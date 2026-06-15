@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_fd0a5a60efc4fd46ae0298835a3ef3f9 {
+                #map_2a33c957eefbccead0c780a38585248a {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -55,30 +55,68 @@
     
     
     <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-        <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Bezirksklasse</div>
-        
+        <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Erwachsene - Bezirksklasse</div>
+        <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Gruppe 2' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</label></li></ul>
+        <div style='margin-top:8px; font-size:13px; color:#333;'>
+            <div style='font-weight:600;'>Active groups:</div>
+            <ul id='active_groups_list' style='list-style:none; padding:0; margin:4px 0 0 0;'><li style='margin:2px 0; font-size:12px;'>Gruppe 2</li></ul>
+        </div>
     </div>
+    <style>
+    .leaflet-control-layers { display: none !important; }
+    </style>
     
     
     <script>
-    // wait a bit for Leaflet controls to be created, then check overlay inputs
-    setTimeout(function(){
-        try{
-            var overlays = document.querySelectorAll('.leaflet-control-layers-overlays input[type=checkbox]');
-            overlays.forEach(function(cb){ if(!cb.checked){ cb.click(); } });
-        }catch(e){ console && console.log && console.log('enable_overlays_js error', e); }
-    }, 250);
+    function updateActiveGroupList() {
+        var activeList = document.getElementById('active_groups_list');
+        if (!activeList) return;
+        var activeItems = [];
+        document.querySelectorAll('.group-toggle').forEach(function(cb) {
+            if (cb.checked) {
+                activeItems.push(cb.getAttribute('data-group'));
+            }
+        });
+        activeList.innerHTML = activeItems.map(function(name) {
+            return '<li style="margin:2px 0; font-size:12px;">' + name + '</li>';
+        }).join('');
+    }
+
+    setTimeout(function() {
+        try {
+            var overlayMap = {};
+            document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(label) {
+                var input = label.querySelector('input[type=checkbox]');
+                if (!input) return;
+                var text = label.textContent.trim();
+                overlayMap[text] = input;
+            });
+
+            document.querySelectorAll('.group-toggle').forEach(function(cb) {
+                var target = cb.getAttribute('data-group');
+                cb.addEventListener('change', function() {
+                    var overlayInput = overlayMap[target];
+                    if (overlayInput && overlayInput.checked !== cb.checked) {
+                        overlayInput.click();
+                    }
+                    updateActiveGroupList();
+                });
+            });
+
+            updateActiveGroupList();
+        } catch (e) { console && console.log && console.log('group legend init error', e); }
+    }, 500);
     </script>
     
     
-            <div class="folium-map" id="map_fd0a5a60efc4fd46ae0298835a3ef3f9" ></div>
+            <div class="folium-map" id="map_2a33c957eefbccead0c780a38585248a" ></div>
         
 </body>
 <script>
     
     
-            var map_fd0a5a60efc4fd46ae0298835a3ef3f9 = L.map(
-                "map_fd0a5a60efc4fd46ae0298835a3ef3f9",
+            var map_2a33c957eefbccead0c780a38585248a = L.map(
+                "map_2a33c957eefbccead0c780a38585248a",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -95,7 +133,7 @@
 
         
     
-            var tile_layer_9e8da208a2bb5e240dbaab8330155fad = L.tileLayer(
+            var tile_layer_c13484db78ae26f195b9df701fed3bd3 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -112,29 +150,29 @@
             );
         
     
-            tile_layer_9e8da208a2bb5e240dbaab8330155fad.addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
+            tile_layer_c13484db78ae26f195b9df701fed3bd3.addTo(map_2a33c957eefbccead0c780a38585248a);
         
     
-            var feature_group_f8617d103ca01034e2a2b19176b36cc9 = L.featureGroup(
+            var feature_group_9794c9c6d9367b1784e44f0f2970bb8e = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_e4077b451edac775ec862c70d9bcaac7 = L.circleMarker(
+            var circle_marker_343afb6d5bb7417cf0a08bb3c64c3d5a = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_f8617d103ca01034e2a2b19176b36cc9);
+            ).addTo(feature_group_9794c9c6d9367b1784e44f0f2970bb8e);
         
     
-            var marker_2a85c40ed20fa50a6c21bbad730cd2d0 = L.marker(
+            var marker_5faa2cf386b32f05fd39fb4ec6c091fb = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_f8617d103ca01034e2a2b19176b36cc9);
+            ).addTo(feature_group_9794c9c6d9367b1784e44f0f2970bb8e);
         
     
-            var div_icon_c839edc14652cb1125e005f2b939d089 = L.divIcon({
+            var div_icon_49f8e1d0c4ecf49c8e22828b95ceec4d = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -142,29 +180,29 @@
 });
         
     
-                marker_2a85c40ed20fa50a6c21bbad730cd2d0.setIcon(div_icon_c839edc14652cb1125e005f2b939d089);
+                marker_5faa2cf386b32f05fd39fb4ec6c091fb.setIcon(div_icon_49f8e1d0c4ecf49c8e22828b95ceec4d);
             
     
-            feature_group_f8617d103ca01034e2a2b19176b36cc9.addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
+            feature_group_9794c9c6d9367b1784e44f0f2970bb8e.addTo(map_2a33c957eefbccead0c780a38585248a);
         
     
-            var layer_control_56567d934ada487ba3efc895cbc1ffec_layers = {
+            var layer_control_303dc9c4c9707307ed24133990f1380d_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_9e8da208a2bb5e240dbaab8330155fad,
+                    "openstreetmap" : tile_layer_c13484db78ae26f195b9df701fed3bd3,
                 },
                 overlays :  {
-                    "Gruppe 2" : feature_group_f8617d103ca01034e2a2b19176b36cc9,
+                    "Gruppe 2" : feature_group_9794c9c6d9367b1784e44f0f2970bb8e,
                 },
             };
-            let layer_control_56567d934ada487ba3efc895cbc1ffec = L.control.layers(
-                layer_control_56567d934ada487ba3efc895cbc1ffec_layers.base_layers,
-                layer_control_56567d934ada487ba3efc895cbc1ffec_layers.overlays,
+            let layer_control_303dc9c4c9707307ed24133990f1380d = L.control.layers(
+                layer_control_303dc9c4c9707307ed24133990f1380d_layers.base_layers,
+                layer_control_303dc9c4c9707307ed24133990f1380d_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
+            ).addTo(map_2a33c957eefbccead0c780a38585248a);
 
         
 </script>
