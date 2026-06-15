@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_42abee91731751228fe8c59ba6dd916e {
+                #map_1c1841d34a6130606891572250d01515 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -64,7 +64,7 @@
     
     
     <script>
-    var groupMarkerLabels = {"Alle": []};
+    var groupMarkerLabels = {"Alle": ["TV Derendingen"]};
 
     function refreshGroupMarkerList(groupName, visible) {
         var list = document.querySelector('ul.group-marker-list[data-group="' + groupName + '"]');
@@ -106,18 +106,24 @@
 
             refreshAllGroupMarkerLists();
         } catch (e) { console && console.log && console.log('group legend init error', e); }
-    }, 500);
+    }, 1000);
+    // Also refresh on window load in case the DOM/map initialization is slower
+    if (window && window.addEventListener) {
+        window.addEventListener('load', function() {
+            try { refreshAllGroupMarkerLists(); } catch(e){}
+        });
+    }
     </script>
     
     
-            <div class="folium-map" id="map_42abee91731751228fe8c59ba6dd916e" ></div>
+            <div class="folium-map" id="map_1c1841d34a6130606891572250d01515" ></div>
         
 </body>
 <script>
     
     
-            var map_42abee91731751228fe8c59ba6dd916e = L.map(
-                "map_42abee91731751228fe8c59ba6dd916e",
+            var map_1c1841d34a6130606891572250d01515 = L.map(
+                "map_1c1841d34a6130606891572250d01515",
                 {
                     center: [48.501661, 9.0566549],
                     crs: L.CRS.EPSG3857,
@@ -134,7 +140,7 @@
 
         
     
-            var tile_layer_5be7f110ebf46741033e853706b0e65d = L.tileLayer(
+            var tile_layer_58f72c22e4047dcedc23e804a806ac2a = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -151,29 +157,29 @@
             );
         
     
-            tile_layer_5be7f110ebf46741033e853706b0e65d.addTo(map_42abee91731751228fe8c59ba6dd916e);
+            tile_layer_58f72c22e4047dcedc23e804a806ac2a.addTo(map_1c1841d34a6130606891572250d01515);
         
     
-            var feature_group_52c9657800e4018922b8114d1a117b47 = L.featureGroup(
+            var feature_group_72430d831d66dcbeabcd683c62184c01 = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_afc4f30d126a1e01233c6b4098fc9213 = L.circleMarker(
+            var circle_marker_b3c6facac72a7ebe47071c8e3c51d99e = L.circleMarker(
                 [48.501661, 9.0566549],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_52c9657800e4018922b8114d1a117b47);
+            ).addTo(feature_group_72430d831d66dcbeabcd683c62184c01);
         
     
-            var marker_f5ba262d8c0c3d4151a5be7e1547ae50 = L.marker(
+            var marker_fc9f48edef3f016642fceffcec5c82db = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_52c9657800e4018922b8114d1a117b47);
+            ).addTo(feature_group_72430d831d66dcbeabcd683c62184c01);
         
     
-            var div_icon_679878bc8cbed09e1ee3d2ca6cba8162 = L.divIcon({
+            var div_icon_1c98a62177909dd17626f89c310f335a = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Derendingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -181,29 +187,29 @@
 });
         
     
-                marker_f5ba262d8c0c3d4151a5be7e1547ae50.setIcon(div_icon_679878bc8cbed09e1ee3d2ca6cba8162);
+                marker_fc9f48edef3f016642fceffcec5c82db.setIcon(div_icon_1c98a62177909dd17626f89c310f335a);
             
     
-            feature_group_52c9657800e4018922b8114d1a117b47.addTo(map_42abee91731751228fe8c59ba6dd916e);
+            feature_group_72430d831d66dcbeabcd683c62184c01.addTo(map_1c1841d34a6130606891572250d01515);
         
     
-            var layer_control_da4cf3d5581a713a719eff61b61ee896_layers = {
+            var layer_control_a221128e80cf0aa6821b235e0320d24f_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_5be7f110ebf46741033e853706b0e65d,
+                    "openstreetmap" : tile_layer_58f72c22e4047dcedc23e804a806ac2a,
                 },
                 overlays :  {
-                    "Alle" : feature_group_52c9657800e4018922b8114d1a117b47,
+                    "Alle" : feature_group_72430d831d66dcbeabcd683c62184c01,
                 },
             };
-            let layer_control_da4cf3d5581a713a719eff61b61ee896 = L.control.layers(
-                layer_control_da4cf3d5581a713a719eff61b61ee896_layers.base_layers,
-                layer_control_da4cf3d5581a713a719eff61b61ee896_layers.overlays,
+            let layer_control_a221128e80cf0aa6821b235e0320d24f = L.control.layers(
+                layer_control_a221128e80cf0aa6821b235e0320d24f_layers.base_layers,
+                layer_control_a221128e80cf0aa6821b235e0320d24f_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_42abee91731751228fe8c59ba6dd916e);
+            ).addTo(map_1c1841d34a6130606891572250d01515);
 
         
 </script>

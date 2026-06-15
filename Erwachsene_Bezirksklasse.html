@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_0eeca22dc76559845170c3a72c5fdbae {
+                #map_5a65ebaf674527cede7e36285ae2f284 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -64,7 +64,7 @@
     
     
     <script>
-    var groupMarkerLabels = {"Gruppe 2": []};
+    var groupMarkerLabels = {"Gruppe 2": ["TTC Reutlingen II"]};
 
     function refreshGroupMarkerList(groupName, visible) {
         var list = document.querySelector('ul.group-marker-list[data-group="' + groupName + '"]');
@@ -106,18 +106,24 @@
 
             refreshAllGroupMarkerLists();
         } catch (e) { console && console.log && console.log('group legend init error', e); }
-    }, 500);
+    }, 1000);
+    // Also refresh on window load in case the DOM/map initialization is slower
+    if (window && window.addEventListener) {
+        window.addEventListener('load', function() {
+            try { refreshAllGroupMarkerLists(); } catch(e){}
+        });
+    }
     </script>
     
     
-            <div class="folium-map" id="map_0eeca22dc76559845170c3a72c5fdbae" ></div>
+            <div class="folium-map" id="map_5a65ebaf674527cede7e36285ae2f284" ></div>
         
 </body>
 <script>
     
     
-            var map_0eeca22dc76559845170c3a72c5fdbae = L.map(
-                "map_0eeca22dc76559845170c3a72c5fdbae",
+            var map_5a65ebaf674527cede7e36285ae2f284 = L.map(
+                "map_5a65ebaf674527cede7e36285ae2f284",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -134,7 +140,7 @@
 
         
     
-            var tile_layer_d01290eb35b524059f81ac0c7940370e = L.tileLayer(
+            var tile_layer_279d6c95b8784b26b804b8d355df6be8 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -151,29 +157,29 @@
             );
         
     
-            tile_layer_d01290eb35b524059f81ac0c7940370e.addTo(map_0eeca22dc76559845170c3a72c5fdbae);
+            tile_layer_279d6c95b8784b26b804b8d355df6be8.addTo(map_5a65ebaf674527cede7e36285ae2f284);
         
     
-            var feature_group_822614a109ddf4ff699685e8c2ab45e5 = L.featureGroup(
+            var feature_group_c16dab002db33cbfda1a2aaf0008c62a = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_29ac8b1dac2fee7be7ffa34a38aa6188 = L.circleMarker(
+            var circle_marker_d69a2257911318ffd91342612979b29b = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_822614a109ddf4ff699685e8c2ab45e5);
+            ).addTo(feature_group_c16dab002db33cbfda1a2aaf0008c62a);
         
     
-            var marker_372a3dbb0af2a33da7b7ca5442441655 = L.marker(
+            var marker_58187c0ae393a2bf254893c621b84a75 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_822614a109ddf4ff699685e8c2ab45e5);
+            ).addTo(feature_group_c16dab002db33cbfda1a2aaf0008c62a);
         
     
-            var div_icon_0ff937c92699d094f38651adb784ff62 = L.divIcon({
+            var div_icon_2fc77fad41ae2168f3e329318e96c438 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -181,29 +187,29 @@
 });
         
     
-                marker_372a3dbb0af2a33da7b7ca5442441655.setIcon(div_icon_0ff937c92699d094f38651adb784ff62);
+                marker_58187c0ae393a2bf254893c621b84a75.setIcon(div_icon_2fc77fad41ae2168f3e329318e96c438);
             
     
-            feature_group_822614a109ddf4ff699685e8c2ab45e5.addTo(map_0eeca22dc76559845170c3a72c5fdbae);
+            feature_group_c16dab002db33cbfda1a2aaf0008c62a.addTo(map_5a65ebaf674527cede7e36285ae2f284);
         
     
-            var layer_control_3338e32fd0209d511786becaedd70581_layers = {
+            var layer_control_d11af24947f6f1921d04b5111b7cacbd_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_d01290eb35b524059f81ac0c7940370e,
+                    "openstreetmap" : tile_layer_279d6c95b8784b26b804b8d355df6be8,
                 },
                 overlays :  {
-                    "Gruppe 2" : feature_group_822614a109ddf4ff699685e8c2ab45e5,
+                    "Gruppe 2" : feature_group_c16dab002db33cbfda1a2aaf0008c62a,
                 },
             };
-            let layer_control_3338e32fd0209d511786becaedd70581 = L.control.layers(
-                layer_control_3338e32fd0209d511786becaedd70581_layers.base_layers,
-                layer_control_3338e32fd0209d511786becaedd70581_layers.overlays,
+            let layer_control_d11af24947f6f1921d04b5111b7cacbd = L.control.layers(
+                layer_control_d11af24947f6f1921d04b5111b7cacbd_layers.base_layers,
+                layer_control_d11af24947f6f1921d04b5111b7cacbd_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_0eeca22dc76559845170c3a72c5fdbae);
+            ).addTo(map_5a65ebaf674527cede7e36285ae2f284);
 
         
 </script>
