@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_2a33c957eefbccead0c780a38585248a {
+                #map_5a9c346c98c51b6ceeb85dfa1abd76e6 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -58,8 +58,8 @@
         <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Erwachsene - Bezirksklasse</div>
         <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Gruppe 2' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</label></li></ul>
         <div style='margin-top:8px; font-size:13px; color:#333;'>
-            <div style='font-weight:600;'>Active groups:</div>
-            <ul id='active_groups_list' style='list-style:none; padding:0; margin:4px 0 0 0;'><li style='margin:2px 0; font-size:12px;'>Gruppe 2</li></ul>
+            <div style='font-weight:600;'>Active markers:</div>
+            <ul id='active_marker_labels_list' style='list-style:none; padding:0; margin:4px 0 0 0;'></ul>
         </div>
     </div>
     <style>
@@ -68,16 +68,21 @@
     
     
     <script>
-    function updateActiveGroupList() {
-        var activeList = document.getElementById('active_groups_list');
+    var groupMarkerLabels = {"Gruppe 2": []};
+
+    function updateActiveMarkerList() {
+        var activeList = document.getElementById('active_marker_labels_list');
         if (!activeList) return;
-        var activeItems = [];
+        var labelItems = [];
         document.querySelectorAll('.group-toggle').forEach(function(cb) {
-            if (cb.checked) {
-                activeItems.push(cb.getAttribute('data-group'));
+            var groupName = cb.getAttribute('data-group');
+            if (cb.checked && groupMarkerLabels[groupName]) {
+                groupMarkerLabels[groupName].forEach(function(markerLabel) {
+                    labelItems.push(markerLabel);
+                });
             }
         });
-        activeList.innerHTML = activeItems.map(function(name) {
+        activeList.innerHTML = labelItems.map(function(name) {
             return '<li style="margin:2px 0; font-size:12px;">' + name + '</li>';
         }).join('');
     }
@@ -99,24 +104,24 @@
                     if (overlayInput && overlayInput.checked !== cb.checked) {
                         overlayInput.click();
                     }
-                    updateActiveGroupList();
+                    updateActiveMarkerList();
                 });
             });
 
-            updateActiveGroupList();
+            updateActiveMarkerList();
         } catch (e) { console && console.log && console.log('group legend init error', e); }
     }, 500);
     </script>
     
     
-            <div class="folium-map" id="map_2a33c957eefbccead0c780a38585248a" ></div>
+            <div class="folium-map" id="map_5a9c346c98c51b6ceeb85dfa1abd76e6" ></div>
         
 </body>
 <script>
     
     
-            var map_2a33c957eefbccead0c780a38585248a = L.map(
-                "map_2a33c957eefbccead0c780a38585248a",
+            var map_5a9c346c98c51b6ceeb85dfa1abd76e6 = L.map(
+                "map_5a9c346c98c51b6ceeb85dfa1abd76e6",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -133,7 +138,7 @@
 
         
     
-            var tile_layer_c13484db78ae26f195b9df701fed3bd3 = L.tileLayer(
+            var tile_layer_b1077f9e410b3d0b746231a8a74c2b7e = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -150,29 +155,29 @@
             );
         
     
-            tile_layer_c13484db78ae26f195b9df701fed3bd3.addTo(map_2a33c957eefbccead0c780a38585248a);
+            tile_layer_b1077f9e410b3d0b746231a8a74c2b7e.addTo(map_5a9c346c98c51b6ceeb85dfa1abd76e6);
         
     
-            var feature_group_9794c9c6d9367b1784e44f0f2970bb8e = L.featureGroup(
+            var feature_group_81ae6b28834a35b4278d59f76f26bc8c = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_343afb6d5bb7417cf0a08bb3c64c3d5a = L.circleMarker(
+            var circle_marker_ca3e578cf2478551e82429437ba8650b = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_9794c9c6d9367b1784e44f0f2970bb8e);
+            ).addTo(feature_group_81ae6b28834a35b4278d59f76f26bc8c);
         
     
-            var marker_5faa2cf386b32f05fd39fb4ec6c091fb = L.marker(
+            var marker_92ebc1db8d7d24d6baeea01f09229662 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_9794c9c6d9367b1784e44f0f2970bb8e);
+            ).addTo(feature_group_81ae6b28834a35b4278d59f76f26bc8c);
         
     
-            var div_icon_49f8e1d0c4ecf49c8e22828b95ceec4d = L.divIcon({
+            var div_icon_d0bc8dbb2fc3b12c0625e62a507cba4c = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -180,29 +185,29 @@
 });
         
     
-                marker_5faa2cf386b32f05fd39fb4ec6c091fb.setIcon(div_icon_49f8e1d0c4ecf49c8e22828b95ceec4d);
+                marker_92ebc1db8d7d24d6baeea01f09229662.setIcon(div_icon_d0bc8dbb2fc3b12c0625e62a507cba4c);
             
     
-            feature_group_9794c9c6d9367b1784e44f0f2970bb8e.addTo(map_2a33c957eefbccead0c780a38585248a);
+            feature_group_81ae6b28834a35b4278d59f76f26bc8c.addTo(map_5a9c346c98c51b6ceeb85dfa1abd76e6);
         
     
-            var layer_control_303dc9c4c9707307ed24133990f1380d_layers = {
+            var layer_control_9a991eb1fdd8624d4759a6657861bdfa_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_c13484db78ae26f195b9df701fed3bd3,
+                    "openstreetmap" : tile_layer_b1077f9e410b3d0b746231a8a74c2b7e,
                 },
                 overlays :  {
-                    "Gruppe 2" : feature_group_9794c9c6d9367b1784e44f0f2970bb8e,
+                    "Gruppe 2" : feature_group_81ae6b28834a35b4278d59f76f26bc8c,
                 },
             };
-            let layer_control_303dc9c4c9707307ed24133990f1380d = L.control.layers(
-                layer_control_303dc9c4c9707307ed24133990f1380d_layers.base_layers,
-                layer_control_303dc9c4c9707307ed24133990f1380d_layers.overlays,
+            let layer_control_9a991eb1fdd8624d4759a6657861bdfa = L.control.layers(
+                layer_control_9a991eb1fdd8624d4759a6657861bdfa_layers.base_layers,
+                layer_control_9a991eb1fdd8624d4759a6657861bdfa_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_2a33c957eefbccead0c780a38585248a);
+            ).addTo(map_5a9c346c98c51b6ceeb85dfa1abd76e6);
 
         
 </script>
