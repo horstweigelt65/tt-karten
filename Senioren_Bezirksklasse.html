@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6c4a6dee67219a0c10c395b8940a15f4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25); max-height:40vh; width:280px; overflow:auto;'>
+        <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Senioren - Bezirksklasse</div>
+        <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Gruppe 1' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 1</label><ul class='group-marker-list' data-group='Gruppe 1' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Gruppe 2' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:green;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</label><ul class='group-marker-list' data-group='Gruppe 2' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
+    </div>
+    <style>
+    .leaflet-control-layers { display: none !important; }
+    /* group marker lists show fully; outer legend scroll handles overflow */
+    .group-marker-list { margin:4px 0 0 0; padding-left:16px; }
+    /* ensure legend scroll is comfortable on small screens */
+    @media (max-height:600px) {
+        #map_legend { max-height:50vh; }
+    }
+    </style>
+    
+    
+    <script>
+    var groupMarkerLabels = {"Gruppe 1": ["VfL Dettenhausen II", "FC Mittelstadt", "TTC Ergenzingen", "TuS Metzingen", "TSV Dettingen", "TSV Gomaringen", "VfL Dettenhausen"], "Gruppe 2": ["TTG Sonnenbühl", "TSV Eningen II", "TSV Eningen", "SV Böttingen", "TSV Steinhilben", "TTC Tailfingen-Margrethausen", "TTC Lichtenstein"]};
+
+    function refreshGroupMarkerList(groupName, visible) {
+        var list = document.querySelector('ul.group-marker-list[data-group="' + groupName + '"]');
+        if (!list) return;
+        var labels = groupMarkerLabels[groupName] || [];
+        list.innerHTML = labels.map(function(name) {
+            return '<li style="margin:2px 0; font-size:12px;">' + name + '</li>';
+        }).join('');
+        list.style.display = visible ? 'block' : 'none';
+    }
+
+    function refreshAllGroupMarkerLists() {
+        document.querySelectorAll('.group-toggle').forEach(function(cb) {
+            var groupName = cb.getAttribute('data-group');
+            refreshGroupMarkerList(groupName, cb.checked);
+        });
+    }
+
+    setTimeout(function() {
+        try {
+            var overlayMap = {};
+            document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(label) {
+                var input = label.querySelector('input[type=checkbox]');
+                if (!input) return;
+                var text = label.textContent.trim();
+                overlayMap[text] = input;
+            });
+
+            document.querySelectorAll('.group-toggle').forEach(function(cb) {
+                var target = cb.getAttribute('data-group');
+                cb.addEventListener('change', function() {
+                    var overlayInput = overlayMap[target];
+                    if (overlayInput && overlayInput.checked !== cb.checked) {
+                        overlayInput.click();
+                    }
+                    refreshGroupMarkerList(target, cb.checked);
+                });
+            });
+
+            refreshAllGroupMarkerLists();
+        } catch (e) { console && console.log && console.log('group legend init error', e); }
+    }, 1000);
+    // Also refresh on window load in case the DOM/map initialization is slower
+    if (window && window.addEventListener) {
+        window.addEventListener('load', function() {
+            try { refreshAllGroupMarkerLists(); } catch(e){}
+        });
+    }
+    </script>
+    
+    
+            <div class="folium-map" id="map_6c4a6dee67219a0c10c395b8940a15f4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_6c4a6dee67219a0c10c395b8940a15f4 = L.map(
+                "map_6c4a6dee67219a0c10c395b8940a15f4",
+                {
+                    center: [48.469123599999996, 9.198489035714285],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_53bb964a97d673e208621b46730cb1ee = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_53bb964a97d673e208621b46730cb1ee.addTo(map_6c4a6dee67219a0c10c395b8940a15f4);
+        
+    
+            var feature_group_7d3b91e68cc727ae46b9335bfb032538 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_c6ad8263c8e451abf9206e09b412b4fe = L.circleMarker(
+                [48.6093627, 9.1010124],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_37313022ab457cfe875794efcc220de5 = L.marker(
+                [48.6093627, 9.1010124],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_d6e0bfd9bba40e46a96e430e3732d857 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eVfL Dettenhausen II\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_37313022ab457cfe875794efcc220de5.setIcon(div_icon_d6e0bfd9bba40e46a96e430e3732d857);
+            
+    
+            var circle_marker_c11069802b662c4fd5b36d5475b81be8 = L.circleMarker(
+                [48.5651237, 9.2285889],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_aeed113a9cca4828789c7c6de77a3d08 = L.marker(
+                [48.5651237, 9.2285889],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_2030ce1c7ba47f85df4e43f24eaca6a9 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eFC Mittelstadt\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_aeed113a9cca4828789c7c6de77a3d08.setIcon(div_icon_2030ce1c7ba47f85df4e43f24eaca6a9);
+            
+    
+            var circle_marker_f7f731c8376b2921eacf4e35b7b0b399 = L.circleMarker(
+                [48.4916585, 8.8156384],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_a23f9955af98858cabc7fc626dccc494 = L.marker(
+                [48.4916585, 8.8156384],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_4973cf0fc94ff9fbe6b5bac6c5ff4de2 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Ergenzingen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_a23f9955af98858cabc7fc626dccc494.setIcon(div_icon_4973cf0fc94ff9fbe6b5bac6c5ff4de2);
+            
+    
+            var circle_marker_95ee00eb340f410caf74ab933e2255c8 = L.circleMarker(
+                [48.539397, 9.2926588],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_503c49f42e9158f5d37cff6e5524c61f = L.marker(
+                [48.539397, 9.2926588],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_fb7648ac3b379e40cb062a415002b1d0 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTuS Metzingen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_503c49f42e9158f5d37cff6e5524c61f.setIcon(div_icon_fb7648ac3b379e40cb062a415002b1d0);
+            
+    
+            var circle_marker_408c4ee9435049b5b0eb09064f6bda7c = L.circleMarker(
+                [48.5283908, 9.3460774],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_22b8aaf0809018d06d16a403e2ce135d = L.marker(
+                [48.5283908, 9.3460774],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_1dc26e95f233c669b2b3033516b322a5 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Dettingen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_22b8aaf0809018d06d16a403e2ce135d.setIcon(div_icon_1dc26e95f233c669b2b3033516b322a5);
+            
+    
+            var circle_marker_e2e6a0625b860a6e1af1a17a736bc61e = L.circleMarker(
+                [48.4474987, 9.0887233],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_fcc41ea0875232d54223dd9ab5c555cc = L.marker(
+                [48.4474987, 9.0887233],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_c1c917c2d48ea5722cddfec174349ec1 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Gomaringen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_fcc41ea0875232d54223dd9ab5c555cc.setIcon(div_icon_c1c917c2d48ea5722cddfec174349ec1);
+            
+    
+            var circle_marker_dd0beb880b1b922abf4a4806b376bae6 = L.circleMarker(
+                [48.6093627, 9.1010124],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var marker_a67f92468139c2a01928ddd0c2ab8006 = L.marker(
+                [48.6093627, 9.1010124],
+                {
+}
+            ).addTo(feature_group_7d3b91e68cc727ae46b9335bfb032538);
+        
+    
+            var div_icon_d562ef6f3d0dfc0ba7ab53bbe5cc94b2 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eVfL Dettenhausen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_a67f92468139c2a01928ddd0c2ab8006.setIcon(div_icon_d562ef6f3d0dfc0ba7ab53bbe5cc94b2);
+            
+    
+            feature_group_7d3b91e68cc727ae46b9335bfb032538.addTo(map_6c4a6dee67219a0c10c395b8940a15f4);
+        
+    
+            var feature_group_57af2e5e8b40721b3a46556f322333fe = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_bf9a540c8fa4540a425c80eeb0c34d5d = L.circleMarker(
+                [48.4090808, 9.1848558],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_a3c69c904d3061aecbf0ce130cb2da41 = L.marker(
+                [48.4090808, 9.1848558],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_53125a8f817d442d359c661cdc7c3613 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTG Sonnenb\u00fchl\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_a3c69c904d3061aecbf0ce130cb2da41.setIcon(div_icon_53125a8f817d442d359c661cdc7c3613);
+            
+    
+            var circle_marker_89cd576d46d8a8e97185250771e3b31d = L.circleMarker(
+                [48.4914675, 9.257036],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_50f6de2dd9b2df7ad3b43a743881750e = L.marker(
+                [48.4914675, 9.257036],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_edc966b5f6a46dfdfc68e85d820b2128 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Eningen II\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_50f6de2dd9b2df7ad3b43a743881750e.setIcon(div_icon_edc966b5f6a46dfdfc68e85d820b2128);
+            
+    
+            var circle_marker_6a91abd25be8bdcf030b1f0eea2f683b = L.circleMarker(
+                [48.4914675, 9.257036],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_8386cd2a9e2dc9c0752bca25e5430c14 = L.marker(
+                [48.4914675, 9.257036],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_386309962606f44e29bfa2f32a3be698 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Eningen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_8386cd2a9e2dc9c0752bca25e5430c14.setIcon(div_icon_386309962606f44e29bfa2f32a3be698);
+            
+    
+            var circle_marker_692a1b33cfa5f2644358222bade35369 = L.circleMarker(
+                [48.4149072, 9.5515591],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_2b7ee8ff74aa440cd7d2af2846c1069e = L.marker(
+                [48.4149072, 9.5515591],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_e7b4daae584f5de1ce1882cd270a16e2 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSV B\u00f6ttingen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_2b7ee8ff74aa440cd7d2af2846c1069e.setIcon(div_icon_e7b4daae584f5de1ce1882cd270a16e2);
+            
+    
+            var circle_marker_a2b49c0e5a21fd69c890d30abf38a8e2 = L.circleMarker(
+                [48.3095555, 9.2770409],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_bdbbab3cef44ac7dce3c50c883f0bcf1 = L.marker(
+                [48.3095555, 9.2770409],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_cae620ee459257ba42db80e4bdab84c4 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Steinhilben\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_bdbbab3cef44ac7dce3c50c883f0bcf1.setIcon(div_icon_cae620ee459257ba42db80e4bdab84c4);
+            
+    
+            var circle_marker_6aa77476c8be911a9b79fba518093ae6 = L.circleMarker(
+                [48.2521682, 9.014709],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_ea565ccdcfbf5100a304f47ea2293c14 = L.marker(
+                [48.2521682, 9.014709],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_8c68d074969888b901763d7dedc295f5 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Tailfingen-Margrethausen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_ea565ccdcfbf5100a304f47ea2293c14.setIcon(div_icon_8c68d074969888b901763d7dedc295f5);
+            
+    
+            var circle_marker_b378bef2d68c9b83e0cce0ca53c555a4 = L.circleMarker(
+                [48.4082896, 9.2628981],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var marker_0679f42c80cb9281ab91425ff34474ab = L.marker(
+                [48.4082896, 9.2628981],
+                {
+}
+            ).addTo(feature_group_57af2e5e8b40721b3a46556f322333fe);
+        
+    
+            var div_icon_10519db303e630c10088177403d286b2 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Lichtenstein\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
+});
+        
+    
+                marker_0679f42c80cb9281ab91425ff34474ab.setIcon(div_icon_10519db303e630c10088177403d286b2);
+            
+    
+            feature_group_57af2e5e8b40721b3a46556f322333fe.addTo(map_6c4a6dee67219a0c10c395b8940a15f4);
+        
+    
+            var layer_control_2c0859353a345e50acb41dcac667be21_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_53bb964a97d673e208621b46730cb1ee,
+                },
+                overlays :  {
+                    "Gruppe 1" : feature_group_7d3b91e68cc727ae46b9335bfb032538,
+                    "Gruppe 2" : feature_group_57af2e5e8b40721b3a46556f322333fe,
+                },
+            };
+            let layer_control_2c0859353a345e50acb41dcac667be21 = L.control.layers(
+                layer_control_2c0859353a345e50acb41dcac667be21_layers.base_layers,
+                layer_control_2c0859353a345e50acb41dcac667be21_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_6c4a6dee67219a0c10c395b8940a15f4);
+
+        
+</script>
+</html>
