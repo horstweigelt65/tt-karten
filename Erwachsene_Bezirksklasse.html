@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_f61b18fb268233487f771d248ace9c11 {
+                #map_346d2ebebc5d795e8f439de652c92fec {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,14 +54,20 @@
 <body>
     
     
-            <div class="folium-map" id="map_f61b18fb268233487f771d248ace9c11" ></div>
+        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+            <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Bezirksklasse</div>
+            
+        </div>
+        
+    
+            <div class="folium-map" id="map_346d2ebebc5d795e8f439de652c92fec" ></div>
         
 </body>
 <script>
     
     
-            var map_f61b18fb268233487f771d248ace9c11 = L.map(
-                "map_f61b18fb268233487f771d248ace9c11",
+            var map_346d2ebebc5d795e8f439de652c92fec = L.map(
+                "map_346d2ebebc5d795e8f439de652c92fec",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -78,7 +84,7 @@
 
         
     
-            var tile_layer_9e7d21909c5b80c178fb5cd7e24499ee = L.tileLayer(
+            var tile_layer_5e74326839b8f4ae022ab338ddcc4bfa = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -95,83 +101,59 @@
             );
         
     
-            tile_layer_9e7d21909c5b80c178fb5cd7e24499ee.addTo(map_f61b18fb268233487f771d248ace9c11);
+            tile_layer_5e74326839b8f4ae022ab338ddcc4bfa.addTo(map_346d2ebebc5d795e8f439de652c92fec);
         
     
-            var feature_group_971860b61673a0259ce6645f05d1beba = L.featureGroup(
+            var feature_group_373ec87d5f28a404817dae73aa119c14 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_e287893dd703eba17903469055dba624 = L.marker(
+            var circle_marker_edb258093306a99311cd4f1915bf1a03 = L.circleMarker(
+                [48.489053, 9.2063572],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_373ec87d5f28a404817dae73aa119c14);
+        
+    
+            var marker_4c9851241d583e6c9d42300025b84893 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_971860b61673a0259ce6645f05d1beba);
+            ).addTo(feature_group_373ec87d5f28a404817dae73aa119c14);
         
     
-            var icon_a52174940952f537c7c491df19c70738 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "blue",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_99280b16cda2d9337fa980ed8788323c = L.popup({
-  "maxWidth": "100%",
+            var div_icon_3dfc63862a2f41601c237a5cebad7ec4 = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
 });
-
-        
-            
-                var html_bf871f28e07fd676cd04a2d15f32ba81 = $(`<div id="html_bf871f28e07fd676cd04a2d15f32ba81" style="width: 100.0%; height: 100.0%;"><b>TTC Reutlingen II</b><br>Jahnstraße 3, Reutlingen<br>Gruppe: 2</div>`)[0];
-                popup_99280b16cda2d9337fa980ed8788323c.setContent(html_bf871f28e07fd676cd04a2d15f32ba81);
-            
-        
-
-        marker_e287893dd703eba17903469055dba624.bindPopup(popup_99280b16cda2d9337fa980ed8788323c)
-        ;
-
         
     
-    
-            marker_e287893dd703eba17903469055dba624.bindTooltip(
-                `<div>
-                     TTC Reutlingen II
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_e287893dd703eba17903469055dba624.setIcon(icon_a52174940952f537c7c491df19c70738);
+                marker_4c9851241d583e6c9d42300025b84893.setIcon(div_icon_3dfc63862a2f41601c237a5cebad7ec4);
             
     
-            feature_group_971860b61673a0259ce6645f05d1beba.addTo(map_f61b18fb268233487f771d248ace9c11);
+            feature_group_373ec87d5f28a404817dae73aa119c14.addTo(map_346d2ebebc5d795e8f439de652c92fec);
         
     
-            var layer_control_fb60779796d3f613c3ca9cde7d0f9204_layers = {
+            var layer_control_87b71415a1c553e5fc8fda762e116d92_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_9e7d21909c5b80c178fb5cd7e24499ee,
+                    "openstreetmap" : tile_layer_5e74326839b8f4ae022ab338ddcc4bfa,
                 },
                 overlays :  {
-                    "2" : feature_group_971860b61673a0259ce6645f05d1beba,
+                    "2" : feature_group_373ec87d5f28a404817dae73aa119c14,
                 },
             };
-            let layer_control_fb60779796d3f613c3ca9cde7d0f9204 = L.control.layers(
-                layer_control_fb60779796d3f613c3ca9cde7d0f9204_layers.base_layers,
-                layer_control_fb60779796d3f613c3ca9cde7d0f9204_layers.overlays,
+            let layer_control_87b71415a1c553e5fc8fda762e116d92 = L.control.layers(
+                layer_control_87b71415a1c553e5fc8fda762e116d92_layers.base_layers,
+                layer_control_87b71415a1c553e5fc8fda762e116d92_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_f61b18fb268233487f771d248ace9c11);
+            ).addTo(map_346d2ebebc5d795e8f439de652c92fec);
 
         
 </script>

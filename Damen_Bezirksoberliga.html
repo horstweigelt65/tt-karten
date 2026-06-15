@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_23dec075594e9d98d99d09bfb97b764b {
+                #map_55b7b20daf8c062e5af49648b3a1e24c {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,14 +54,20 @@
 <body>
     
     
-            <div class="folium-map" id="map_23dec075594e9d98d99d09bfb97b764b" ></div>
+        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+            <div style='font-weight:700; margin-bottom:6px;'>Damen - Bezirksoberliga</div>
+            
+        </div>
+        
+    
+            <div class="folium-map" id="map_55b7b20daf8c062e5af49648b3a1e24c" ></div>
         
 </body>
 <script>
     
     
-            var map_23dec075594e9d98d99d09bfb97b764b = L.map(
-                "map_23dec075594e9d98d99d09bfb97b764b",
+            var map_55b7b20daf8c062e5af49648b3a1e24c = L.map(
+                "map_55b7b20daf8c062e5af49648b3a1e24c",
                 {
                     center: [48.501661, 9.0566549],
                     crs: L.CRS.EPSG3857,
@@ -78,7 +84,7 @@
 
         
     
-            var tile_layer_4d086bdb83f5dbe50eedb3de10e89dc2 = L.tileLayer(
+            var tile_layer_24996e4108c75cc5683d60d93294e2ac = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -95,83 +101,59 @@
             );
         
     
-            tile_layer_4d086bdb83f5dbe50eedb3de10e89dc2.addTo(map_23dec075594e9d98d99d09bfb97b764b);
+            tile_layer_24996e4108c75cc5683d60d93294e2ac.addTo(map_55b7b20daf8c062e5af49648b3a1e24c);
         
     
-            var feature_group_134676445c9964dcf4a5c25366ecd5e2 = L.featureGroup(
+            var feature_group_286159fff75b9ffdf4cd28333b2dc49b = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_88a4f5095466e37593185368f1a647ab = L.marker(
+            var circle_marker_a4f65c32dfc59381f0b852dd988180ad = L.circleMarker(
+                [48.501661, 9.0566549],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_286159fff75b9ffdf4cd28333b2dc49b);
+        
+    
+            var marker_e81a10ab70b58fdcf5cdfe0719086759 = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_134676445c9964dcf4a5c25366ecd5e2);
+            ).addTo(feature_group_286159fff75b9ffdf4cd28333b2dc49b);
         
     
-            var icon_cea1c0e1e6ee5c6cccaa57d2935fb20e = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "blue",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_ca2debc176e71b8a5b015fefd0ca81b3 = L.popup({
-  "maxWidth": "100%",
+            var div_icon_7d2bb9ca0f44a0ed412a08f3ab300c0c = L.divIcon({
+  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Derendingen\u003c/div\u003e",
+  "iconSize": [150, 20],
+  "iconAnchor": [0, -10],
+  "className": "empty",
 });
-
-        
-            
-                var html_3908f9ede842626fe8a5cda34bf06e07 = $(`<div id="html_3908f9ede842626fe8a5cda34bf06e07" style="width: 100.0%; height: 100.0%;"><b>TV Derendingen</b><br>Turnhalle Feuerhägle, Tübingen,BW,Deutschland</div>`)[0];
-                popup_ca2debc176e71b8a5b015fefd0ca81b3.setContent(html_3908f9ede842626fe8a5cda34bf06e07);
-            
-        
-
-        marker_88a4f5095466e37593185368f1a647ab.bindPopup(popup_ca2debc176e71b8a5b015fefd0ca81b3)
-        ;
-
         
     
-    
-            marker_88a4f5095466e37593185368f1a647ab.bindTooltip(
-                `<div>
-                     TV Derendingen
-                 </div>`,
-                {
-  "sticky": true,
-}
-            );
-        
-    
-                marker_88a4f5095466e37593185368f1a647ab.setIcon(icon_cea1c0e1e6ee5c6cccaa57d2935fb20e);
+                marker_e81a10ab70b58fdcf5cdfe0719086759.setIcon(div_icon_7d2bb9ca0f44a0ed412a08f3ab300c0c);
             
     
-            feature_group_134676445c9964dcf4a5c25366ecd5e2.addTo(map_23dec075594e9d98d99d09bfb97b764b);
+            feature_group_286159fff75b9ffdf4cd28333b2dc49b.addTo(map_55b7b20daf8c062e5af49648b3a1e24c);
         
     
-            var layer_control_38667cbdd3c53f6ba9500fa7eb4c2467_layers = {
+            var layer_control_d362b6437ef5e53a65622c43e0738f35_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_4d086bdb83f5dbe50eedb3de10e89dc2,
+                    "openstreetmap" : tile_layer_24996e4108c75cc5683d60d93294e2ac,
                 },
                 overlays :  {
-                    "Alle" : feature_group_134676445c9964dcf4a5c25366ecd5e2,
+                    "Alle" : feature_group_286159fff75b9ffdf4cd28333b2dc49b,
                 },
             };
-            let layer_control_38667cbdd3c53f6ba9500fa7eb4c2467 = L.control.layers(
-                layer_control_38667cbdd3c53f6ba9500fa7eb4c2467_layers.base_layers,
-                layer_control_38667cbdd3c53f6ba9500fa7eb4c2467_layers.overlays,
+            let layer_control_d362b6437ef5e53a65622c43e0738f35 = L.control.layers(
+                layer_control_d362b6437ef5e53a65622c43e0738f35_layers.base_layers,
+                layer_control_d362b6437ef5e53a65622c43e0738f35_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_23dec075594e9d98d99d09bfb97b764b);
+            ).addTo(map_55b7b20daf8c062e5af49648b3a1e24c);
 
         
 </script>
