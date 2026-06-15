@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_9562da5901cd95863294941ec7c1076d {
+                #map_5d9493674d0eae115b4c235514cb4a0b {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,32 +54,31 @@
 <body>
     
     
-        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-            <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Kreisliga A</div>
-            <ul style="list-style:none; padding:0; margin:0"><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 1</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:green;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:red;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 3</li></ul>
-        </div>
-        
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+        <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Kreisliga A</div>
+        <ul style='list-style:none; padding:0; margin:0'><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 1</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:green;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:red;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 3</li></ul>
+    </div>
     
-            <div class="folium-map" id="map_9562da5901cd95863294941ec7c1076d" ></div>
-        
     
-        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-            <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Kreisliga A</div>
-            <ul style="list-style:none; padding:0; margin:0"><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 1</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:green;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:red;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 3</li></ul>
-        </div>
-        
+    <script>
+    // wait a bit for Leaflet controls to be created, then check overlay inputs
+    setTimeout(function(){
+        try{
+            var overlays = document.querySelectorAll('.leaflet-control-layers-overlays input[type=checkbox]');
+            overlays.forEach(function(cb){ if(!cb.checked){ cb.click(); } });
+        }catch(e){ console && console.log && console.log('enable_overlays_js error', e); }
+    }, 250);
+    </script>
     
-        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-            <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Kreisliga A</div>
-            <ul style="list-style:none; padding:0; margin:0"><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 1</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:green;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</li><li style='margin:4px 0'><span style='display:inline-block;width:14px;height:14px;background:red;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 3</li></ul>
-        </div>
+    
+            <div class="folium-map" id="map_5d9493674d0eae115b4c235514cb4a0b" ></div>
         
 </body>
 <script>
     
     
-            var map_9562da5901cd95863294941ec7c1076d = L.map(
-                "map_9562da5901cd95863294941ec7c1076d",
+            var map_5d9493674d0eae115b4c235514cb4a0b = L.map(
+                "map_5d9493674d0eae115b4c235514cb4a0b",
                 {
                     center: [48.430641871999995, 9.048126468],
                     crs: L.CRS.EPSG3857,
@@ -96,7 +95,7 @@
 
         
     
-            var tile_layer_c3a50b362dcf7e5f105b204c3c043cd2 = L.tileLayer(
+            var tile_layer_8ea215c3f94e1818139f95772ac4fd92 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -113,29 +112,29 @@
             );
         
     
-            tile_layer_c3a50b362dcf7e5f105b204c3c043cd2.addTo(map_9562da5901cd95863294941ec7c1076d);
+            tile_layer_8ea215c3f94e1818139f95772ac4fd92.addTo(map_5d9493674d0eae115b4c235514cb4a0b);
         
     
-            var feature_group_8ffe5d97478fd48ade0abd7df3fae241 = L.featureGroup(
+            var feature_group_2e8b005475f5b88626af3ec17143659c = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_7dd6d1d353ac1b51635b9c5316018c0f = L.circleMarker(
+            var circle_marker_4fb04721be9c3caaa42d9e7da7e81c0a = L.circleMarker(
                 [48.3715292, 8.9425241],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_e2b255fbe1a2a3b79416efa1fbfe8bd8 = L.marker(
+            var marker_18f7122157985dc77cb87ab12f449a63 = L.marker(
                 [48.3715292, 8.9425241],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_c572196dabecae6ee6d17b4edb2abb40 = L.divIcon({
+            var div_icon_85827abc52a13f05a68732c77298c129 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Stein\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -143,23 +142,23 @@
 });
         
     
-                marker_e2b255fbe1a2a3b79416efa1fbfe8bd8.setIcon(div_icon_c572196dabecae6ee6d17b4edb2abb40);
+                marker_18f7122157985dc77cb87ab12f449a63.setIcon(div_icon_85827abc52a13f05a68732c77298c129);
             
     
-            var circle_marker_6cd930589074a60fb5cdca6c95f2b019 = L.circleMarker(
+            var circle_marker_7d1ccc4cb2b0aec04cf7b2d0093a24ef = L.circleMarker(
                 [48.130618, 8.8902861],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_9b6b16e497083bae7269bcb7a38da2b0 = L.marker(
+            var marker_80b13cfe0055300f6d9a1d0eb519776f = L.marker(
                 [48.130618, 8.8902861],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_4cad880424db00ede6c512e97dc354db = L.divIcon({
+            var div_icon_c6f20a12d2a7a5d2c5b6f7e885cdcf5e = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Nusplingen IV\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -167,23 +166,23 @@
 });
         
     
-                marker_9b6b16e497083bae7269bcb7a38da2b0.setIcon(div_icon_4cad880424db00ede6c512e97dc354db);
+                marker_80b13cfe0055300f6d9a1d0eb519776f.setIcon(div_icon_c6f20a12d2a7a5d2c5b6f7e885cdcf5e);
             
     
-            var circle_marker_0988c14844f6dab015f7d43c0e156a02 = L.circleMarker(
+            var circle_marker_884144da9a463149dded8871aae3fd2c = L.circleMarker(
                 [48.3778073, 8.8847627],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_a7510d14b8ece4c89d4037b5524530c7 = L.marker(
+            var marker_f99874ecc0bf0f42f908062af9b3dbc4 = L.marker(
                 [48.3778073, 8.8847627],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_e2571ac3a4595a8620c6f7802a16babf = L.divIcon({
+            var div_icon_155eb3f58d81a6c3d7cc0d2a94941281 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Rangendingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -191,23 +190,23 @@
 });
         
     
-                marker_a7510d14b8ece4c89d4037b5524530c7.setIcon(div_icon_e2571ac3a4595a8620c6f7802a16babf);
+                marker_f99874ecc0bf0f42f908062af9b3dbc4.setIcon(div_icon_155eb3f58d81a6c3d7cc0d2a94941281);
             
     
-            var circle_marker_e5b4119db42259390ac2f11cddc94bff = L.circleMarker(
+            var circle_marker_b62d677ad9a287a4711a46366d3858b4 = L.circleMarker(
                 [48.2401872, 8.7716219],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_006e5f765b88f2dc3177fffd54520966 = L.marker(
+            var marker_e1863c1ec8f4f53d244415270fc5ad91 = L.marker(
                 [48.2401872, 8.7716219],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_131c6c2d985363b9547c9e9f80b9bb75 = L.divIcon({
+            var div_icon_353894e10e3039def06e275e37299a5a = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Dormettingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -215,23 +214,23 @@
 });
         
     
-                marker_006e5f765b88f2dc3177fffd54520966.setIcon(div_icon_131c6c2d985363b9547c9e9f80b9bb75);
+                marker_e1863c1ec8f4f53d244415270fc5ad91.setIcon(div_icon_353894e10e3039def06e275e37299a5a);
             
     
-            var circle_marker_8f8c5f856160a8ab6664378ce7f4a580 = L.circleMarker(
+            var circle_marker_f3de0871ff90f80cf04258209ade48cd = L.circleMarker(
                 [48.3549089, 8.9616219],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_2148121b730cfca3bfd564e9511c2a1d = L.marker(
+            var marker_67d16fe374a4cb1d2d1513205989187f = L.marker(
                 [48.3549089, 8.9616219],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_e96bd93ee6533821c947514ad5da8d9d = L.divIcon({
+            var div_icon_94bfefb23587d57a6b5bd36f912e4237 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Hechingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -239,23 +238,23 @@
 });
         
     
-                marker_2148121b730cfca3bfd564e9511c2a1d.setIcon(div_icon_e96bd93ee6533821c947514ad5da8d9d);
+                marker_67d16fe374a4cb1d2d1513205989187f.setIcon(div_icon_94bfefb23587d57a6b5bd36f912e4237);
             
     
-            var circle_marker_087b954060bc7d0f80f6b394ab5db168 = L.circleMarker(
+            var circle_marker_ccf4cd74f5a16dae61a368a33e72b328 = L.circleMarker(
                 [48.2907415, 9.111071],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_d559b7581a89ca0e6364f07d762d4cdf = L.marker(
+            var marker_f7e9f298a6e68ae12cd93bf9b93c88db = L.marker(
                 [48.2907415, 9.111071],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_3cbfd82d5a1d47f035b7a1e567ad9fde = L.divIcon({
+            var div_icon_00a73dd185190ec520fe705603a4b437 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Burladingen III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -263,23 +262,23 @@
 });
         
     
-                marker_d559b7581a89ca0e6364f07d762d4cdf.setIcon(div_icon_3cbfd82d5a1d47f035b7a1e567ad9fde);
+                marker_f7e9f298a6e68ae12cd93bf9b93c88db.setIcon(div_icon_00a73dd185190ec520fe705603a4b437);
             
     
-            var circle_marker_9a2133856df655a5f46697091b46e21d = L.circleMarker(
+            var circle_marker_f22db418b3ecd70ca81b70010e681e68 = L.circleMarker(
                 [48.2581009, 8.8468472],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_ffdf7de79972b5825f2561c99a737756 = L.marker(
+            var marker_d1bd46b6af672e3331d990d47b4e8e01 = L.marker(
                 [48.2581009, 8.8468472],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_07699f27f7a425c9190ea4c1b434b077 = L.divIcon({
+            var div_icon_6e3f3e83d8f009ecb4dfaab8938adcb8 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Endingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -287,23 +286,23 @@
 });
         
     
-                marker_ffdf7de79972b5825f2561c99a737756.setIcon(div_icon_07699f27f7a425c9190ea4c1b434b077);
+                marker_d1bd46b6af672e3331d990d47b4e8e01.setIcon(div_icon_6e3f3e83d8f009ecb4dfaab8938adcb8);
             
     
-            var circle_marker_029141cc449bbe0b90ca2a7eb950317e = L.circleMarker(
+            var circle_marker_e17d1b892ace6fcd567fddca114ca654 = L.circleMarker(
                 [48.28441, 8.7171882],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var marker_5d3f2c7335813af0a7901fce0fec9eb0 = L.marker(
+            var marker_2003944ebddaa06e37a751d120c345f7 = L.marker(
                 [48.28441, 8.7171882],
                 {
 }
-            ).addTo(feature_group_8ffe5d97478fd48ade0abd7df3fae241);
+            ).addTo(feature_group_2e8b005475f5b88626af3ec17143659c);
         
     
-            var div_icon_a047b5a8f37e28b312c34a5b235939a4 = L.divIcon({
+            var div_icon_9b60eda75e9ffc9b87589aaeb3b9a1f2 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSV Rosenfeld II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -311,84 +310,32 @@
 });
         
     
-                marker_5d3f2c7335813af0a7901fce0fec9eb0.setIcon(div_icon_a047b5a8f37e28b312c34a5b235939a4);
+                marker_2003944ebddaa06e37a751d120c345f7.setIcon(div_icon_9b60eda75e9ffc9b87589aaeb3b9a1f2);
             
     
-            feature_group_8ffe5d97478fd48ade0abd7df3fae241.addTo(map_9562da5901cd95863294941ec7c1076d);
+            feature_group_2e8b005475f5b88626af3ec17143659c.addTo(map_5d9493674d0eae115b4c235514cb4a0b);
         
     
-            var layer_control_650a5915a41c1d3d82454684df23c85a_layers = {
-                base_layers : {
-                    "openstreetmap" : tile_layer_c3a50b362dcf7e5f105b204c3c043cd2,
-                },
-                overlays :  {
-                    "Gruppe 1" : feature_group_8ffe5d97478fd48ade0abd7df3fae241,
-                    "Gruppe 2" : feature_group_3f99e3224be7a0c7956fd435b4bd219a,
-                    "Gruppe 3" : feature_group_eeeef934227d5d6514dee98b93851d4c,
-                },
-            };
-            let layer_control_650a5915a41c1d3d82454684df23c85a = L.control.layers(
-                layer_control_650a5915a41c1d3d82454684df23c85a_layers.base_layers,
-                layer_control_650a5915a41c1d3d82454684df23c85a_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": false,
-  "autoZIndex": true,
-}
-            ).addTo(map_9562da5901cd95863294941ec7c1076d);
-
-        
-    
-            tile_layer_c3a50b362dcf7e5f105b204c3c043cd2.addTo(map_9562da5901cd95863294941ec7c1076d);
-        
-    
-                marker_e2b255fbe1a2a3b79416efa1fbfe8bd8.setIcon(div_icon_c572196dabecae6ee6d17b4edb2abb40);
-            
-    
-                marker_9b6b16e497083bae7269bcb7a38da2b0.setIcon(div_icon_4cad880424db00ede6c512e97dc354db);
-            
-    
-                marker_a7510d14b8ece4c89d4037b5524530c7.setIcon(div_icon_e2571ac3a4595a8620c6f7802a16babf);
-            
-    
-                marker_006e5f765b88f2dc3177fffd54520966.setIcon(div_icon_131c6c2d985363b9547c9e9f80b9bb75);
-            
-    
-                marker_2148121b730cfca3bfd564e9511c2a1d.setIcon(div_icon_e96bd93ee6533821c947514ad5da8d9d);
-            
-    
-                marker_d559b7581a89ca0e6364f07d762d4cdf.setIcon(div_icon_3cbfd82d5a1d47f035b7a1e567ad9fde);
-            
-    
-                marker_ffdf7de79972b5825f2561c99a737756.setIcon(div_icon_07699f27f7a425c9190ea4c1b434b077);
-            
-    
-                marker_5d3f2c7335813af0a7901fce0fec9eb0.setIcon(div_icon_a047b5a8f37e28b312c34a5b235939a4);
-            
-    
-            feature_group_8ffe5d97478fd48ade0abd7df3fae241.addTo(map_9562da5901cd95863294941ec7c1076d);
-        
-    
-            var feature_group_3f99e3224be7a0c7956fd435b4bd219a = L.featureGroup(
+            var feature_group_c064ab8b5a6763021a48110adef16e7c = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_9b3a4c709282d543600bc5905860ec14 = L.circleMarker(
+            var circle_marker_7a68f14fa564a2e6d725e5a58959ba7e = L.circleMarker(
                 [48.4096527, 9.0601211],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_b1aa8621e24215e6531f56ba6cf053ca = L.marker(
+            var marker_48ebf7f359c21277ccf8d676acb85674 = L.marker(
                 [48.4096527, 9.0601211],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_c1f258d2556fb789d6797b1dc25cef58 = L.divIcon({
+            var div_icon_abad73e7c1df48b14f370d32427a33bb = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSpVgg M\u00f6ssingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -396,23 +343,23 @@
 });
         
     
-                marker_b1aa8621e24215e6531f56ba6cf053ca.setIcon(div_icon_c1f258d2556fb789d6797b1dc25cef58);
+                marker_48ebf7f359c21277ccf8d676acb85674.setIcon(div_icon_abad73e7c1df48b14f370d32427a33bb);
             
     
-            var circle_marker_71b6ac0a541d174b9389e1fe9c841848 = L.circleMarker(
+            var circle_marker_873d32714bc6d8663b848aa3834cd2a9 = L.circleMarker(
                 [48.4680585, 8.9287914],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_77be573b4b4ec5a49ccdfa079bb1812a = L.marker(
+            var marker_9887ae297bf65cdbecf16d73cb722f84 = L.marker(
                 [48.4680585, 8.9287914],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_dd4993cf598224b3cae217206951a9ac = L.divIcon({
+            var div_icon_1f8e49ba8a512543060cd92991fb144e = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Rottenburg III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -420,23 +367,23 @@
 });
         
     
-                marker_77be573b4b4ec5a49ccdfa079bb1812a.setIcon(div_icon_dd4993cf598224b3cae217206951a9ac);
+                marker_9887ae297bf65cdbecf16d73cb722f84.setIcon(div_icon_1f8e49ba8a512543060cd92991fb144e);
             
     
-            var circle_marker_db23228f34ac20d17abe9a225e480299 = L.circleMarker(
+            var circle_marker_d5fa43a27897595f7a5a77b143b17680 = L.circleMarker(
                 [48.4916585, 8.8156384],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_b759c4fc7e03780116b48d6d44e65263 = L.marker(
+            var marker_9f90712be5f65420271b17784e2645fe = L.marker(
                 [48.4916585, 8.8156384],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_2f0dc65b01255af8de6a56a8c395fc3e = L.divIcon({
+            var div_icon_3b2711fa609a7cf4dcfa391b2de385d0 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Ergenzingen III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -444,23 +391,23 @@
 });
         
     
-                marker_b759c4fc7e03780116b48d6d44e65263.setIcon(div_icon_2f0dc65b01255af8de6a56a8c395fc3e);
+                marker_9f90712be5f65420271b17784e2645fe.setIcon(div_icon_3b2711fa609a7cf4dcfa391b2de385d0);
             
     
-            var circle_marker_00dde2f06fabb35ff279d115bfb919f8 = L.circleMarker(
+            var circle_marker_ebea61d1f20843ea1d282996fc0fff98 = L.circleMarker(
                 [48.501661, 9.0566549],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_6eaa19c9a1505d7afd56bfcc11968631 = L.marker(
+            var marker_643c68fc64635e2f55f07d269dd8e80f = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_4a66dfc51ba1c0339ccbca556bb80b6b = L.divIcon({
+            var div_icon_346e48ddb2980017071a5105629e35a4 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Derendingen IV\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -468,23 +415,23 @@
 });
         
     
-                marker_6eaa19c9a1505d7afd56bfcc11968631.setIcon(div_icon_4a66dfc51ba1c0339ccbca556bb80b6b);
+                marker_643c68fc64635e2f55f07d269dd8e80f.setIcon(div_icon_346e48ddb2980017071a5105629e35a4);
             
     
-            var circle_marker_ac788f89e0c63933c75382747b1080a0 = L.circleMarker(
+            var circle_marker_3f9b75fcb1c463b682def61eda15dcdb = L.circleMarker(
                 [48.5219805, 9.0838472],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_67e7d369b0d0ac8e5bcfae7ae0a382be = L.marker(
+            var marker_238178aef489b91a1d646a72e83912d9 = L.marker(
                 [48.5219805, 9.0838472],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_07676f941f51f029da29ee2424be18a3 = L.divIcon({
+            var div_icon_f074ddf6b02834afb9f918270687190d = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eEK Lustnau\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -492,23 +439,23 @@
 });
         
     
-                marker_67e7d369b0d0ac8e5bcfae7ae0a382be.setIcon(div_icon_07676f941f51f029da29ee2424be18a3);
+                marker_238178aef489b91a1d646a72e83912d9.setIcon(div_icon_f074ddf6b02834afb9f918270687190d);
             
     
-            var circle_marker_2fd3f448e293f1bee0171a016ce883df = L.circleMarker(
+            var circle_marker_aee8be2fed677e385009e5843714fb56 = L.circleMarker(
                 [48.4321451, 9.1448916],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_eb47c8ca693623c43ce33950ccc16e3e = L.marker(
+            var marker_e36af658eb21076969227354cf6bd0cb = L.marker(
                 [48.4321451, 9.1448916],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_b9d9d870fe4e0835ceb8e90b803e9791 = L.divIcon({
+            var div_icon_c1a7c072131d1f0d4beff2aedd0fe532 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTG G\u00f6nningen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -516,23 +463,23 @@
 });
         
     
-                marker_eb47c8ca693623c43ce33950ccc16e3e.setIcon(div_icon_b9d9d870fe4e0835ceb8e90b803e9791);
+                marker_e36af658eb21076969227354cf6bd0cb.setIcon(div_icon_c1a7c072131d1f0d4beff2aedd0fe532);
             
     
-            var circle_marker_6c987ef354edc1ac2bd81427e0d69ae6 = L.circleMarker(
+            var circle_marker_5391708a0a719eec39af0cb2827d8588 = L.circleMarker(
                 [48.4772597, 8.9737295],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_8a0e1c062231d13a8724bbc1b16b483d = L.marker(
+            var marker_1e9e0d6bd7770a4d42397756089355e5 = L.marker(
                 [48.4772597, 8.9737295],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_7d26439f9f5021ac8534a97d1c6f7c0f = L.divIcon({
+            var div_icon_9c135f4aaafd07092b749481c7bd309b = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Kiebingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -540,23 +487,23 @@
 });
         
     
-                marker_8a0e1c062231d13a8724bbc1b16b483d.setIcon(div_icon_7d26439f9f5021ac8534a97d1c6f7c0f);
+                marker_1e9e0d6bd7770a4d42397756089355e5.setIcon(div_icon_9c135f4aaafd07092b749481c7bd309b);
             
     
-            var circle_marker_11b0948b4816a8df280ca5dc71ab228d = L.circleMarker(
+            var circle_marker_9d146dcd3cd660150a49022408e3dd61 = L.circleMarker(
                 [48.4900747, 9.0351542],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_cfb681dc943f3659d01423053a92dab1 = L.marker(
+            var marker_529f988e0c4fec02b59fb876cb1e85a2 = L.marker(
                 [48.4900747, 9.0351542],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_313672a523b38d66ab0a221f0d3af457 = L.divIcon({
+            var div_icon_7dc03fc7c49c8e351d9daaf740fb489a = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSV Weilheim III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -564,23 +511,23 @@
 });
         
     
-                marker_cfb681dc943f3659d01423053a92dab1.setIcon(div_icon_313672a523b38d66ab0a221f0d3af457);
+                marker_529f988e0c4fec02b59fb876cb1e85a2.setIcon(div_icon_7dc03fc7c49c8e351d9daaf740fb489a);
             
     
-            var circle_marker_cec7569135b1c8fef6f7e1fd7438ee1c = L.circleMarker(
+            var circle_marker_9a963d06dcd5d8460bffcfeb92c92e70 = L.circleMarker(
                 [48.3982628, 9.0335588],
                 {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var marker_0fae99bd1a9f38e5e1bd78cb8a047e86 = L.marker(
+            var marker_69d6873b51d6b84081f476c82a73ca20 = L.marker(
                 [48.3982628, 9.0335588],
                 {
 }
-            ).addTo(feature_group_3f99e3224be7a0c7956fd435b4bd219a);
+            ).addTo(feature_group_c064ab8b5a6763021a48110adef16e7c);
         
     
-            var div_icon_5edb2e76df4d51c8622d0da5dec07694 = L.divIcon({
+            var div_icon_296490c91f3f0c1a8d16a1a4efab2dae = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Belsen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -588,114 +535,32 @@
 });
         
     
-                marker_0fae99bd1a9f38e5e1bd78cb8a047e86.setIcon(div_icon_5edb2e76df4d51c8622d0da5dec07694);
+                marker_69d6873b51d6b84081f476c82a73ca20.setIcon(div_icon_296490c91f3f0c1a8d16a1a4efab2dae);
             
     
-            feature_group_3f99e3224be7a0c7956fd435b4bd219a.addTo(map_9562da5901cd95863294941ec7c1076d);
+            feature_group_c064ab8b5a6763021a48110adef16e7c.addTo(map_5d9493674d0eae115b4c235514cb4a0b);
         
     
-            var layer_control_952fe701b1f0b858d5c0e230cc74b1f5_layers = {
-                base_layers : {
-                    "openstreetmap" : tile_layer_c3a50b362dcf7e5f105b204c3c043cd2,
-                },
-                overlays :  {
-                    "Gruppe 1" : feature_group_8ffe5d97478fd48ade0abd7df3fae241,
-                    "Gruppe 2" : feature_group_3f99e3224be7a0c7956fd435b4bd219a,
-                    "Gruppe 3" : feature_group_eeeef934227d5d6514dee98b93851d4c,
-                },
-            };
-            let layer_control_952fe701b1f0b858d5c0e230cc74b1f5 = L.control.layers(
-                layer_control_952fe701b1f0b858d5c0e230cc74b1f5_layers.base_layers,
-                layer_control_952fe701b1f0b858d5c0e230cc74b1f5_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": false,
-  "autoZIndex": true,
-}
-            ).addTo(map_9562da5901cd95863294941ec7c1076d);
-
-        
-    
-            tile_layer_c3a50b362dcf7e5f105b204c3c043cd2.addTo(map_9562da5901cd95863294941ec7c1076d);
-        
-    
-                marker_e2b255fbe1a2a3b79416efa1fbfe8bd8.setIcon(div_icon_c572196dabecae6ee6d17b4edb2abb40);
-            
-    
-                marker_9b6b16e497083bae7269bcb7a38da2b0.setIcon(div_icon_4cad880424db00ede6c512e97dc354db);
-            
-    
-                marker_a7510d14b8ece4c89d4037b5524530c7.setIcon(div_icon_e2571ac3a4595a8620c6f7802a16babf);
-            
-    
-                marker_006e5f765b88f2dc3177fffd54520966.setIcon(div_icon_131c6c2d985363b9547c9e9f80b9bb75);
-            
-    
-                marker_2148121b730cfca3bfd564e9511c2a1d.setIcon(div_icon_e96bd93ee6533821c947514ad5da8d9d);
-            
-    
-                marker_d559b7581a89ca0e6364f07d762d4cdf.setIcon(div_icon_3cbfd82d5a1d47f035b7a1e567ad9fde);
-            
-    
-                marker_ffdf7de79972b5825f2561c99a737756.setIcon(div_icon_07699f27f7a425c9190ea4c1b434b077);
-            
-    
-                marker_5d3f2c7335813af0a7901fce0fec9eb0.setIcon(div_icon_a047b5a8f37e28b312c34a5b235939a4);
-            
-    
-            feature_group_8ffe5d97478fd48ade0abd7df3fae241.addTo(map_9562da5901cd95863294941ec7c1076d);
-        
-    
-                marker_b1aa8621e24215e6531f56ba6cf053ca.setIcon(div_icon_c1f258d2556fb789d6797b1dc25cef58);
-            
-    
-                marker_77be573b4b4ec5a49ccdfa079bb1812a.setIcon(div_icon_dd4993cf598224b3cae217206951a9ac);
-            
-    
-                marker_b759c4fc7e03780116b48d6d44e65263.setIcon(div_icon_2f0dc65b01255af8de6a56a8c395fc3e);
-            
-    
-                marker_6eaa19c9a1505d7afd56bfcc11968631.setIcon(div_icon_4a66dfc51ba1c0339ccbca556bb80b6b);
-            
-    
-                marker_67e7d369b0d0ac8e5bcfae7ae0a382be.setIcon(div_icon_07676f941f51f029da29ee2424be18a3);
-            
-    
-                marker_eb47c8ca693623c43ce33950ccc16e3e.setIcon(div_icon_b9d9d870fe4e0835ceb8e90b803e9791);
-            
-    
-                marker_8a0e1c062231d13a8724bbc1b16b483d.setIcon(div_icon_7d26439f9f5021ac8534a97d1c6f7c0f);
-            
-    
-                marker_cfb681dc943f3659d01423053a92dab1.setIcon(div_icon_313672a523b38d66ab0a221f0d3af457);
-            
-    
-                marker_0fae99bd1a9f38e5e1bd78cb8a047e86.setIcon(div_icon_5edb2e76df4d51c8622d0da5dec07694);
-            
-    
-            feature_group_3f99e3224be7a0c7956fd435b4bd219a.addTo(map_9562da5901cd95863294941ec7c1076d);
-        
-    
-            var feature_group_eeeef934227d5d6514dee98b93851d4c = L.featureGroup(
+            var feature_group_debb5ccd400a08f932f3f2fc73a4ee07 = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_9e28e518531e4a9f52d7c8b11c18520f = L.circleMarker(
+            var circle_marker_b7d3d1e79b5f1486dc89af61540f3e80 = L.circleMarker(
                 [48.5400109, 9.2280995],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_7e9a9253ef15695275ae9ec99437702a = L.marker(
+            var marker_b2ea612673ef67dce31080a3fade53fb = L.marker(
                 [48.5400109, 9.2280995],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_213b749089e87268365e6f1848704730 = L.divIcon({
+            var div_icon_963dd7f9fe5f5aa938494bf3855b4702 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTV Reicheneck\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -703,23 +568,23 @@
 });
         
     
-                marker_7e9a9253ef15695275ae9ec99437702a.setIcon(div_icon_213b749089e87268365e6f1848704730);
+                marker_b2ea612673ef67dce31080a3fade53fb.setIcon(div_icon_963dd7f9fe5f5aa938494bf3855b4702);
             
     
-            var circle_marker_6a0db1f5b2889349cdaea04491aae75a = L.circleMarker(
+            var circle_marker_0d772e883509e28dea382b6851165085 = L.circleMarker(
                 [48.5651237, 9.2285889],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_9738319f2ed87f54d3f3d4e5775c2a26 = L.marker(
+            var marker_8e407cfbceec5fa7a6829e552484cebf = L.marker(
                 [48.5651237, 9.2285889],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_79ae22684076380baf7db0cbf9dba6ab = L.divIcon({
+            var div_icon_3a1598b254298ed7ab4d5297e66d75bb = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eFC Mittelstadt II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -727,23 +592,23 @@
 });
         
     
-                marker_9738319f2ed87f54d3f3d4e5775c2a26.setIcon(div_icon_79ae22684076380baf7db0cbf9dba6ab);
+                marker_8e407cfbceec5fa7a6829e552484cebf.setIcon(div_icon_3a1598b254298ed7ab4d5297e66d75bb);
             
     
-            var circle_marker_34e0242add72419850caf3b65a85f645 = L.circleMarker(
+            var circle_marker_cd687bffa3658b84009e4d8fddde7709 = L.circleMarker(
                 [48.5421989, 9.2866566],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_c3d9802caddb19d10ce8a4d61154a4f5 = L.marker(
+            var marker_17d7be21b0651a559c46b442a37118af = L.marker(
                 [48.5421989, 9.2866566],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_81338deb7056e9c89976a150dbbc0556 = L.divIcon({
+            var div_icon_bd469310187b93b973e15146d6538d64 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTB Metzingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -751,23 +616,23 @@
 });
         
     
-                marker_c3d9802caddb19d10ce8a4d61154a4f5.setIcon(div_icon_81338deb7056e9c89976a150dbbc0556);
+                marker_17d7be21b0651a559c46b442a37118af.setIcon(div_icon_bd469310187b93b973e15146d6538d64);
             
     
-            var circle_marker_a1485549dccbd5c50fec179f8e8a4774 = L.circleMarker(
+            var circle_marker_8286ae7b9d7e3b2cd5bc7f373f20313f = L.circleMarker(
                 [48.5308407, 9.1895725],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_aeb2e6c0239cb8c0944501fe8514b365 = L.marker(
+            var marker_bd00cf23baf964d084f91095dfb6b0ca = L.marker(
                 [48.5308407, 9.1895725],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_66aa6aee3aaf18f2de5384f09b86a23f = L.divIcon({
+            var div_icon_a88067cecf3e994f019303cc0655e8e9 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Sickenhausen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -775,23 +640,23 @@
 });
         
     
-                marker_aeb2e6c0239cb8c0944501fe8514b365.setIcon(div_icon_66aa6aee3aaf18f2de5384f09b86a23f);
+                marker_bd00cf23baf964d084f91095dfb6b0ca.setIcon(div_icon_a88067cecf3e994f019303cc0655e8e9);
             
     
-            var circle_marker_4b6b3a5296a72801efbb23525c9f3829 = L.circleMarker(
+            var circle_marker_27e3656f5e5d6cca37a2ebeb5a77f39f = L.circleMarker(
                 [48.5307208, 9.312648],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_e971eda06ee564d54357c7564c745bee = L.marker(
+            var marker_f09dba5f9a04e764e04176ad48f860a0 = L.marker(
                 [48.5307208, 9.312648],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_80cc0f417f36ad6ee951ccbbed0f466b = L.divIcon({
+            var div_icon_cf5a1ae6e7b98221c54f0ff75eaf92e6 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Neuhausen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -799,23 +664,23 @@
 });
         
     
-                marker_e971eda06ee564d54357c7564c745bee.setIcon(div_icon_80cc0f417f36ad6ee951ccbbed0f466b);
+                marker_f09dba5f9a04e764e04176ad48f860a0.setIcon(div_icon_cf5a1ae6e7b98221c54f0ff75eaf92e6);
             
     
-            var circle_marker_3744dddf331964ad1e2a7dec4dba4220 = L.circleMarker(
+            var circle_marker_05f539ea4acc166fc23d44b757866972 = L.circleMarker(
                 [48.5296453, 9.20027],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_0aebb210f08fff4c9f1374dc04170c01 = L.marker(
+            var marker_a7dcaf63fddb6afd184063bfb68a9061 = L.marker(
                 [48.5296453, 9.20027],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_3f7a7d439110c113f70d2a22a074075c = L.divIcon({
+            var div_icon_a85753d7d8993941e8acb14063881867 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSV Rommelsbach III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -823,23 +688,23 @@
 });
         
     
-                marker_0aebb210f08fff4c9f1374dc04170c01.setIcon(div_icon_3f7a7d439110c113f70d2a22a074075c);
+                marker_a7dcaf63fddb6afd184063bfb68a9061.setIcon(div_icon_a85753d7d8993941e8acb14063881867);
             
     
-            var circle_marker_459d07eee868266f1097d1fee07cb5dc = L.circleMarker(
+            var circle_marker_f0347698840d9424d4c4cdf331d367cc = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_16f963579f0b1499bb340ea1e5e0ca9a = L.marker(
+            var marker_9dbe5e9b9257c5ae49a4bf616d5b55e8 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_82fd949e53998710145bf01257fa6587 = L.divIcon({
+            var div_icon_b4430bb0cfe42f7497c7b4b5021f190c = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen IV\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -847,23 +712,23 @@
 });
         
     
-                marker_16f963579f0b1499bb340ea1e5e0ca9a.setIcon(div_icon_82fd949e53998710145bf01257fa6587);
+                marker_9dbe5e9b9257c5ae49a4bf616d5b55e8.setIcon(div_icon_b4430bb0cfe42f7497c7b4b5021f190c);
             
     
-            var circle_marker_30dec4852ed98a66e14349869dd8970a = L.circleMarker(
+            var circle_marker_1962f166d44a3b3249336f5edaca1d7d = L.circleMarker(
                 [48.539397, 9.2926588],
                 {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var marker_b38bab5bd98ba3fa5858fab4941506fd = L.marker(
+            var marker_00211cdec1f940a26484dff2347b65f4 = L.marker(
                 [48.539397, 9.2926588],
                 {
 }
-            ).addTo(feature_group_eeeef934227d5d6514dee98b93851d4c);
+            ).addTo(feature_group_debb5ccd400a08f932f3f2fc73a4ee07);
         
     
-            var div_icon_e22f26c2ba2ab9cc699c36f884bc2c58 = L.divIcon({
+            var div_icon_1583f92c5ea2c089862b140402ba46d2 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTuS Metzingen III\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -871,31 +736,31 @@
 });
         
     
-                marker_b38bab5bd98ba3fa5858fab4941506fd.setIcon(div_icon_e22f26c2ba2ab9cc699c36f884bc2c58);
+                marker_00211cdec1f940a26484dff2347b65f4.setIcon(div_icon_1583f92c5ea2c089862b140402ba46d2);
             
     
-            feature_group_eeeef934227d5d6514dee98b93851d4c.addTo(map_9562da5901cd95863294941ec7c1076d);
+            feature_group_debb5ccd400a08f932f3f2fc73a4ee07.addTo(map_5d9493674d0eae115b4c235514cb4a0b);
         
     
-            var layer_control_dca8ea21c15e3dc76eeaecc74b407ae5_layers = {
+            var layer_control_20e78e3c8b9defc17d20ca27bdfc68e6_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_c3a50b362dcf7e5f105b204c3c043cd2,
+                    "openstreetmap" : tile_layer_8ea215c3f94e1818139f95772ac4fd92,
                 },
                 overlays :  {
-                    "Gruppe 1" : feature_group_8ffe5d97478fd48ade0abd7df3fae241,
-                    "Gruppe 2" : feature_group_3f99e3224be7a0c7956fd435b4bd219a,
-                    "Gruppe 3" : feature_group_eeeef934227d5d6514dee98b93851d4c,
+                    "Gruppe 1" : feature_group_2e8b005475f5b88626af3ec17143659c,
+                    "Gruppe 2" : feature_group_c064ab8b5a6763021a48110adef16e7c,
+                    "Gruppe 3" : feature_group_debb5ccd400a08f932f3f2fc73a4ee07,
                 },
             };
-            let layer_control_dca8ea21c15e3dc76eeaecc74b407ae5 = L.control.layers(
-                layer_control_dca8ea21c15e3dc76eeaecc74b407ae5_layers.base_layers,
-                layer_control_dca8ea21c15e3dc76eeaecc74b407ae5_layers.overlays,
+            let layer_control_20e78e3c8b9defc17d20ca27bdfc68e6 = L.control.layers(
+                layer_control_20e78e3c8b9defc17d20ca27bdfc68e6_layers.base_layers,
+                layer_control_20e78e3c8b9defc17d20ca27bdfc68e6_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_9562da5901cd95863294941ec7c1076d);
+            ).addTo(map_5d9493674d0eae115b4c235514cb4a0b);
 
         
 </script>

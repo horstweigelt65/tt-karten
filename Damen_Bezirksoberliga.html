@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_31b74667227361866f48b453c2e371a4 {
+                #map_c671c9973e94294afafc8d017670058b {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,20 +54,31 @@
 <body>
     
     
-        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-            <div style='font-weight:700; margin-bottom:6px;'>Damen - Bezirksoberliga</div>
-            
-        </div>
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+        <div style='font-weight:700; margin-bottom:6px;'>Damen - Bezirksoberliga</div>
         
+    </div>
     
-            <div class="folium-map" id="map_31b74667227361866f48b453c2e371a4" ></div>
+    
+    <script>
+    // wait a bit for Leaflet controls to be created, then check overlay inputs
+    setTimeout(function(){
+        try{
+            var overlays = document.querySelectorAll('.leaflet-control-layers-overlays input[type=checkbox]');
+            overlays.forEach(function(cb){ if(!cb.checked){ cb.click(); } });
+        }catch(e){ console && console.log && console.log('enable_overlays_js error', e); }
+    }, 250);
+    </script>
+    
+    
+            <div class="folium-map" id="map_c671c9973e94294afafc8d017670058b" ></div>
         
 </body>
 <script>
     
     
-            var map_31b74667227361866f48b453c2e371a4 = L.map(
-                "map_31b74667227361866f48b453c2e371a4",
+            var map_c671c9973e94294afafc8d017670058b = L.map(
+                "map_c671c9973e94294afafc8d017670058b",
                 {
                     center: [48.501661, 9.0566549],
                     crs: L.CRS.EPSG3857,
@@ -84,7 +95,7 @@
 
         
     
-            var tile_layer_bf44288323ad97bafcf4336ad2596710 = L.tileLayer(
+            var tile_layer_75e31233df90ec7da4ecc49d9eca42a3 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -101,29 +112,29 @@
             );
         
     
-            tile_layer_bf44288323ad97bafcf4336ad2596710.addTo(map_31b74667227361866f48b453c2e371a4);
+            tile_layer_75e31233df90ec7da4ecc49d9eca42a3.addTo(map_c671c9973e94294afafc8d017670058b);
         
     
-            var feature_group_af69bece5a78f5fa11fa5e9ecd36382f = L.featureGroup(
+            var feature_group_f70c37c1053604e2133810fe6bae38e1 = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_44a2c83e395da712d24529f666029eb9 = L.circleMarker(
+            var circle_marker_302e7f39a5af541f9ac298d887e3695d = L.circleMarker(
                 [48.501661, 9.0566549],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_af69bece5a78f5fa11fa5e9ecd36382f);
+            ).addTo(feature_group_f70c37c1053604e2133810fe6bae38e1);
         
     
-            var marker_45a96dd71acb97a6efdfabf73c3b42ee = L.marker(
+            var marker_552cfb572df73dba9285f674768354ff = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_af69bece5a78f5fa11fa5e9ecd36382f);
+            ).addTo(feature_group_f70c37c1053604e2133810fe6bae38e1);
         
     
-            var div_icon_9ba459c7f7c3a482109ed7561d1d3ec4 = L.divIcon({
+            var div_icon_01445e1aac9e61be1b478f4721a5d357 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Derendingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -131,29 +142,29 @@
 });
         
     
-                marker_45a96dd71acb97a6efdfabf73c3b42ee.setIcon(div_icon_9ba459c7f7c3a482109ed7561d1d3ec4);
+                marker_552cfb572df73dba9285f674768354ff.setIcon(div_icon_01445e1aac9e61be1b478f4721a5d357);
             
     
-            feature_group_af69bece5a78f5fa11fa5e9ecd36382f.addTo(map_31b74667227361866f48b453c2e371a4);
+            feature_group_f70c37c1053604e2133810fe6bae38e1.addTo(map_c671c9973e94294afafc8d017670058b);
         
     
-            var layer_control_3bd85860ca039c388e729b3c97102481_layers = {
+            var layer_control_39307bd6e3c0d25d9eb08b9d6a08d57e_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_bf44288323ad97bafcf4336ad2596710,
+                    "openstreetmap" : tile_layer_75e31233df90ec7da4ecc49d9eca42a3,
                 },
                 overlays :  {
-                    "Alle" : feature_group_af69bece5a78f5fa11fa5e9ecd36382f,
+                    "Alle" : feature_group_f70c37c1053604e2133810fe6bae38e1,
                 },
             };
-            let layer_control_3bd85860ca039c388e729b3c97102481 = L.control.layers(
-                layer_control_3bd85860ca039c388e729b3c97102481_layers.base_layers,
-                layer_control_3bd85860ca039c388e729b3c97102481_layers.overlays,
+            let layer_control_39307bd6e3c0d25d9eb08b9d6a08d57e = L.control.layers(
+                layer_control_39307bd6e3c0d25d9eb08b9d6a08d57e_layers.base_layers,
+                layer_control_39307bd6e3c0d25d9eb08b9d6a08d57e_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_31b74667227361866f48b453c2e371a4);
+            ).addTo(map_c671c9973e94294afafc8d017670058b);
 
         
 </script>

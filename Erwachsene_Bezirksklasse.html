@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_8ee8d15e0904caa95f72b1d2dbf18fc5 {
+                #map_fd0a5a60efc4fd46ae0298835a3ef3f9 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,20 +54,31 @@
 <body>
     
     
-        <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
-            <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Bezirksklasse</div>
-            
-        </div>
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+        <div style='font-weight:700; margin-bottom:6px;'>Erwachsene - Bezirksklasse</div>
         
+    </div>
     
-            <div class="folium-map" id="map_8ee8d15e0904caa95f72b1d2dbf18fc5" ></div>
+    
+    <script>
+    // wait a bit for Leaflet controls to be created, then check overlay inputs
+    setTimeout(function(){
+        try{
+            var overlays = document.querySelectorAll('.leaflet-control-layers-overlays input[type=checkbox]');
+            overlays.forEach(function(cb){ if(!cb.checked){ cb.click(); } });
+        }catch(e){ console && console.log && console.log('enable_overlays_js error', e); }
+    }, 250);
+    </script>
+    
+    
+            <div class="folium-map" id="map_fd0a5a60efc4fd46ae0298835a3ef3f9" ></div>
         
 </body>
 <script>
     
     
-            var map_8ee8d15e0904caa95f72b1d2dbf18fc5 = L.map(
-                "map_8ee8d15e0904caa95f72b1d2dbf18fc5",
+            var map_fd0a5a60efc4fd46ae0298835a3ef3f9 = L.map(
+                "map_fd0a5a60efc4fd46ae0298835a3ef3f9",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -84,7 +95,7 @@
 
         
     
-            var tile_layer_d15ed3a61c44d1255f1da21f9c3b5a6f = L.tileLayer(
+            var tile_layer_9e8da208a2bb5e240dbaab8330155fad = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -101,29 +112,29 @@
             );
         
     
-            tile_layer_d15ed3a61c44d1255f1da21f9c3b5a6f.addTo(map_8ee8d15e0904caa95f72b1d2dbf18fc5);
+            tile_layer_9e8da208a2bb5e240dbaab8330155fad.addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
         
     
-            var feature_group_e58efd2085d0caa69d8b06eaa2e22fbb = L.featureGroup(
+            var feature_group_f8617d103ca01034e2a2b19176b36cc9 = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_d2671eb5c5a30608ac276d19102c1b5a = L.circleMarker(
+            var circle_marker_e4077b451edac775ec862c70d9bcaac7 = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_e58efd2085d0caa69d8b06eaa2e22fbb);
+            ).addTo(feature_group_f8617d103ca01034e2a2b19176b36cc9);
         
     
-            var marker_6cb3e2a229bad32fc5c5820c70610039 = L.marker(
+            var marker_2a85c40ed20fa50a6c21bbad730cd2d0 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_e58efd2085d0caa69d8b06eaa2e22fbb);
+            ).addTo(feature_group_f8617d103ca01034e2a2b19176b36cc9);
         
     
-            var div_icon_9e4248290ee4380af8e66e2c511927aa = L.divIcon({
+            var div_icon_c839edc14652cb1125e005f2b939d089 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -131,29 +142,29 @@
 });
         
     
-                marker_6cb3e2a229bad32fc5c5820c70610039.setIcon(div_icon_9e4248290ee4380af8e66e2c511927aa);
+                marker_2a85c40ed20fa50a6c21bbad730cd2d0.setIcon(div_icon_c839edc14652cb1125e005f2b939d089);
             
     
-            feature_group_e58efd2085d0caa69d8b06eaa2e22fbb.addTo(map_8ee8d15e0904caa95f72b1d2dbf18fc5);
+            feature_group_f8617d103ca01034e2a2b19176b36cc9.addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
         
     
-            var layer_control_d5a0732deb96a24fcdee4a7ec92c0fc0_layers = {
+            var layer_control_56567d934ada487ba3efc895cbc1ffec_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_d15ed3a61c44d1255f1da21f9c3b5a6f,
+                    "openstreetmap" : tile_layer_9e8da208a2bb5e240dbaab8330155fad,
                 },
                 overlays :  {
-                    "Gruppe 2" : feature_group_e58efd2085d0caa69d8b06eaa2e22fbb,
+                    "Gruppe 2" : feature_group_f8617d103ca01034e2a2b19176b36cc9,
                 },
             };
-            let layer_control_d5a0732deb96a24fcdee4a7ec92c0fc0 = L.control.layers(
-                layer_control_d5a0732deb96a24fcdee4a7ec92c0fc0_layers.base_layers,
-                layer_control_d5a0732deb96a24fcdee4a7ec92c0fc0_layers.overlays,
+            let layer_control_56567d934ada487ba3efc895cbc1ffec = L.control.layers(
+                layer_control_56567d934ada487ba3efc895cbc1ffec_layers.base_layers,
+                layer_control_56567d934ada487ba3efc895cbc1ffec_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_8ee8d15e0904caa95f72b1d2dbf18fc5);
+            ).addTo(map_fd0a5a60efc4fd46ae0298835a3ef3f9);
 
         
 </script>
