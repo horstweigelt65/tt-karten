@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_5a65ebaf674527cede7e36285ae2f284 {
+                #map_4d2788e1183ca09c2175859004cd1741 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,12 +54,18 @@
 <body>
     
     
-    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25); max-height:40vh; width:280px; overflow:auto;'>
         <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Erwachsene - Bezirksklasse</div>
         <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Gruppe 2' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Gruppe 2</label><ul class='group-marker-list' data-group='Gruppe 2' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
     </div>
     <style>
     .leaflet-control-layers { display: none !important; }
+    /* per-group marker lists scroll independently when long */
+    .group-marker-list { max-height:140px; overflow:auto; margin:4px 0 0 0; padding-left:16px; }
+    /* ensure legend scroll is comfortable on small screens */
+    @media (max-height:600px) {
+        #map_legend { max-height:50vh; }
+    }
     </style>
     
     
@@ -116,14 +122,14 @@
     </script>
     
     
-            <div class="folium-map" id="map_5a65ebaf674527cede7e36285ae2f284" ></div>
+            <div class="folium-map" id="map_4d2788e1183ca09c2175859004cd1741" ></div>
         
 </body>
 <script>
     
     
-            var map_5a65ebaf674527cede7e36285ae2f284 = L.map(
-                "map_5a65ebaf674527cede7e36285ae2f284",
+            var map_4d2788e1183ca09c2175859004cd1741 = L.map(
+                "map_4d2788e1183ca09c2175859004cd1741",
                 {
                     center: [48.489053, 9.2063572],
                     crs: L.CRS.EPSG3857,
@@ -140,7 +146,7 @@
 
         
     
-            var tile_layer_279d6c95b8784b26b804b8d355df6be8 = L.tileLayer(
+            var tile_layer_0ab1427efedb6b2bb175c51ffd90ea94 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -157,29 +163,29 @@
             );
         
     
-            tile_layer_279d6c95b8784b26b804b8d355df6be8.addTo(map_5a65ebaf674527cede7e36285ae2f284);
+            tile_layer_0ab1427efedb6b2bb175c51ffd90ea94.addTo(map_4d2788e1183ca09c2175859004cd1741);
         
     
-            var feature_group_c16dab002db33cbfda1a2aaf0008c62a = L.featureGroup(
+            var feature_group_3c45bf500f24c0cac912ccfc6db7f6fa = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_d69a2257911318ffd91342612979b29b = L.circleMarker(
+            var circle_marker_4c67d179892cdd24f0f4ce8a46fd6ef3 = L.circleMarker(
                 [48.489053, 9.2063572],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_c16dab002db33cbfda1a2aaf0008c62a);
+            ).addTo(feature_group_3c45bf500f24c0cac912ccfc6db7f6fa);
         
     
-            var marker_58187c0ae393a2bf254893c621b84a75 = L.marker(
+            var marker_78b43f8723d58fcce4afbc688ce8c021 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_c16dab002db33cbfda1a2aaf0008c62a);
+            ).addTo(feature_group_3c45bf500f24c0cac912ccfc6db7f6fa);
         
     
-            var div_icon_2fc77fad41ae2168f3e329318e96c438 = L.divIcon({
+            var div_icon_3403d4bcc9037ad34138731899e88818 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Reutlingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -187,29 +193,29 @@
 });
         
     
-                marker_58187c0ae393a2bf254893c621b84a75.setIcon(div_icon_2fc77fad41ae2168f3e329318e96c438);
+                marker_78b43f8723d58fcce4afbc688ce8c021.setIcon(div_icon_3403d4bcc9037ad34138731899e88818);
             
     
-            feature_group_c16dab002db33cbfda1a2aaf0008c62a.addTo(map_5a65ebaf674527cede7e36285ae2f284);
+            feature_group_3c45bf500f24c0cac912ccfc6db7f6fa.addTo(map_4d2788e1183ca09c2175859004cd1741);
         
     
-            var layer_control_d11af24947f6f1921d04b5111b7cacbd_layers = {
+            var layer_control_8e9229c2ea8f3d1318f8befe94486746_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_279d6c95b8784b26b804b8d355df6be8,
+                    "openstreetmap" : tile_layer_0ab1427efedb6b2bb175c51ffd90ea94,
                 },
                 overlays :  {
-                    "Gruppe 2" : feature_group_c16dab002db33cbfda1a2aaf0008c62a,
+                    "Gruppe 2" : feature_group_3c45bf500f24c0cac912ccfc6db7f6fa,
                 },
             };
-            let layer_control_d11af24947f6f1921d04b5111b7cacbd = L.control.layers(
-                layer_control_d11af24947f6f1921d04b5111b7cacbd_layers.base_layers,
-                layer_control_d11af24947f6f1921d04b5111b7cacbd_layers.overlays,
+            let layer_control_8e9229c2ea8f3d1318f8befe94486746 = L.control.layers(
+                layer_control_8e9229c2ea8f3d1318f8befe94486746_layers.base_layers,
+                layer_control_8e9229c2ea8f3d1318f8befe94486746_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_5a65ebaf674527cede7e36285ae2f284);
+            ).addTo(map_4d2788e1183ca09c2175859004cd1741);
 
         
 </script>

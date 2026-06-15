@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_1c1841d34a6130606891572250d01515 {
+                #map_d59334cbe04722e092ed015607cd4227 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,12 +54,18 @@
 <body>
     
     
-    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25);'>
+    <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25); max-height:40vh; width:280px; overflow:auto;'>
         <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Damen - Bezirksoberliga</div>
         <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Alle' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Alle</label><ul class='group-marker-list' data-group='Alle' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
     </div>
     <style>
     .leaflet-control-layers { display: none !important; }
+    /* per-group marker lists scroll independently when long */
+    .group-marker-list { max-height:140px; overflow:auto; margin:4px 0 0 0; padding-left:16px; }
+    /* ensure legend scroll is comfortable on small screens */
+    @media (max-height:600px) {
+        #map_legend { max-height:50vh; }
+    }
     </style>
     
     
@@ -116,14 +122,14 @@
     </script>
     
     
-            <div class="folium-map" id="map_1c1841d34a6130606891572250d01515" ></div>
+            <div class="folium-map" id="map_d59334cbe04722e092ed015607cd4227" ></div>
         
 </body>
 <script>
     
     
-            var map_1c1841d34a6130606891572250d01515 = L.map(
-                "map_1c1841d34a6130606891572250d01515",
+            var map_d59334cbe04722e092ed015607cd4227 = L.map(
+                "map_d59334cbe04722e092ed015607cd4227",
                 {
                     center: [48.501661, 9.0566549],
                     crs: L.CRS.EPSG3857,
@@ -140,7 +146,7 @@
 
         
     
-            var tile_layer_58f72c22e4047dcedc23e804a806ac2a = L.tileLayer(
+            var tile_layer_3c7671422f684edcd94f163837e58f56 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -157,29 +163,29 @@
             );
         
     
-            tile_layer_58f72c22e4047dcedc23e804a806ac2a.addTo(map_1c1841d34a6130606891572250d01515);
+            tile_layer_3c7671422f684edcd94f163837e58f56.addTo(map_d59334cbe04722e092ed015607cd4227);
         
     
-            var feature_group_72430d831d66dcbeabcd683c62184c01 = L.featureGroup(
+            var feature_group_09a8f77abf381dc392213369c1ed8577 = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_b3c6facac72a7ebe47071c8e3c51d99e = L.circleMarker(
+            var circle_marker_c1cb93d4e5e2069070e3925442bc3032 = L.circleMarker(
                 [48.501661, 9.0566549],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_72430d831d66dcbeabcd683c62184c01);
+            ).addTo(feature_group_09a8f77abf381dc392213369c1ed8577);
         
     
-            var marker_fc9f48edef3f016642fceffcec5c82db = L.marker(
+            var marker_b6d5916d3b3c6cdeaf43009924945c59 = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_72430d831d66dcbeabcd683c62184c01);
+            ).addTo(feature_group_09a8f77abf381dc392213369c1ed8577);
         
     
-            var div_icon_1c98a62177909dd17626f89c310f335a = L.divIcon({
+            var div_icon_22dc3c8826ac007fd25fbfc2291aae41 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTV Derendingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -187,29 +193,29 @@
 });
         
     
-                marker_fc9f48edef3f016642fceffcec5c82db.setIcon(div_icon_1c98a62177909dd17626f89c310f335a);
+                marker_b6d5916d3b3c6cdeaf43009924945c59.setIcon(div_icon_22dc3c8826ac007fd25fbfc2291aae41);
             
     
-            feature_group_72430d831d66dcbeabcd683c62184c01.addTo(map_1c1841d34a6130606891572250d01515);
+            feature_group_09a8f77abf381dc392213369c1ed8577.addTo(map_d59334cbe04722e092ed015607cd4227);
         
     
-            var layer_control_a221128e80cf0aa6821b235e0320d24f_layers = {
+            var layer_control_af316db36b2fd617d53efac8197865cd_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_58f72c22e4047dcedc23e804a806ac2a,
+                    "openstreetmap" : tile_layer_3c7671422f684edcd94f163837e58f56,
                 },
                 overlays :  {
-                    "Alle" : feature_group_72430d831d66dcbeabcd683c62184c01,
+                    "Alle" : feature_group_09a8f77abf381dc392213369c1ed8577,
                 },
             };
-            let layer_control_a221128e80cf0aa6821b235e0320d24f = L.control.layers(
-                layer_control_a221128e80cf0aa6821b235e0320d24f_layers.base_layers,
-                layer_control_a221128e80cf0aa6821b235e0320d24f_layers.overlays,
+            let layer_control_af316db36b2fd617d53efac8197865cd = L.control.layers(
+                layer_control_af316db36b2fd617d53efac8197865cd_layers.base_layers,
+                layer_control_af316db36b2fd617d53efac8197865cd_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_1c1841d34a6130606891572250d01515);
+            ).addTo(map_d59334cbe04722e092ed015607cd4227);
 
         
 </script>
