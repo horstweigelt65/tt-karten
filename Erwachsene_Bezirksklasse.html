@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_62294028166261300c2f95188ebdebf4 {
+                #map_fa7f518495a98b1b46bcf1937cacfa49 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -88,11 +88,8 @@
             });
         }
 
-        window.moveMarkerGroup = function(markerId, targetRawGroup) {
-            var targetDisplayName = 'Alle';
-            if (targetRawGroup !== 'Alle') {
-                targetDisplayName = 'Gruppe ' + targetRawGroup;
-            }
+        window.moveMarkerGroup = function(markerId, targetRawGroup, bundleId) {
+            var targetDisplayName = targetRawGroup === 'Alle' ? 'Alle' : 'Gruppe ' + targetRawGroup;
             
             var matchedItem = null;
             Object.keys(groupMarkerLabels).forEach(function(gName) {
@@ -109,8 +106,8 @@
             if (!groupMarkerLabels[targetDisplayName]) groupMarkerLabels[targetDisplayName] = [];
             groupMarkerLabels[targetDisplayName].push(matchedItem);
 
-            // Handle Leaflet Layer reassignment
-            var childLayer = subGroups[markerId];
+            // Layer-Zugehörigkeit der gesamten Koordinate anpassen
+            var childLayer = subGroups[bundleId];
             if (childLayer) {
                 Object.keys(fGroups).forEach(function(gKey) {
                     fGroups[gKey].removeLayer(childLayer);
@@ -120,8 +117,7 @@
                 }
             }
 
-            // --- FIXED: Direct CSS DOM Mutation ---
-            // Directly targets the circle's element ID and modifies the background-color rule
+            // Nur die Farbe des spezifisch ausgewählten Unter-Dots anpassen!
             var targetColor = colorMapping[targetRawGroup];
             var targetElement = document.getElementById('dot_' + markerId);
             if (targetElement) {
@@ -138,9 +134,9 @@
                     if (key.startsWith('feature_group_')) {
                         var fg = window[key];
                         if (fg.options && fg.options.name) {
-                            if (fg.options.name.startsWith('sub_marker_')) {
-                                var mId = fg.options.name.replace('sub_', '');
-                                subGroups[mId] = fg;
+                            if (fg.options.name.startsWith('sub_')) {
+                                var bId = fg.options.name.replace('sub_', '');
+                                subGroups[bId] = fg;
                             } else {
                                 var cleanKey = fg.options.name.replace('Gruppe ', '');
                                 fGroups[cleanKey] = fg;
@@ -173,16 +169,16 @@
         </script>
         
     
-            <div class="folium-map" id="map_62294028166261300c2f95188ebdebf4" ></div>
+            <div class="folium-map" id="map_fa7f518495a98b1b46bcf1937cacfa49" ></div>
         
 </body>
 <script>
     
     
-            var map_62294028166261300c2f95188ebdebf4 = L.map(
-                "map_62294028166261300c2f95188ebdebf4",
+            var map_fa7f518495a98b1b46bcf1937cacfa49 = L.map(
+                "map_fa7f518495a98b1b46bcf1937cacfa49",
                 {
-                    center: [48.426750866666666, 9.153863872222223],
+                    center: [48.43357819032258, 9.155754970967742],
                     crs: L.CRS.EPSG3857,
                     ...{
   "zoom": 10,
@@ -197,7 +193,7 @@
 
         
     
-            var tile_layer_7bc01efc56d169ed18531ceaf96254fc = L.tileLayer(
+            var tile_layer_c670e907ec20674241c3c01917668fdb = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -214,1649 +210,1429 @@
             );
         
     
-            tile_layer_7bc01efc56d169ed18531ceaf96254fc.addTo(map_62294028166261300c2f95188ebdebf4);
+            tile_layer_c670e907ec20674241c3c01917668fdb.addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
         
     
-            var feature_group_d2906238e136f0797b45932602083266 = L.featureGroup(
+            var feature_group_7a93508589aeeef1c323e6746c776e7e = L.featureGroup(
                 {
 }
             );
         
     
-            var feature_group_678a13edb8af93bfb90d21545ecdf4e9 = L.featureGroup(
+            var feature_group_3361303fa66629dfd6e4733cd9a0ef5a = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_4ac3a56043016c3d015b2a3ebb07c8ef = L.marker(
+            var marker_8877b36ee2381769f16f8d21626b152d = L.marker(
                 [48.2907415, 9.111071],
                 {
 }
-            ).addTo(feature_group_678a13edb8af93bfb90d21545ecdf4e9);
+            ).addTo(feature_group_3361303fa66629dfd6e4733cd9a0ef5a);
         
     
-            var div_icon_efebecad25323da8bd7087eb54adaf8d = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_0\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Burladingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_fd5c868d6cc9964b51b89eeb595c1b8b = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_0\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \n                \u003cdiv id=\u0027dot_marker_4\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: -6px;\n                    position: relative;\n                    z-index: 9;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Burladingen (II \u0026 )\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_54f65ceaf4852e8d64f7f73064a242db = L.popup({
+        var popup_ee9eb357c7e6be919339061861ac2aba = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_56aebc867b07ceccf52943f946726298 = $(`<div id="html_56aebc867b07ceccf52943f946726298" style="width: 100.0%; height: 100.0%;"><b>TSV Burladingen II</b><br>Ambrosius-Heim-Straße 12, Burladingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_0", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_54f65ceaf4852e8d64f7f73064a242db.setContent(html_56aebc867b07ceccf52943f946726298);
+                var html_34361f38d58e1125d89b252950fa19b3 = $(`<div id="html_34361f38d58e1125d89b252950fa19b3" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Ambrosius-Heim-Straße 12, Burladingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Burladingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_0", this.value, "marker_0_marker_4")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Burladingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_4", this.value, "marker_0_marker_4")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_ee9eb357c7e6be919339061861ac2aba.setContent(html_34361f38d58e1125d89b252950fa19b3);
             
         
 
-        marker_4ac3a56043016c3d015b2a3ebb07c8ef.bindPopup(popup_54f65ceaf4852e8d64f7f73064a242db)
+        marker_8877b36ee2381769f16f8d21626b152d.bindPopup(popup_ee9eb357c7e6be919339061861ac2aba)
         ;
 
         
     
     
-                marker_4ac3a56043016c3d015b2a3ebb07c8ef.setIcon(div_icon_efebecad25323da8bd7087eb54adaf8d);
+                marker_8877b36ee2381769f16f8d21626b152d.setIcon(div_icon_fd5c868d6cc9964b51b89eeb595c1b8b);
             
     
-            feature_group_678a13edb8af93bfb90d21545ecdf4e9.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_3361303fa66629dfd6e4733cd9a0ef5a.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_ac7d35b78de17ee2fc1217792fa96359 = L.featureGroup(
+            var feature_group_6a3372c731bb50fd35a9edbd4d03ee13 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_bceeda4d66493761f310c4b41b5c1595 = L.marker(
+            var marker_c27d78575585ed0ae28ceefebbb379fa = L.marker(
                 [48.28441, 8.7171882],
                 {
 }
-            ).addTo(feature_group_ac7d35b78de17ee2fc1217792fa96359);
+            ).addTo(feature_group_6a3372c731bb50fd35a9edbd4d03ee13);
         
     
-            var div_icon_4d42b0bb81607373c837d6cebd9caa4c = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_1\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV Rosenfeld\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_cfa75b26422ca404c009b84f08c7aae0 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_1\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV Rosenfeld\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_0701487a479cc9c21f2443cbdca02c57 = L.popup({
+        var popup_023415c011e9fab5c6c07af7cf4441ca = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_2b07694e09f0ddb163e2294507debe93 = $(`<div id="html_2b07694e09f0ddb163e2294507debe93" style="width: 100.0%; height: 100.0%;"><b>SV Rosenfeld</b><br>Leidringer Str. 45, 72348 Rosenfeld<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_1", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_0701487a479cc9c21f2443cbdca02c57.setContent(html_2b07694e09f0ddb163e2294507debe93);
+                var html_60710d471edc8d5cca4a1942d38f4d54 = $(`<div id="html_60710d471edc8d5cca4a1942d38f4d54" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Leidringer Str. 45, 72348 Rosenfeld<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Rosenfeld</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_1", this.value, "marker_1")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_023415c011e9fab5c6c07af7cf4441ca.setContent(html_60710d471edc8d5cca4a1942d38f4d54);
             
         
 
-        marker_bceeda4d66493761f310c4b41b5c1595.bindPopup(popup_0701487a479cc9c21f2443cbdca02c57)
+        marker_c27d78575585ed0ae28ceefebbb379fa.bindPopup(popup_023415c011e9fab5c6c07af7cf4441ca)
         ;
 
         
     
     
-                marker_bceeda4d66493761f310c4b41b5c1595.setIcon(div_icon_4d42b0bb81607373c837d6cebd9caa4c);
+                marker_c27d78575585ed0ae28ceefebbb379fa.setIcon(div_icon_cfa75b26422ca404c009b84f08c7aae0);
             
     
-            feature_group_ac7d35b78de17ee2fc1217792fa96359.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_6a3372c731bb50fd35a9edbd4d03ee13.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_fb3237a490ee345793ec7b2bb49b1b6c = L.featureGroup(
+            var feature_group_02585ca3f78dad79a0a42af9da5d5b38 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_3796166a6ecb0cd9f3ec6305a250e997 = L.marker(
+            var marker_5dcedce3f4a148f9740a7f651d7c61b5 = L.marker(
                 [48.2473154, 9.2158205],
                 {
 }
-            ).addTo(feature_group_fb3237a490ee345793ec7b2bb49b1b6c);
+            ).addTo(feature_group_02585ca3f78dad79a0a42af9da5d5b38);
         
     
-            var div_icon_2eadc662f8827679e992d8b85712d20b = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_2\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Gammertingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_4004c04f31228b1ad604337662ab20ba = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_2\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \n                \u003cdiv id=\u0027dot_marker_33\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: -6px;\n                    position: relative;\n                    z-index: 9;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Gammertingen ( \u0026 )\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_00edf0a7dda9d9ed62b93ec0b16627c7 = L.popup({
+        var popup_fcb7c3e766e91194f88e319200ac77f5 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_85f1e6e67df237d415bf91a4b7b250bc = $(`<div id="html_85f1e6e67df237d415bf91a4b7b250bc" style="width: 100.0%; height: 100.0%;"><b>TSV Gammertingen</b><br>Schrotgasse 9, Gammertingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_2", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_00edf0a7dda9d9ed62b93ec0b16627c7.setContent(html_85f1e6e67df237d415bf91a4b7b250bc);
+                var html_b15d2330f56e0bf2a80191c31baabbdf = $(`<div id="html_b15d2330f56e0bf2a80191c31baabbdf" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Schrotgasse 9, Gammertingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Gammertingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_2", this.value, "marker_2_marker_33")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Bronnen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_33", this.value, "marker_2_marker_33")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_fcb7c3e766e91194f88e319200ac77f5.setContent(html_b15d2330f56e0bf2a80191c31baabbdf);
             
         
 
-        marker_3796166a6ecb0cd9f3ec6305a250e997.bindPopup(popup_00edf0a7dda9d9ed62b93ec0b16627c7)
+        marker_5dcedce3f4a148f9740a7f651d7c61b5.bindPopup(popup_fcb7c3e766e91194f88e319200ac77f5)
         ;
 
         
     
     
-                marker_3796166a6ecb0cd9f3ec6305a250e997.setIcon(div_icon_2eadc662f8827679e992d8b85712d20b);
+                marker_5dcedce3f4a148f9740a7f651d7c61b5.setIcon(div_icon_4004c04f31228b1ad604337662ab20ba);
             
     
-            feature_group_fb3237a490ee345793ec7b2bb49b1b6c.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_02585ca3f78dad79a0a42af9da5d5b38.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_be688a35abeb59f97374640497085e9e = L.featureGroup(
+            var feature_group_333c3feed83cc4fcc8d75498b42897f9 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_adb56a8f8a1b9826120f65488dab0de3 = L.marker(
+            var marker_bbfb8ecaf3d785ce5def267b5253613e = L.marker(
                 [48.4474987, 9.0887233],
                 {
 }
-            ).addTo(feature_group_be688a35abeb59f97374640497085e9e);
+            ).addTo(feature_group_333c3feed83cc4fcc8d75498b42897f9);
         
     
-            var div_icon_9ae4f24e0b46d7f1cb5d7fb5fdb07a87 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_3\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Gomaringen III\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_f7630613babcb47f4a1a7b67083082ea = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_3\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \n                \u003cdiv id=\u0027dot_marker_15\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: -6px;\n                    position: relative;\n                    z-index: 9;\n                \u0027\u003e\u003c/div\u003e\n                \n                \u003cdiv id=\u0027dot_marker_16\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: -6px;\n                    position: relative;\n                    z-index: 8;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Gomaringen (III \u0026 IV \u0026 II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_595ba48f68611a76d3423b999ff644be = L.popup({
+        var popup_a5f27559bdfe2bfc410c5329ad312896 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_955574f0a4adffa8459e330a4799b849 = $(`<div id="html_955574f0a4adffa8459e330a4799b849" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen III</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_3", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_595ba48f68611a76d3423b999ff644be.setContent(html_955574f0a4adffa8459e330a4799b849);
+                var html_f47c97e349383fb3dd5e35bf639f35d8 = $(`<div id="html_f47c97e349383fb3dd5e35bf639f35d8" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Haydnstraße 22, Gomaringen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Gomaringen III</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_3", this.value, "marker_3_marker_15_marker_16")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Gomaringen IV</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_15", this.value, "marker_3_marker_15_marker_16")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Gomaringen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_16", this.value, "marker_3_marker_15_marker_16")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_a5f27559bdfe2bfc410c5329ad312896.setContent(html_f47c97e349383fb3dd5e35bf639f35d8);
             
         
 
-        marker_adb56a8f8a1b9826120f65488dab0de3.bindPopup(popup_595ba48f68611a76d3423b999ff644be)
+        marker_bbfb8ecaf3d785ce5def267b5253613e.bindPopup(popup_a5f27559bdfe2bfc410c5329ad312896)
         ;
 
         
     
     
-                marker_adb56a8f8a1b9826120f65488dab0de3.setIcon(div_icon_9ae4f24e0b46d7f1cb5d7fb5fdb07a87);
+                marker_bbfb8ecaf3d785ce5def267b5253613e.setIcon(div_icon_f7630613babcb47f4a1a7b67083082ea);
             
     
-            feature_group_be688a35abeb59f97374640497085e9e.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_333c3feed83cc4fcc8d75498b42897f9.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_48b91ed1a8974a53802b07147a4bd5cc = L.featureGroup(
+            var feature_group_5a5728a6cfe280bed0133ed09cac9cec = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_2334e3896883309ddf38dbf63801450e = L.marker(
-                [48.2907415, 9.111071],
-                {
-}
-            ).addTo(feature_group_48b91ed1a8974a53802b07147a4bd5cc);
-        
-    
-            var div_icon_c170360f3295da90d5833df164060a5d = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_4\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Burladingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
-  "iconAnchor": [7, 12],
-  "className": "empty",
-});
-        
-    
-        var popup_5506f61e47daf241139facb296cced1d = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_472a256c95267b70af9cd65e07f883ed = $(`<div id="html_472a256c95267b70af9cd65e07f883ed" style="width: 100.0%; height: 100.0%;"><b>TSV Burladingen</b><br>Ambrosius-Heim-Straße 12, Burladingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_4", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_5506f61e47daf241139facb296cced1d.setContent(html_472a256c95267b70af9cd65e07f883ed);
-            
-        
-
-        marker_2334e3896883309ddf38dbf63801450e.bindPopup(popup_5506f61e47daf241139facb296cced1d)
-        ;
-
-        
-    
-    
-                marker_2334e3896883309ddf38dbf63801450e.setIcon(div_icon_c170360f3295da90d5833df164060a5d);
-            
-    
-            feature_group_48b91ed1a8974a53802b07147a4bd5cc.addTo(feature_group_d2906238e136f0797b45932602083266);
-        
-    
-            var feature_group_153d45e45cdf797b5677d3266f8e19fa = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_6de0899aba63eb396cc335d58d44e9fc = L.marker(
+            var marker_059f726edfd3c2c0dbaa3f58a7885fb8 = L.marker(
                 [48.3307525, 8.8819193],
                 {
 }
-            ).addTo(feature_group_153d45e45cdf797b5677d3266f8e19fa);
+            ).addTo(feature_group_5a5728a6cfe280bed0133ed09cac9cec);
         
     
-            var div_icon_c8d46bb6f3ee81690f8ff935be77d565 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_5\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Grosselfingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_d84cf6061a117dc0813e5f26b4a7ccd6 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_5\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Grosselfingen (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_77627ad602dd929ed639cd00eab7580a = L.popup({
+        var popup_659e9ba1cbce509e509acd50d2b5b7c2 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_1982869954563334b8cba8208a0006b6 = $(`<div id="html_1982869954563334b8cba8208a0006b6" style="width: 100.0%; height: 100.0%;"><b>TTC Grosselfingen II</b><br>Schulstraße 9, Grosselfingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_5", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_77627ad602dd929ed639cd00eab7580a.setContent(html_1982869954563334b8cba8208a0006b6);
+                var html_dad95a801085ffcc2aa673d46993eedf = $(`<div id="html_dad95a801085ffcc2aa673d46993eedf" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Schulstraße 9, Grosselfingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Grosselfingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_5", this.value, "marker_5")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_659e9ba1cbce509e509acd50d2b5b7c2.setContent(html_dad95a801085ffcc2aa673d46993eedf);
             
         
 
-        marker_6de0899aba63eb396cc335d58d44e9fc.bindPopup(popup_77627ad602dd929ed639cd00eab7580a)
+        marker_059f726edfd3c2c0dbaa3f58a7885fb8.bindPopup(popup_659e9ba1cbce509e509acd50d2b5b7c2)
         ;
 
         
     
     
-                marker_6de0899aba63eb396cc335d58d44e9fc.setIcon(div_icon_c8d46bb6f3ee81690f8ff935be77d565);
+                marker_059f726edfd3c2c0dbaa3f58a7885fb8.setIcon(div_icon_d84cf6061a117dc0813e5f26b4a7ccd6);
             
     
-            feature_group_153d45e45cdf797b5677d3266f8e19fa.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_5a5728a6cfe280bed0133ed09cac9cec.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_e9e595c582083f8b77d25545ed836c77 = L.featureGroup(
+            var feature_group_84d062918f9b97ba0ffa2ba56b3eeffe = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_6b6458e2465ccf1f1c7bc5ef9f00040e = L.marker(
+            var marker_f5b41de9e0b488253b07a34a74bd88c1 = L.marker(
                 [48.1697674, 9.1477092],
                 {
 }
-            ).addTo(feature_group_e9e595c582083f8b77d25545ed836c77);
+            ).addTo(feature_group_84d062918f9b97ba0ffa2ba56b3eeffe);
         
     
-            var div_icon_23dc57b02843ccd140bf0699c4ede917 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_6\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Benzingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_cffeaf97f49addc24f55a57dbfcc197e = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_6\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Benzingen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_c3b125b324eec1ae428b393791bb1d1e = L.popup({
+        var popup_c49b9552ff289d60e67565cec2f68b96 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_127ec7a0137e03cd9ed25cd243d20814 = $(`<div id="html_127ec7a0137e03cd9ed25cd243d20814" style="width: 100.0%; height: 100.0%;"><b>TTC Benzingen</b><br>In der Bize 1, Winterlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_6", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_c3b125b324eec1ae428b393791bb1d1e.setContent(html_127ec7a0137e03cd9ed25cd243d20814);
+                var html_44559af8fd525f15755ba1972172ab1e = $(`<div id="html_44559af8fd525f15755ba1972172ab1e" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> In der Bize 1, Winterlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Benzingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_6", this.value, "marker_6")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_c49b9552ff289d60e67565cec2f68b96.setContent(html_44559af8fd525f15755ba1972172ab1e);
             
         
 
-        marker_6b6458e2465ccf1f1c7bc5ef9f00040e.bindPopup(popup_c3b125b324eec1ae428b393791bb1d1e)
+        marker_f5b41de9e0b488253b07a34a74bd88c1.bindPopup(popup_c49b9552ff289d60e67565cec2f68b96)
         ;
 
         
     
     
-                marker_6b6458e2465ccf1f1c7bc5ef9f00040e.setIcon(div_icon_23dc57b02843ccd140bf0699c4ede917);
+                marker_f5b41de9e0b488253b07a34a74bd88c1.setIcon(div_icon_cffeaf97f49addc24f55a57dbfcc197e);
             
     
-            feature_group_e9e595c582083f8b77d25545ed836c77.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_84d062918f9b97ba0ffa2ba56b3eeffe.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_31d2613d3b95ba8f96b3af4a43d1d852 = L.featureGroup(
+            var feature_group_9b0c081fc501c8fdcbcfa5000aa57c07 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_3f85c7e8b53d457285f929ee2101b775 = L.marker(
+            var marker_8887bec349167e8b9b64d9f611f6a3de = L.marker(
                 [48.2466142, 9.0866609],
                 {
 }
-            ).addTo(feature_group_31d2613d3b95ba8f96b3af4a43d1d852);
+            ).addTo(feature_group_9b0c081fc501c8fdcbcfa5000aa57c07);
         
     
-            var div_icon_8866f5b80deb242ed2ec642196368235 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_7\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Bitz\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_99c7df65153af13f84dc1409a393515c = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_7\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Bitz\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_69de014cb34ec7df2243e5009212b9ca = L.popup({
+        var popup_c91258e04e97316d03146a03624a8432 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_344b29ac385fd53a42eb4bb6f90349bd = $(`<div id="html_344b29ac385fd53a42eb4bb6f90349bd" style="width: 100.0%; height: 100.0%;"><b>TTC Bitz</b><br>Hohe Straße 62, Bitz<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_7", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_69de014cb34ec7df2243e5009212b9ca.setContent(html_344b29ac385fd53a42eb4bb6f90349bd);
+                var html_d7957b71d937309bb1b24a2ae932e26a = $(`<div id="html_d7957b71d937309bb1b24a2ae932e26a" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Hohe Straße 62, Bitz<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Bitz</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_7", this.value, "marker_7")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_c91258e04e97316d03146a03624a8432.setContent(html_d7957b71d937309bb1b24a2ae932e26a);
             
         
 
-        marker_3f85c7e8b53d457285f929ee2101b775.bindPopup(popup_69de014cb34ec7df2243e5009212b9ca)
+        marker_8887bec349167e8b9b64d9f611f6a3de.bindPopup(popup_c91258e04e97316d03146a03624a8432)
         ;
 
         
     
     
-                marker_3f85c7e8b53d457285f929ee2101b775.setIcon(div_icon_8866f5b80deb242ed2ec642196368235);
+                marker_8887bec349167e8b9b64d9f611f6a3de.setIcon(div_icon_99c7df65153af13f84dc1409a393515c);
             
     
-            feature_group_31d2613d3b95ba8f96b3af4a43d1d852.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_9b0c081fc501c8fdcbcfa5000aa57c07.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            var feature_group_b7c67aa36352213d93d51b3d17a59b3d = L.featureGroup(
+            var feature_group_ec5fb5f45cdff4521630787696972935 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_ade264c0321db7c7f5d0ac0bcbd61c53 = L.marker(
+            var marker_5e764076f0e19aaac8dbcad77687c2a2 = L.marker(
                 [48.2521682, 9.014709],
                 {
 }
-            ).addTo(feature_group_b7c67aa36352213d93d51b3d17a59b3d);
+            ).addTo(feature_group_ec5fb5f45cdff4521630787696972935);
         
     
-            var div_icon_5fb245c8192fd2dc8e6b87fce91c235c = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_8\u0027 style=\u0027    width: 14px; height: 14px;     background-color: blue;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Tailfingen-Margrethausen III\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_3a0b50cc2d7ecce35e0e0717a1eb8528 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_8\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: blue; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Tailfingen-Margrethausen (III)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_defa9b2e06c37f6e9c27e9d38aee7d0e = L.popup({
+        var popup_9260fc49ef8cdb56de51963aa53f6fb0 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_c441011dff7e2c722f811aee0c8fe599 = $(`<div id="html_c441011dff7e2c722f811aee0c8fe599" style="width: 100.0%; height: 100.0%;"><b>TTC Tailfingen-Margrethausen III</b><br>Sporthalle Lutherschule, Albstadt<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_8", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_defa9b2e06c37f6e9c27e9d38aee7d0e.setContent(html_c441011dff7e2c722f811aee0c8fe599);
+                var html_ee9253b2842d4c01a053aaa8f8c08813 = $(`<div id="html_ee9253b2842d4c01a053aaa8f8c08813" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Sporthalle Lutherschule, Albstadt<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Tailfingen-Margrethausen III</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_8", this.value, "marker_8")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' selected>Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_9260fc49ef8cdb56de51963aa53f6fb0.setContent(html_ee9253b2842d4c01a053aaa8f8c08813);
             
         
 
-        marker_ade264c0321db7c7f5d0ac0bcbd61c53.bindPopup(popup_defa9b2e06c37f6e9c27e9d38aee7d0e)
+        marker_5e764076f0e19aaac8dbcad77687c2a2.bindPopup(popup_9260fc49ef8cdb56de51963aa53f6fb0)
         ;
 
         
     
     
-                marker_ade264c0321db7c7f5d0ac0bcbd61c53.setIcon(div_icon_5fb245c8192fd2dc8e6b87fce91c235c);
+                marker_5e764076f0e19aaac8dbcad77687c2a2.setIcon(div_icon_3a0b50cc2d7ecce35e0e0717a1eb8528);
             
     
-            feature_group_b7c67aa36352213d93d51b3d17a59b3d.addTo(feature_group_d2906238e136f0797b45932602083266);
+            feature_group_ec5fb5f45cdff4521630787696972935.addTo(feature_group_7a93508589aeeef1c323e6746c776e7e);
         
     
-            feature_group_d2906238e136f0797b45932602083266.addTo(map_62294028166261300c2f95188ebdebf4);
+            feature_group_7a93508589aeeef1c323e6746c776e7e.addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
         
     
-            var feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555 = L.featureGroup(
+            var feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c = L.featureGroup(
                 {
 }
             );
         
     
-            var feature_group_8082fde8980ed772efca097cca2249a7 = L.featureGroup(
+            var feature_group_175aaaa400de98ffcb8c41b00b6b86b0 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_a65d83d541ac9d295edca06e113813cc = L.marker(
+            var marker_a30c4b1451117b4e0326dd95cfa1a8af = L.marker(
                 [48.501661, 9.0566549],
                 {
 }
-            ).addTo(feature_group_8082fde8980ed772efca097cca2249a7);
+            ).addTo(feature_group_175aaaa400de98ffcb8c41b00b6b86b0);
         
     
-            var div_icon_4dd7119cf1bfad9d4dea71cfbccb3891 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_9\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTV Derendingen III\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_7b76724452e6ae41b03dde1955caa5f4 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_9\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTV Derendingen (III)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_3ec85733e97d7cc2c8d3a896e873acb6 = L.popup({
+        var popup_0725a123609760098617ac010b4b859f = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_5eab17e9ee6bd61f85eaee64c256e13a = $(`<div id="html_5eab17e9ee6bd61f85eaee64c256e13a" style="width: 100.0%; height: 100.0%;"><b>TV Derendingen III</b><br>Turnhalle Feuerhägle, Tübingen,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_9", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_3ec85733e97d7cc2c8d3a896e873acb6.setContent(html_5eab17e9ee6bd61f85eaee64c256e13a);
+                var html_3572cb99663e73e30c1767a41d938ba1 = $(`<div id="html_3572cb99663e73e30c1767a41d938ba1" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Turnhalle Feuerhägle, Tübingen,BW,Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TV Derendingen III</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_9", this.value, "marker_9")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_0725a123609760098617ac010b4b859f.setContent(html_3572cb99663e73e30c1767a41d938ba1);
             
         
 
-        marker_a65d83d541ac9d295edca06e113813cc.bindPopup(popup_3ec85733e97d7cc2c8d3a896e873acb6)
+        marker_a30c4b1451117b4e0326dd95cfa1a8af.bindPopup(popup_0725a123609760098617ac010b4b859f)
         ;
 
         
     
     
-                marker_a65d83d541ac9d295edca06e113813cc.setIcon(div_icon_4dd7119cf1bfad9d4dea71cfbccb3891);
+                marker_a30c4b1451117b4e0326dd95cfa1a8af.setIcon(div_icon_7b76724452e6ae41b03dde1955caa5f4);
             
     
-            feature_group_8082fde8980ed772efca097cca2249a7.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_175aaaa400de98ffcb8c41b00b6b86b0.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_a80420b57959ed35942293338c9b2aa7 = L.featureGroup(
+            var feature_group_fe5a3dca1f129dc2fcdaa3d6926f234f = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_9a7ebb67aaf95ac22e3a5dd76f74b6b5 = L.marker(
+            var marker_80b5a24721d021670325fbb204e5bd23 = L.marker(
                 [48.5138093, 9.068387],
                 {
 }
-            ).addTo(feature_group_a80420b57959ed35942293338c9b2aa7);
+            ).addTo(feature_group_fe5a3dca1f129dc2fcdaa3d6926f234f);
         
     
-            var div_icon_5b5f66923bbb508795dd53c6c2bafc4e = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_10\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV T\u00fcbingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_349672497b35145f600fc4bf3483d9bf = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_10\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV T\u00fcbingen (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_fb8de0f0fb6dfa5560808691425b7287 = L.popup({
+        var popup_2778ef8995d6692902b97cf3aa0a61d0 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_db8945d9a9608fde6d53b01b3a87e775 = $(`<div id="html_db8945d9a9608fde6d53b01b3a87e775" style="width: 100.0%; height: 100.0%;"><b>SV Tübingen II</b><br>Grundschule an der Hügelstraße, Tübingen,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_10", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_fb8de0f0fb6dfa5560808691425b7287.setContent(html_db8945d9a9608fde6d53b01b3a87e775);
+                var html_366ef2df6d48c5ff4d7ddd0050f4d9c4 = $(`<div id="html_366ef2df6d48c5ff4d7ddd0050f4d9c4" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Grundschule an der Hügelstraße, Tübingen,BW,Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Tübingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_10", this.value, "marker_10")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_2778ef8995d6692902b97cf3aa0a61d0.setContent(html_366ef2df6d48c5ff4d7ddd0050f4d9c4);
             
         
 
-        marker_9a7ebb67aaf95ac22e3a5dd76f74b6b5.bindPopup(popup_fb8de0f0fb6dfa5560808691425b7287)
+        marker_80b5a24721d021670325fbb204e5bd23.bindPopup(popup_2778ef8995d6692902b97cf3aa0a61d0)
         ;
 
         
     
     
-                marker_9a7ebb67aaf95ac22e3a5dd76f74b6b5.setIcon(div_icon_5b5f66923bbb508795dd53c6c2bafc4e);
+                marker_80b5a24721d021670325fbb204e5bd23.setIcon(div_icon_349672497b35145f600fc4bf3483d9bf);
             
     
-            feature_group_a80420b57959ed35942293338c9b2aa7.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_fe5a3dca1f129dc2fcdaa3d6926f234f.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_2f3eab5d56944345e2db25e9f57e686a = L.featureGroup(
+            var feature_group_276e232e8f51d565d160f181f781ddb1 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_a46b012f480ad3eda25d691c5e5ba426 = L.marker(
+            var marker_8c29b67c6b640ea415f2893c1c80c529 = L.marker(
                 [48.6093627, 9.1010124],
                 {
 }
-            ).addTo(feature_group_2f3eab5d56944345e2db25e9f57e686a);
+            ).addTo(feature_group_276e232e8f51d565d160f181f781ddb1);
         
     
-            var div_icon_5bca3d77f6d02ce0f1f06567a9e3859c = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_11\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eVfL Dettenhausen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_fffe3dc1c5ebcc9f98eec94984268f1c = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_11\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eVfL Dettenhausen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_a20e0d18d3f49b36ac271fd3147d6f5f = L.popup({
+        var popup_4ea341f9792ae08796b45e9655e7080f = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_076c375c96f2be96582d2f9f2243743b = $(`<div id="html_076c375c96f2be96582d2f9f2243743b" style="width: 100.0%; height: 100.0%;"><b>VfL Dettenhausen</b><br>Karlstraße 1, Dettenhausen,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_11", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_a20e0d18d3f49b36ac271fd3147d6f5f.setContent(html_076c375c96f2be96582d2f9f2243743b);
+                var html_3eb3eb2698d637d3770eaca7a307a8ef = $(`<div id="html_3eb3eb2698d637d3770eaca7a307a8ef" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Karlstraße 1, Dettenhausen,BW,Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>VfL Dettenhausen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_11", this.value, "marker_11")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_4ea341f9792ae08796b45e9655e7080f.setContent(html_3eb3eb2698d637d3770eaca7a307a8ef);
             
         
 
-        marker_a46b012f480ad3eda25d691c5e5ba426.bindPopup(popup_a20e0d18d3f49b36ac271fd3147d6f5f)
+        marker_8c29b67c6b640ea415f2893c1c80c529.bindPopup(popup_4ea341f9792ae08796b45e9655e7080f)
         ;
 
         
     
     
-                marker_a46b012f480ad3eda25d691c5e5ba426.setIcon(div_icon_5bca3d77f6d02ce0f1f06567a9e3859c);
+                marker_8c29b67c6b640ea415f2893c1c80c529.setIcon(div_icon_fffe3dc1c5ebcc9f98eec94984268f1c);
             
     
-            feature_group_2f3eab5d56944345e2db25e9f57e686a.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_276e232e8f51d565d160f181f781ddb1.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_40feed0c6d5de0136513df4742e3317c = L.featureGroup(
+            var feature_group_b5955a032b425e42cab781a88477bf4e = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_60e7cd6e270804e270ed0dcbb7207493 = L.marker(
+            var marker_dd8ed96c91a51664fb823dac8e2e2a38 = L.marker(
                 [48.4900747, 9.0351542],
                 {
 }
-            ).addTo(feature_group_40feed0c6d5de0136513df4742e3317c);
+            ).addTo(feature_group_b5955a032b425e42cab781a88477bf4e);
         
     
-            var div_icon_b6e7dc254de29a362ed76bb3920e2776 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_12\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV Weilheim II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_06560d5b6b54a2224bf61da4d21dc35d = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_12\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV Weilheim (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_6fc72ff80c631dcd33e500b1690b5578 = L.popup({
+        var popup_189c3fa143809037fa8e33327a6dea68 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_6eb77fcd1843f6a9e6f6fd4594680776 = $(`<div id="html_6eb77fcd1843f6a9e6f6fd4594680776" style="width: 100.0%; height: 100.0%;"><b>SV Weilheim II</b><br>Bronnackerstraße 15, Tübingen, BW, Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_12", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_6fc72ff80c631dcd33e500b1690b5578.setContent(html_6eb77fcd1843f6a9e6f6fd4594680776);
+                var html_e23c65a2e1031b352de450b151529c37 = $(`<div id="html_e23c65a2e1031b352de450b151529c37" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Bronnackerstraße 15, Tübingen, BW, Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Weilheim II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_12", this.value, "marker_12")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_189c3fa143809037fa8e33327a6dea68.setContent(html_e23c65a2e1031b352de450b151529c37);
             
         
 
-        marker_60e7cd6e270804e270ed0dcbb7207493.bindPopup(popup_6fc72ff80c631dcd33e500b1690b5578)
+        marker_dd8ed96c91a51664fb823dac8e2e2a38.bindPopup(popup_189c3fa143809037fa8e33327a6dea68)
         ;
 
         
     
     
-                marker_60e7cd6e270804e270ed0dcbb7207493.setIcon(div_icon_b6e7dc254de29a362ed76bb3920e2776);
+                marker_dd8ed96c91a51664fb823dac8e2e2a38.setIcon(div_icon_06560d5b6b54a2224bf61da4d21dc35d);
             
     
-            feature_group_40feed0c6d5de0136513df4742e3317c.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_b5955a032b425e42cab781a88477bf4e.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_65b6b7b21d504b4076437212eca7a25f = L.featureGroup(
+            var feature_group_0bad9b9425cd0859c759a0823a85d287 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_da5b63fd257d2bfeaa4d61be6d7c97d2 = L.marker(
+            var marker_c6e8ab42c1a1c773b401e2f75342bed7 = L.marker(
                 [48.4210473, 9.0383338],
                 {
 }
-            ).addTo(feature_group_65b6b7b21d504b4076437212eca7a25f);
+            ).addTo(feature_group_0bad9b9425cd0859c759a0823a85d287);
         
     
-            var div_icon_f63ad5b96f2e90f5d1df09a43e385cfd = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_13\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Ofterdingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_283c3ed01480a209198932ec4d1b763c = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_13\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Ofterdingen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_ab4394afc9bc1b7d1a520f348fd0080d = L.popup({
+        var popup_f6b4bfc026b038a6c1afa55296844ded = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_45e95a4e32e7a2681fd35400da41c27f = $(`<div id="html_45e95a4e32e7a2681fd35400da41c27f" style="width: 100.0%; height: 100.0%;"><b>TTC Ofterdingen</b><br>Schulstr. 3, Ofterdingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_13", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_ab4394afc9bc1b7d1a520f348fd0080d.setContent(html_45e95a4e32e7a2681fd35400da41c27f);
+                var html_c306f71fa33cc6637dd5b66f5eb71fd2 = $(`<div id="html_c306f71fa33cc6637dd5b66f5eb71fd2" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Schulstr. 3, Ofterdingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Ofterdingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_13", this.value, "marker_13")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_f6b4bfc026b038a6c1afa55296844ded.setContent(html_c306f71fa33cc6637dd5b66f5eb71fd2);
             
         
 
-        marker_da5b63fd257d2bfeaa4d61be6d7c97d2.bindPopup(popup_ab4394afc9bc1b7d1a520f348fd0080d)
+        marker_c6e8ab42c1a1c773b401e2f75342bed7.bindPopup(popup_f6b4bfc026b038a6c1afa55296844ded)
         ;
 
         
     
     
-                marker_da5b63fd257d2bfeaa4d61be6d7c97d2.setIcon(div_icon_f63ad5b96f2e90f5d1df09a43e385cfd);
+                marker_c6e8ab42c1a1c773b401e2f75342bed7.setIcon(div_icon_283c3ed01480a209198932ec4d1b763c);
             
     
-            feature_group_65b6b7b21d504b4076437212eca7a25f.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_0bad9b9425cd0859c759a0823a85d287.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_7addd69d00c43818d34c11d0451f9f0f = L.featureGroup(
+            var feature_group_c8a27f7c78b08f76e2733afbcbf2954e = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_dcff49bc7191fa9c03bdc4829d9bd04a = L.marker(
+            var marker_a24488743bf92dacd8557f017f3cbcac = L.marker(
                 [48.5324695, 9.0818082],
                 {
 }
-            ).addTo(feature_group_7addd69d00c43818d34c11d0451f9f0f);
+            ).addTo(feature_group_c8a27f7c78b08f76e2733afbcbf2954e);
         
     
-            var div_icon_0ded95abb43142f2b08b3eb461bdb146 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_14\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Lustnau\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_21498e30799da6a9daaee289c2cfb08e = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_14\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Lustnau\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_5396a2257d6ada28124c7e8fb8a2f481 = L.popup({
+        var popup_99d80f136958e0bfae5ddc689cb9728c = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_64aa0cbc87ba2e4690aa28732abbffff = $(`<div id="html_64aa0cbc87ba2e4690aa28732abbffff" style="width: 100.0%; height: 100.0%;"><b>TSV Lustnau</b><br>Neuhaldenstraße, Tübingen, BW, Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_14", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_5396a2257d6ada28124c7e8fb8a2f481.setContent(html_64aa0cbc87ba2e4690aa28732abbffff);
+                var html_bf894638ba83260dc2fb2d299e06e1a9 = $(`<div id="html_bf894638ba83260dc2fb2d299e06e1a9" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Neuhaldenstraße, Tübingen, BW, Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Lustnau</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_14", this.value, "marker_14")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_99d80f136958e0bfae5ddc689cb9728c.setContent(html_bf894638ba83260dc2fb2d299e06e1a9);
             
         
 
-        marker_dcff49bc7191fa9c03bdc4829d9bd04a.bindPopup(popup_5396a2257d6ada28124c7e8fb8a2f481)
+        marker_a24488743bf92dacd8557f017f3cbcac.bindPopup(popup_99d80f136958e0bfae5ddc689cb9728c)
         ;
 
         
     
     
-                marker_dcff49bc7191fa9c03bdc4829d9bd04a.setIcon(div_icon_0ded95abb43142f2b08b3eb461bdb146);
+                marker_a24488743bf92dacd8557f017f3cbcac.setIcon(div_icon_21498e30799da6a9daaee289c2cfb08e);
             
     
-            feature_group_7addd69d00c43818d34c11d0451f9f0f.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_c8a27f7c78b08f76e2733afbcbf2954e.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            var feature_group_1ffc1f2ef824f1a75282dbaf8ca0d0c9 = L.featureGroup(
+            var feature_group_74bfdad958a08f7df0d577450e751d7b = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_c2a8ecda633547ac80ab7745f2a79753 = L.marker(
-                [48.4474987, 9.0887233],
-                {
-}
-            ).addTo(feature_group_1ffc1f2ef824f1a75282dbaf8ca0d0c9);
-        
-    
-            var div_icon_df0bd7d73c920e6fcca281674376a9c9 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_15\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Gomaringen IV\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
-  "iconAnchor": [7, 12],
-  "className": "empty",
-});
-        
-    
-        var popup_baaa3b2eca2900ba91da93f20ba59e85 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_4ebc6eb1186d3a279a9d2a49b5f15388 = $(`<div id="html_4ebc6eb1186d3a279a9d2a49b5f15388" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen IV</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_15", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_baaa3b2eca2900ba91da93f20ba59e85.setContent(html_4ebc6eb1186d3a279a9d2a49b5f15388);
-            
-        
-
-        marker_c2a8ecda633547ac80ab7745f2a79753.bindPopup(popup_baaa3b2eca2900ba91da93f20ba59e85)
-        ;
-
-        
-    
-    
-                marker_c2a8ecda633547ac80ab7745f2a79753.setIcon(div_icon_df0bd7d73c920e6fcca281674376a9c9);
-            
-    
-            feature_group_1ffc1f2ef824f1a75282dbaf8ca0d0c9.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
-        
-    
-            var feature_group_decb93aaa3a082bafe8d526a55f2b441 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_8d6d32b3e80fca3c69b5553d0e311042 = L.marker(
-                [48.4474987, 9.0887233],
-                {
-}
-            ).addTo(feature_group_decb93aaa3a082bafe8d526a55f2b441);
-        
-    
-            var div_icon_70e4d7f3415c449786156a196b64f23d = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_16\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Gomaringen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
-  "iconAnchor": [7, 12],
-  "className": "empty",
-});
-        
-    
-        var popup_c4dedf117d85d7ad3bccc5395df99dbd = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_b5302f1a86203f56024b39cc0f24c917 = $(`<div id="html_b5302f1a86203f56024b39cc0f24c917" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen II</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_16", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_c4dedf117d85d7ad3bccc5395df99dbd.setContent(html_b5302f1a86203f56024b39cc0f24c917);
-            
-        
-
-        marker_8d6d32b3e80fca3c69b5553d0e311042.bindPopup(popup_c4dedf117d85d7ad3bccc5395df99dbd)
-        ;
-
-        
-    
-    
-                marker_8d6d32b3e80fca3c69b5553d0e311042.setIcon(div_icon_70e4d7f3415c449786156a196b64f23d);
-            
-    
-            feature_group_decb93aaa3a082bafe8d526a55f2b441.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
-        
-    
-            var feature_group_f212f0cd8a644c7a8be831a3b1e938ab = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_964336c7bd4224b5abb7e6a6db455d47 = L.marker(
+            var marker_ae5bf623d15c9eadb2dc89fb56f7bb01 = L.marker(
                 [48.5089068, 8.9392455],
                 {
 }
-            ).addTo(feature_group_f212f0cd8a644c7a8be831a3b1e938ab);
+            ).addTo(feature_group_74bfdad958a08f7df0d577450e751d7b);
         
     
-            var div_icon_0dd2efdcc4a913bfad4f91a703e47a8c = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_17\u0027 style=\u0027    width: 14px; height: 14px;     background-color: green;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV Wendelsheim\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_982bea1d7082b892e4acbf1cb239e266 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_17\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: green; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV Wendelsheim\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_8f40aff7810b0ae54e980feaa57f3123 = L.popup({
+        var popup_8ad215802ee7d344734c487d8ca153c4 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_8977a9fb74f9dfdded313467ee2ac0a4 = $(`<div id="html_8977a9fb74f9dfdded313467ee2ac0a4" style="width: 100.0%; height: 100.0%;"><b>SV Wendelsheim</b><br>Steinbruchstraße 20, Rottenburg<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_17", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_8f40aff7810b0ae54e980feaa57f3123.setContent(html_8977a9fb74f9dfdded313467ee2ac0a4);
+                var html_8aa4dc4d219f68f5601081cdb58d4817 = $(`<div id="html_8aa4dc4d219f68f5601081cdb58d4817" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Steinbruchstraße 20, Rottenburg<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Wendelsheim</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_17", this.value, "marker_17")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' selected>Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_8ad215802ee7d344734c487d8ca153c4.setContent(html_8aa4dc4d219f68f5601081cdb58d4817);
             
         
 
-        marker_964336c7bd4224b5abb7e6a6db455d47.bindPopup(popup_8f40aff7810b0ae54e980feaa57f3123)
+        marker_ae5bf623d15c9eadb2dc89fb56f7bb01.bindPopup(popup_8ad215802ee7d344734c487d8ca153c4)
         ;
 
         
     
     
-                marker_964336c7bd4224b5abb7e6a6db455d47.setIcon(div_icon_0dd2efdcc4a913bfad4f91a703e47a8c);
+                marker_ae5bf623d15c9eadb2dc89fb56f7bb01.setIcon(div_icon_982bea1d7082b892e4acbf1cb239e266);
             
     
-            feature_group_f212f0cd8a644c7a8be831a3b1e938ab.addTo(feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555);
+            feature_group_74bfdad958a08f7df0d577450e751d7b.addTo(feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c);
         
     
-            feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555.addTo(map_62294028166261300c2f95188ebdebf4);
+            feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c.addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
         
     
-            var feature_group_3f0522d1763c55c1dc667570dadd7224 = L.featureGroup(
+            var feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4 = L.featureGroup(
                 {
 }
             );
         
     
-            var feature_group_88bb35123e7d4b3f3d67ed562eea526d = L.featureGroup(
+            var feature_group_3690e99261bf935251a0fe36cac26d86 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_37831a5c67c4a638cb9f8b98af2fbefe = L.marker(
+            var marker_06c55293707bdf1ea98b2c18a4d65034 = L.marker(
                 [48.5143552, 9.2280459],
                 {
 }
-            ).addTo(feature_group_88bb35123e7d4b3f3d67ed562eea526d);
+            ).addTo(feature_group_3690e99261bf935251a0fe36cac26d86);
         
     
-            var div_icon_90f7dd29fcf0bf89bd586ff16070455d = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_18\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Sondelfingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_c6baecb051c4eaa716b70c794328562f = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_18\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Sondelfingen (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_8974ccd83cd87153256bcb0a15284140 = L.popup({
+        var popup_5c618cf173cb3ee505b4cc3023e4db65 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_92bee2b643a68dfbd99c0a28ffbcd0a8 = $(`<div id="html_92bee2b643a68dfbd99c0a28ffbcd0a8" style="width: 100.0%; height: 100.0%;"><b>TSV Sondelfingen II</b><br>Lange Straße 36, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_18", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_8974ccd83cd87153256bcb0a15284140.setContent(html_92bee2b643a68dfbd99c0a28ffbcd0a8);
+                var html_acd95babacc2f829ce8544d36ece7b65 = $(`<div id="html_acd95babacc2f829ce8544d36ece7b65" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Lange Straße 36, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Sondelfingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_18", this.value, "marker_18")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_5c618cf173cb3ee505b4cc3023e4db65.setContent(html_acd95babacc2f829ce8544d36ece7b65);
             
         
 
-        marker_37831a5c67c4a638cb9f8b98af2fbefe.bindPopup(popup_8974ccd83cd87153256bcb0a15284140)
+        marker_06c55293707bdf1ea98b2c18a4d65034.bindPopup(popup_5c618cf173cb3ee505b4cc3023e4db65)
         ;
 
         
     
     
-                marker_37831a5c67c4a638cb9f8b98af2fbefe.setIcon(div_icon_90f7dd29fcf0bf89bd586ff16070455d);
+                marker_06c55293707bdf1ea98b2c18a4d65034.setIcon(div_icon_c6baecb051c4eaa716b70c794328562f);
             
     
-            feature_group_88bb35123e7d4b3f3d67ed562eea526d.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_3690e99261bf935251a0fe36cac26d86.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_b6813dde46de13428681748fbe745111 = L.featureGroup(
+            var feature_group_0413ad71422e78c2f210136dfab51414 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_5418b31a25a772fd8d6bd01a296f0519 = L.marker(
+            var marker_638990012b5484dc1a06024fd2eef5f0 = L.marker(
                 [48.555944, 9.2658693],
                 {
 }
-            ).addTo(feature_group_b6813dde46de13428681748fbe745111);
+            ).addTo(feature_group_0413ad71422e78c2f210136dfab51414);
         
     
-            var div_icon_0b65a1ece203e204335881969c4a4acf = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_19\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Riederich\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_f4cd1e0115a2bd9e3584d71a5ccfd990 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_19\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Riederich\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_1d0073dd2f058bb084205188e7cb41e6 = L.popup({
+        var popup_e8648dd196553eb1b8c32fb1678dd6a0 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_29cbc92d22b5050e9920dfe21e4d2943 = $(`<div id="html_29cbc92d22b5050e9920dfe21e4d2943" style="width: 100.0%; height: 100.0%;"><b>TSV Riederich</b><br>Hegwiesenstraße 25, Riederich<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_19", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_1d0073dd2f058bb084205188e7cb41e6.setContent(html_29cbc92d22b5050e9920dfe21e4d2943);
+                var html_e9d97d48c7fa4bb39eeb8ab9e597f99c = $(`<div id="html_e9d97d48c7fa4bb39eeb8ab9e597f99c" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Hegwiesenstraße 25, Riederich<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Riederich</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_19", this.value, "marker_19")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_e8648dd196553eb1b8c32fb1678dd6a0.setContent(html_e9d97d48c7fa4bb39eeb8ab9e597f99c);
             
         
 
-        marker_5418b31a25a772fd8d6bd01a296f0519.bindPopup(popup_1d0073dd2f058bb084205188e7cb41e6)
+        marker_638990012b5484dc1a06024fd2eef5f0.bindPopup(popup_e8648dd196553eb1b8c32fb1678dd6a0)
         ;
 
         
     
     
-                marker_5418b31a25a772fd8d6bd01a296f0519.setIcon(div_icon_0b65a1ece203e204335881969c4a4acf);
+                marker_638990012b5484dc1a06024fd2eef5f0.setIcon(div_icon_f4cd1e0115a2bd9e3584d71a5ccfd990);
             
     
-            feature_group_b6813dde46de13428681748fbe745111.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_0413ad71422e78c2f210136dfab51414.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_8247990c9015344898fe6a3610a140e4 = L.featureGroup(
+            var feature_group_cce8b9f105baf0e0d5bd2bf5718a5e5b = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_77ee6955b2769333b38d8fa0bf406937 = L.marker(
+            var marker_f78f7743ff0b0d48e266a8e9dee9a4f5 = L.marker(
                 [48.5307208, 9.312648],
                 {
 }
-            ).addTo(feature_group_8247990c9015344898fe6a3610a140e4);
+            ).addTo(feature_group_cce8b9f105baf0e0d5bd2bf5718a5e5b);
         
     
-            var div_icon_17ebc9849abe301159d4d2a60d62ff34 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_20\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTV Neuhausen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_25f05061767339b67eefeca71a414fe2 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_20\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTV Neuhausen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_d917c2b5388bf6130f10a949fe52021c = L.popup({
+        var popup_b8a3b7091d30edb80dd64e2e8b0022af = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_94230fd440d81ac8870c4bddf9f93f96 = $(`<div id="html_94230fd440d81ac8870c4bddf9f93f96" style="width: 100.0%; height: 100.0%;"><b>TV Neuhausen</b><br>Wolfgrubstraße 28, Metzingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_20", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_d917c2b5388bf6130f10a949fe52021c.setContent(html_94230fd440d81ac8870c4bddf9f93f96);
+                var html_c9b33c98b3d9cd55fb2f005c84c3b220 = $(`<div id="html_c9b33c98b3d9cd55fb2f005c84c3b220" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Wolfgrubstraße 28, Metzingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TV Neuhausen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_20", this.value, "marker_20")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_b8a3b7091d30edb80dd64e2e8b0022af.setContent(html_c9b33c98b3d9cd55fb2f005c84c3b220);
             
         
 
-        marker_77ee6955b2769333b38d8fa0bf406937.bindPopup(popup_d917c2b5388bf6130f10a949fe52021c)
+        marker_f78f7743ff0b0d48e266a8e9dee9a4f5.bindPopup(popup_b8a3b7091d30edb80dd64e2e8b0022af)
         ;
 
         
     
     
-                marker_77ee6955b2769333b38d8fa0bf406937.setIcon(div_icon_17ebc9849abe301159d4d2a60d62ff34);
+                marker_f78f7743ff0b0d48e266a8e9dee9a4f5.setIcon(div_icon_25f05061767339b67eefeca71a414fe2);
             
     
-            feature_group_8247990c9015344898fe6a3610a140e4.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_cce8b9f105baf0e0d5bd2bf5718a5e5b.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_730556694da05d16b08c0cd49a417f26 = L.featureGroup(
+            var feature_group_c875754297d776a08be269a57f8eb4ba = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_83641d1dc33594001cfce3930a8237a1 = L.marker(
+            var marker_56fc0950f02900cd77d15dd4178f1f42 = L.marker(
                 [48.5644296, 9.3098291],
                 {
 }
-            ).addTo(feature_group_730556694da05d16b08c0cd49a417f26);
+            ).addTo(feature_group_c875754297d776a08be269a57f8eb4ba);
         
     
-            var div_icon_f7947de5254c2daa8748dd489faa5e44 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_21\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Grafenberg\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_5e3dab084fb1863a331d0d9f1f166c99 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_21\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Grafenberg\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_e6bad59ed5dc35a35421bfe471447195 = L.popup({
+        var popup_93d341fd564e54e26b386bbdc199c2d8 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_37a16d48dd7658794584afb9778d4ef3 = $(`<div id="html_37a16d48dd7658794584afb9778d4ef3" style="width: 100.0%; height: 100.0%;"><b>TSV Grafenberg</b><br>Kohlberger Str. 19 Grafenberg<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_21", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_e6bad59ed5dc35a35421bfe471447195.setContent(html_37a16d48dd7658794584afb9778d4ef3);
+                var html_84b2ef788b042b2b0651c2a73b173e23 = $(`<div id="html_84b2ef788b042b2b0651c2a73b173e23" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Kohlberger Str. 19 Grafenberg<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Grafenberg</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_21", this.value, "marker_21")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_93d341fd564e54e26b386bbdc199c2d8.setContent(html_84b2ef788b042b2b0651c2a73b173e23);
             
         
 
-        marker_83641d1dc33594001cfce3930a8237a1.bindPopup(popup_e6bad59ed5dc35a35421bfe471447195)
+        marker_56fc0950f02900cd77d15dd4178f1f42.bindPopup(popup_93d341fd564e54e26b386bbdc199c2d8)
         ;
 
         
     
     
-                marker_83641d1dc33594001cfce3930a8237a1.setIcon(div_icon_f7947de5254c2daa8748dd489faa5e44);
+                marker_56fc0950f02900cd77d15dd4178f1f42.setIcon(div_icon_5e3dab084fb1863a331d0d9f1f166c99);
             
     
-            feature_group_730556694da05d16b08c0cd49a417f26.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_c875754297d776a08be269a57f8eb4ba.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_28ce9beefdd035ee84a7074f551c9772 = L.featureGroup(
+            var feature_group_2789da5e72a5dea65e2c630842f90abc = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_c3e4239f1f604f532accac4c11ffdbe5 = L.marker(
+            var marker_390a503af17d862eed975cd8cd5d0da8 = L.marker(
                 [48.4993845, 9.1824302],
                 {
 }
-            ).addTo(feature_group_28ce9beefdd035ee84a7074f551c9772);
+            ).addTo(feature_group_2789da5e72a5dea65e2c630842f90abc);
         
     
-            var div_icon_f405cdabf1d29b349fdfaca5c040ca0b = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_22\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Betzingen III\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_240856437080cd38d06e2805c36f9244 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_22\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Betzingen (III)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_ec3190a49f08eaab962779892cbe946a = L.popup({
+        var popup_edb7f77727f6f48549e6a389a71aad2c = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_f479ebc81f284602562940a8e0d95677 = $(`<div id="html_f479ebc81f284602562940a8e0d95677" style="width: 100.0%; height: 100.0%;"><b>TSV Betzingen III</b><br>Hoffmannstr. 6, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_22", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_ec3190a49f08eaab962779892cbe946a.setContent(html_f479ebc81f284602562940a8e0d95677);
+                var html_4d25a97ca9f015b9072b8c060fb296f1 = $(`<div id="html_4d25a97ca9f015b9072b8c060fb296f1" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Hoffmannstr. 6, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Betzingen III</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_22", this.value, "marker_22")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_edb7f77727f6f48549e6a389a71aad2c.setContent(html_4d25a97ca9f015b9072b8c060fb296f1);
             
         
 
-        marker_c3e4239f1f604f532accac4c11ffdbe5.bindPopup(popup_ec3190a49f08eaab962779892cbe946a)
+        marker_390a503af17d862eed975cd8cd5d0da8.bindPopup(popup_edb7f77727f6f48549e6a389a71aad2c)
         ;
 
         
     
     
-                marker_c3e4239f1f604f532accac4c11ffdbe5.setIcon(div_icon_f405cdabf1d29b349fdfaca5c040ca0b);
+                marker_390a503af17d862eed975cd8cd5d0da8.setIcon(div_icon_240856437080cd38d06e2805c36f9244);
             
     
-            feature_group_28ce9beefdd035ee84a7074f551c9772.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_2789da5e72a5dea65e2c630842f90abc.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_3983259d777263ce7501626d8b6566ed = L.featureGroup(
+            var feature_group_6bf4f81cd07bcde19702c2d7e8083b0f = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_7b2b397a26ee29b0c2c7039b9f3a6e7d = L.marker(
+            var marker_8daf63786d65fbd7b525f585238adf62 = L.marker(
                 [48.489053, 9.2063572],
                 {
 }
-            ).addTo(feature_group_3983259d777263ce7501626d8b6566ed);
+            ).addTo(feature_group_6bf4f81cd07bcde19702c2d7e8083b0f);
         
     
-            var div_icon_34f9bf6e9a572ac920c97d763697c2ec = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_23\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Reutlingen III\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_6d9bccf82ae24022bd45067c11eb76ee = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_23\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \n                \u003cdiv id=\u0027dot_marker_26\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: -6px;\n                    position: relative;\n                    z-index: 9;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Reutlingen (III \u0026 II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_11521e95621272c30f94712d73dd7206 = L.popup({
+        var popup_35376cd3c3f01e6f0979c270ef1158e6 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_81515bba6cfe4c14bfb4d0ad08db149f = $(`<div id="html_81515bba6cfe4c14bfb4d0ad08db149f" style="width: 100.0%; height: 100.0%;"><b>TTC Reutlingen III</b><br>Jahnstraße 3, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_23", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_11521e95621272c30f94712d73dd7206.setContent(html_81515bba6cfe4c14bfb4d0ad08db149f);
+                var html_ec8d8251938d8bed7afa0508b5b6f0b6 = $(`<div id="html_ec8d8251938d8bed7afa0508b5b6f0b6" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Jahnstraße 3, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Reutlingen III</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_23", this.value, "marker_23_marker_26")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Reutlingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_26", this.value, "marker_23_marker_26")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_35376cd3c3f01e6f0979c270ef1158e6.setContent(html_ec8d8251938d8bed7afa0508b5b6f0b6);
             
         
 
-        marker_7b2b397a26ee29b0c2c7039b9f3a6e7d.bindPopup(popup_11521e95621272c30f94712d73dd7206)
+        marker_8daf63786d65fbd7b525f585238adf62.bindPopup(popup_35376cd3c3f01e6f0979c270ef1158e6)
         ;
 
         
     
     
-                marker_7b2b397a26ee29b0c2c7039b9f3a6e7d.setIcon(div_icon_34f9bf6e9a572ac920c97d763697c2ec);
+                marker_8daf63786d65fbd7b525f585238adf62.setIcon(div_icon_6d9bccf82ae24022bd45067c11eb76ee);
             
     
-            feature_group_3983259d777263ce7501626d8b6566ed.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_6bf4f81cd07bcde19702c2d7e8083b0f.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_e21245b64857e8cd1ce4dd0e7b441def = L.featureGroup(
+            var feature_group_c739dac3647a4e6e4a1e7c4e7f2617f9 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_d0e5a37fea4681b335a8b373091d7d3e = L.marker(
+            var marker_e0f3d7c8d10131afde0ec1670961549e = L.marker(
                 [48.5296453, 9.20027],
                 {
 }
-            ).addTo(feature_group_e21245b64857e8cd1ce4dd0e7b441def);
+            ).addTo(feature_group_c739dac3647a4e6e4a1e7c4e7f2617f9);
         
     
-            var div_icon_8e5e426fc4e95ea39cf9019f944b619a = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_24\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV Rommelsbach II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_1295685962471e567575233f64741e5b = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_24\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV Rommelsbach (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_67164343837be645d729d4107933dbd4 = L.popup({
+        var popup_68d39cd115bec55240db7ff595c818e1 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_34c5729e13e481dba53594e7f4941722 = $(`<div id="html_34c5729e13e481dba53594e7f4941722" style="width: 100.0%; height: 100.0%;"><b>SV Rommelsbach II</b><br>Reisweg 25, Reutlingen-Rommelsbach<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_24", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_67164343837be645d729d4107933dbd4.setContent(html_34c5729e13e481dba53594e7f4941722);
+                var html_e355d0fac659999b1d66de644c65c187 = $(`<div id="html_e355d0fac659999b1d66de644c65c187" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Reisweg 25, Reutlingen-Rommelsbach<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Rommelsbach II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_24", this.value, "marker_24")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_68d39cd115bec55240db7ff595c818e1.setContent(html_e355d0fac659999b1d66de644c65c187);
             
         
 
-        marker_d0e5a37fea4681b335a8b373091d7d3e.bindPopup(popup_67164343837be645d729d4107933dbd4)
+        marker_e0f3d7c8d10131afde0ec1670961549e.bindPopup(popup_68d39cd115bec55240db7ff595c818e1)
         ;
 
         
     
     
-                marker_d0e5a37fea4681b335a8b373091d7d3e.setIcon(div_icon_8e5e426fc4e95ea39cf9019f944b619a);
+                marker_e0f3d7c8d10131afde0ec1670961549e.setIcon(div_icon_1295685962471e567575233f64741e5b);
             
     
-            feature_group_e21245b64857e8cd1ce4dd0e7b441def.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_c739dac3647a4e6e4a1e7c4e7f2617f9.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_6124b162bd1ceb4c6de6b90d08c0c16d = L.featureGroup(
+            var feature_group_7e6d06e9fc970d387d744674adc99138 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_79eb0b9f14253af0a154d17075dece2b = L.marker(
+            var marker_0ebf5dece9c3ce54e3007128e84135c6 = L.marker(
                 [48.5308407, 9.1895725],
                 {
 }
-            ).addTo(feature_group_6124b162bd1ceb4c6de6b90d08c0c16d);
+            ).addTo(feature_group_7e6d06e9fc970d387d744674adc99138);
         
     
-            var div_icon_c61d31060a24a3e79370f7c2f9a33b79 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_25\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Sickenhausen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_bd215ded87255e79e86320391405335a = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_25\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: red; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Sickenhausen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_79a94788b019f08a6fc39e9863e7b722 = L.popup({
+        var popup_4c6dc29602dec77916d2700c556dc742 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_f45afb77bd75855ed33098c174cbecd0 = $(`<div id="html_f45afb77bd75855ed33098c174cbecd0" style="width: 100.0%; height: 100.0%;"><b>TSV Sickenhausen</b><br>Wartburgstraße 30, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_25", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_79a94788b019f08a6fc39e9863e7b722.setContent(html_f45afb77bd75855ed33098c174cbecd0);
+                var html_7d0be90f8c39810d7a524cef6ec6de42 = $(`<div id="html_7d0be90f8c39810d7a524cef6ec6de42" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Wartburgstraße 30, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Sickenhausen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_25", this.value, "marker_25")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
+                popup_4c6dc29602dec77916d2700c556dc742.setContent(html_7d0be90f8c39810d7a524cef6ec6de42);
             
         
 
-        marker_79eb0b9f14253af0a154d17075dece2b.bindPopup(popup_79a94788b019f08a6fc39e9863e7b722)
+        marker_0ebf5dece9c3ce54e3007128e84135c6.bindPopup(popup_4c6dc29602dec77916d2700c556dc742)
         ;
 
         
     
     
-                marker_79eb0b9f14253af0a154d17075dece2b.setIcon(div_icon_c61d31060a24a3e79370f7c2f9a33b79);
+                marker_0ebf5dece9c3ce54e3007128e84135c6.setIcon(div_icon_bd215ded87255e79e86320391405335a);
             
     
-            feature_group_6124b162bd1ceb4c6de6b90d08c0c16d.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
+            feature_group_7e6d06e9fc970d387d744674adc99138.addTo(feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4);
         
     
-            var feature_group_805ad77a7009916a4a0de8ffdeebebd8 = L.featureGroup(
+            feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4.addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
+        
+    
+            var feature_group_6fc3961fc1fe1b7ae031860c6a1308b2 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_afb417d97d3f1c54c2430c03d08fb34d = L.marker(
-                [48.489053, 9.2063572],
-                {
-}
-            ).addTo(feature_group_805ad77a7009916a4a0de8ffdeebebd8);
-        
-    
-            var div_icon_74f9acf934ad253a26782f2f9c175299 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_26\u0027 style=\u0027    width: 14px; height: 14px;     background-color: red;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Reutlingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
-  "iconAnchor": [7, 12],
-  "className": "empty",
-});
-        
-    
-        var popup_56344fbe9356b482d72fb9c1b2a4e71e = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_9b0cf7162da5966e1b254e93344f64ea = $(`<div id="html_9b0cf7162da5966e1b254e93344f64ea" style="width: 100.0%; height: 100.0%;"><b>TTC Reutlingen II</b><br>Jahnstraße 3, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_26", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' selected>Gruppe 3</option><option value='4' >Gruppe 4</option></select></div></div>`)[0];
-                popup_56344fbe9356b482d72fb9c1b2a4e71e.setContent(html_9b0cf7162da5966e1b254e93344f64ea);
-            
-        
-
-        marker_afb417d97d3f1c54c2430c03d08fb34d.bindPopup(popup_56344fbe9356b482d72fb9c1b2a4e71e)
-        ;
-
-        
-    
-    
-                marker_afb417d97d3f1c54c2430c03d08fb34d.setIcon(div_icon_74f9acf934ad253a26782f2f9c175299);
-            
-    
-            feature_group_805ad77a7009916a4a0de8ffdeebebd8.addTo(feature_group_3f0522d1763c55c1dc667570dadd7224);
-        
-    
-            feature_group_3f0522d1763c55c1dc667570dadd7224.addTo(map_62294028166261300c2f95188ebdebf4);
-        
-    
-            var feature_group_61f11302fd1bc830010b2e14a0a31f9b = L.featureGroup(
+            var feature_group_b0a902550900261a653d20f953e6cc73 = L.featureGroup(
                 {
 }
             );
         
     
-            var feature_group_1de80ddabd39bd119a441de9c835e202 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_6b5b2116c8f1260da50f3d99d9649573 = L.marker(
+            var marker_1f4c3ba86d59dbabcd0f25f2e49b8b48 = L.marker(
                 [48.347089, 9.3280358],
                 {
 }
-            ).addTo(feature_group_1de80ddabd39bd119a441de9c835e202);
+            ).addTo(feature_group_b0a902550900261a653d20f953e6cc73);
         
     
-            var div_icon_9a723bb6b7d4ae8398274de4af51aa40 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_27\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSSV Bernloch\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_3384bfeddc8856bbf7cee2f57548b80c = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_27\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSSV Bernloch\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_ae082796cc27163e23dc5e2f3afb2660 = L.popup({
+        var popup_f78e5a74e62a3b73b9fca8f81510ae27 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_806af6b462048b887782e803ee18b4cc = $(`<div id="html_806af6b462048b887782e803ee18b4cc" style="width: 100.0%; height: 100.0%;"><b>SSV Bernloch</b><br>Hohensteinschule 1, Hohenstein<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_27", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_ae082796cc27163e23dc5e2f3afb2660.setContent(html_806af6b462048b887782e803ee18b4cc);
+                var html_b6be017f1b01c6c9061a4b5260b9a978 = $(`<div id="html_b6be017f1b01c6c9061a4b5260b9a978" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Hohensteinschule 1, Hohenstein<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SSV Bernloch</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_27", this.value, "marker_27")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_f78e5a74e62a3b73b9fca8f81510ae27.setContent(html_b6be017f1b01c6c9061a4b5260b9a978);
             
         
 
-        marker_6b5b2116c8f1260da50f3d99d9649573.bindPopup(popup_ae082796cc27163e23dc5e2f3afb2660)
+        marker_1f4c3ba86d59dbabcd0f25f2e49b8b48.bindPopup(popup_f78e5a74e62a3b73b9fca8f81510ae27)
         ;
 
         
     
     
-                marker_6b5b2116c8f1260da50f3d99d9649573.setIcon(div_icon_9a723bb6b7d4ae8398274de4af51aa40);
+                marker_1f4c3ba86d59dbabcd0f25f2e49b8b48.setIcon(div_icon_3384bfeddc8856bbf7cee2f57548b80c);
             
     
-            feature_group_1de80ddabd39bd119a441de9c835e202.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_b0a902550900261a653d20f953e6cc73.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_988c2052f58c0f4b38b95b94ee7926ba = L.featureGroup(
+            var feature_group_42808a7aeff8bb8a5a81366ddf325c2e = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_7889671182acdaf6e14986c4e166cbbf = L.marker(
+            var marker_4e3c8881762b946d70f58b097be923d2 = L.marker(
                 [48.4653757, 9.2287414],
                 {
 }
-            ).addTo(feature_group_988c2052f58c0f4b38b95b94ee7926ba);
+            ).addTo(feature_group_42808a7aeff8bb8a5a81366ddf325c2e);
         
     
-            var div_icon_ce8a4e92aa336d67b9229974b4c662f1 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_28\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eVfL Pfullingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_1777d01ff0a73d6a5880b40acb820170 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_28\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eVfL Pfullingen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_aa876b47c8b557a6a0f5b75a173b6e19 = L.popup({
+        var popup_0982a835d5ba5cbf0a5f95595aa0d718 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_a78d2d51127ecf3abd5510eaf6b4b4ca = $(`<div id="html_a78d2d51127ecf3abd5510eaf6b4b4ca" style="width: 100.0%; height: 100.0%;"><b>VfL Pfullingen</b><br>Große Heerstraße 15/1, Pfullingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_28", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_aa876b47c8b557a6a0f5b75a173b6e19.setContent(html_a78d2d51127ecf3abd5510eaf6b4b4ca);
+                var html_3d68d7a07525ce17a719db356ea5c889 = $(`<div id="html_3d68d7a07525ce17a719db356ea5c889" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Große Heerstraße 15/1, Pfullingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>VfL Pfullingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_28", this.value, "marker_28")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_0982a835d5ba5cbf0a5f95595aa0d718.setContent(html_3d68d7a07525ce17a719db356ea5c889);
             
         
 
-        marker_7889671182acdaf6e14986c4e166cbbf.bindPopup(popup_aa876b47c8b557a6a0f5b75a173b6e19)
+        marker_4e3c8881762b946d70f58b097be923d2.bindPopup(popup_0982a835d5ba5cbf0a5f95595aa0d718)
         ;
 
         
     
     
-                marker_7889671182acdaf6e14986c4e166cbbf.setIcon(div_icon_ce8a4e92aa336d67b9229974b4c662f1);
+                marker_4e3c8881762b946d70f58b097be923d2.setIcon(div_icon_1777d01ff0a73d6a5880b40acb820170);
             
     
-            feature_group_988c2052f58c0f4b38b95b94ee7926ba.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_42808a7aeff8bb8a5a81366ddf325c2e.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_d00823e70e9c663f7da0faaf1a8d23d5 = L.featureGroup(
+            var feature_group_2abae521e3052f3ed059948a6c67b359 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_9ebaeb15ee7e82b5a71a62d6b96b76b3 = L.marker(
+            var marker_44b42f59e735d496ddc7e665d7b170d7 = L.marker(
                 [48.4518955, 9.3386679],
                 {
 }
-            ).addTo(feature_group_d00823e70e9c663f7da0faaf1a8d23d5);
+            ).addTo(feature_group_2abae521e3052f3ed059948a6c67b359);
         
     
-            var div_icon_e1ec4b008e3e2d8cfff1f133a9bfeaf4 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_29\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV W\u00fcrtingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_1559fa73b200ccc0b59432016effafef = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_29\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eSV W\u00fcrtingen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_1d21ffa76698d4e15ba70e792deb2db7 = L.popup({
+        var popup_8d22932d769bc4bfa523059eb0264478 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_19cc73e4f0ba02933de1870651bf1f3e = $(`<div id="html_19cc73e4f0ba02933de1870651bf1f3e" style="width: 100.0%; height: 100.0%;"><b>SV Würtingen</b><br>Uhlandstraße, St. Johann, BW, Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_29", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_1d21ffa76698d4e15ba70e792deb2db7.setContent(html_19cc73e4f0ba02933de1870651bf1f3e);
+                var html_513b288f1a33e7b775b3430b16447f4c = $(`<div id="html_513b288f1a33e7b775b3430b16447f4c" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Uhlandstraße, St. Johann, BW, Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SV Würtingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_29", this.value, "marker_29")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_8d22932d769bc4bfa523059eb0264478.setContent(html_513b288f1a33e7b775b3430b16447f4c);
             
         
 
-        marker_9ebaeb15ee7e82b5a71a62d6b96b76b3.bindPopup(popup_1d21ffa76698d4e15ba70e792deb2db7)
+        marker_44b42f59e735d496ddc7e665d7b170d7.bindPopup(popup_8d22932d769bc4bfa523059eb0264478)
         ;
 
         
     
     
-                marker_9ebaeb15ee7e82b5a71a62d6b96b76b3.setIcon(div_icon_e1ec4b008e3e2d8cfff1f133a9bfeaf4);
+                marker_44b42f59e735d496ddc7e665d7b170d7.setIcon(div_icon_1559fa73b200ccc0b59432016effafef);
             
     
-            feature_group_d00823e70e9c663f7da0faaf1a8d23d5.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_2abae521e3052f3ed059948a6c67b359.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_b2e1e3dbeaf076c2fba39a78c6de8676 = L.featureGroup(
+            var feature_group_9fe5f1f3e29efa432a4e783c83b9a448 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_993348b71bfbcfaa92b9f1eae812bd4a = L.marker(
+            var marker_a31ef5f6ef4d34c24d799f4e860fcd07 = L.marker(
                 [48.4082896, 9.2628981],
                 {
 }
-            ).addTo(feature_group_b2e1e3dbeaf076c2fba39a78c6de8676);
+            ).addTo(feature_group_9fe5f1f3e29efa432a4e783c83b9a448);
         
     
-            var div_icon_124a0200b20bf20014080465feaf1d6b = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_30\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTC Lichtenstein\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_0f9761d4f490684dc66380670b3e2a9e = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_30\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTC Lichtenstein\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_e853d3c46ef70b9b9e0a16b032d776f8 = L.popup({
+        var popup_93ba625aa2754ebd99f3af4c528efd40 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_f973b66993a987851cb4403cb6aec835 = $(`<div id="html_f973b66993a987851cb4403cb6aec835" style="width: 100.0%; height: 100.0%;"><b>TTC Lichtenstein</b><br>Forellenweg 16, Lichtenstein<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_30", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_e853d3c46ef70b9b9e0a16b032d776f8.setContent(html_f973b66993a987851cb4403cb6aec835);
+                var html_39ff93e882effb2f05f4ccdf71937dcc = $(`<div id="html_39ff93e882effb2f05f4ccdf71937dcc" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Forellenweg 16, Lichtenstein<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Lichtenstein</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_30", this.value, "marker_30")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_93ba625aa2754ebd99f3af4c528efd40.setContent(html_39ff93e882effb2f05f4ccdf71937dcc);
             
         
 
-        marker_993348b71bfbcfaa92b9f1eae812bd4a.bindPopup(popup_e853d3c46ef70b9b9e0a16b032d776f8)
+        marker_a31ef5f6ef4d34c24d799f4e860fcd07.bindPopup(popup_93ba625aa2754ebd99f3af4c528efd40)
         ;
 
         
     
     
-                marker_993348b71bfbcfaa92b9f1eae812bd4a.setIcon(div_icon_124a0200b20bf20014080465feaf1d6b);
+                marker_a31ef5f6ef4d34c24d799f4e860fcd07.setIcon(div_icon_0f9761d4f490684dc66380670b3e2a9e);
             
     
-            feature_group_b2e1e3dbeaf076c2fba39a78c6de8676.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_9fe5f1f3e29efa432a4e783c83b9a448.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_2bbeda27a9b06008ccd65cb6d42eb9b5 = L.featureGroup(
+            var feature_group_ee525d0ed3d9185da4dd0301ef690945 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_35bf4e026e3809d9e6a80ad20ba51f97 = L.marker(
+            var marker_6d0e79859ef4fc3e91d00efa8d0390e0 = L.marker(
                 [48.5283908, 9.3460774],
                 {
 }
-            ).addTo(feature_group_2bbeda27a9b06008ccd65cb6d42eb9b5);
+            ).addTo(feature_group_ee525d0ed3d9185da4dd0301ef690945);
         
     
-            var div_icon_58fbf473c6ccfff646bb33a228abcdc7 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_31\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Dettingen II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_6d86ac95e9f5543df74e860bc9e9301c = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_31\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Dettingen (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_bb43ae17c7e89b436541ee3cad58c4ef = L.popup({
+        var popup_91a1e25db0b1b50a0e56d2e63c7ebe11 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_2b8bd64c99cd3c6d52f96944443186d2 = $(`<div id="html_2b8bd64c99cd3c6d52f96944443186d2" style="width: 100.0%; height: 100.0%;"><b>TSV Dettingen II</b><br>Karlstraße 73, Dettingen an der Erms<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_31", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_bb43ae17c7e89b436541ee3cad58c4ef.setContent(html_2b8bd64c99cd3c6d52f96944443186d2);
+                var html_4ca7bc7aad9b24bbdc3a3d031603bc16 = $(`<div id="html_4ca7bc7aad9b24bbdc3a3d031603bc16" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Karlstraße 73, Dettingen an der Erms<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Dettingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_31", this.value, "marker_31")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_91a1e25db0b1b50a0e56d2e63c7ebe11.setContent(html_4ca7bc7aad9b24bbdc3a3d031603bc16);
             
         
 
-        marker_35bf4e026e3809d9e6a80ad20ba51f97.bindPopup(popup_bb43ae17c7e89b436541ee3cad58c4ef)
+        marker_6d0e79859ef4fc3e91d00efa8d0390e0.bindPopup(popup_91a1e25db0b1b50a0e56d2e63c7ebe11)
         ;
 
         
     
     
-                marker_35bf4e026e3809d9e6a80ad20ba51f97.setIcon(div_icon_58fbf473c6ccfff646bb33a228abcdc7);
+                marker_6d0e79859ef4fc3e91d00efa8d0390e0.setIcon(div_icon_6d86ac95e9f5543df74e860bc9e9301c);
             
     
-            feature_group_2bbeda27a9b06008ccd65cb6d42eb9b5.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_ee525d0ed3d9185da4dd0301ef690945.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_bc9d59e9d401dcdf7abfcfdccd939498 = L.featureGroup(
+            var feature_group_33a37bc50fb74958f1cb9a45e09b8501 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_251eb0ffffef7af89a85dea01320d60e = L.marker(
+            var marker_016e3b523565c6e8a21a822214c23c1f = L.marker(
                 [48.4602747, 9.3826672],
                 {
 }
-            ).addTo(feature_group_bc9d59e9d401dcdf7abfcfdccd939498);
+            ).addTo(feature_group_33a37bc50fb74958f1cb9a45e09b8501);
         
     
-            var div_icon_d5559f085d36e4fc8e77863ef4120808 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_32\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSG Upfingen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_4515771f8f55e99531f453e71099a487 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_32\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSG Upfingen\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_c8550a14990a2192070377b882bc7266 = L.popup({
+        var popup_84317d81f89ad4736e6ca6e8e5160a1e = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_dd7da01180825825f76a7efe54b58e28 = $(`<div id="html_dd7da01180825825f76a7efe54b58e28" style="width: 100.0%; height: 100.0%;"><b>TSG Upfingen</b><br>Sportheim, St. Johann,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_32", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_c8550a14990a2192070377b882bc7266.setContent(html_dd7da01180825825f76a7efe54b58e28);
+                var html_cd0a76d5cdfed0b9f28b5a5a2b0944f8 = $(`<div id="html_cd0a76d5cdfed0b9f28b5a5a2b0944f8" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Sportheim, St. Johann,BW,Deutschland<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSG Upfingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_32", this.value, "marker_32")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_84317d81f89ad4736e6ca6e8e5160a1e.setContent(html_cd0a76d5cdfed0b9f28b5a5a2b0944f8);
             
         
 
-        marker_251eb0ffffef7af89a85dea01320d60e.bindPopup(popup_c8550a14990a2192070377b882bc7266)
+        marker_016e3b523565c6e8a21a822214c23c1f.bindPopup(popup_84317d81f89ad4736e6ca6e8e5160a1e)
         ;
 
         
     
     
-                marker_251eb0ffffef7af89a85dea01320d60e.setIcon(div_icon_d5559f085d36e4fc8e77863ef4120808);
+                marker_016e3b523565c6e8a21a822214c23c1f.setIcon(div_icon_4515771f8f55e99531f453e71099a487);
             
     
-            feature_group_bc9d59e9d401dcdf7abfcfdccd939498.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_33a37bc50fb74958f1cb9a45e09b8501.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_537722e80eda64e2621c55f2cf24bdd3 = L.featureGroup(
+            var feature_group_d9dca2d8c1688eee4d24de4575ee4028 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_c7881799e85bb20492f287ac9bb599fd = L.marker(
-                [48.2473154, 9.2158205],
-                {
-}
-            ).addTo(feature_group_537722e80eda64e2621c55f2cf24bdd3);
-        
-    
-            var div_icon_996db4e57f15ea1dd43be28581c895a1 = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_33\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eSV Bronnen\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
-  "iconAnchor": [7, 12],
-  "className": "empty",
-});
-        
-    
-        var popup_f25ca33cd32490e1b5cf7766719a923d = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_8990c582ea6cd368f739db499e5720f7 = $(`<div id="html_8990c582ea6cd368f739db499e5720f7" style="width: 100.0%; height: 100.0%;"><b>SV Bronnen</b><br>Schrotgasse 9, Gammertingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_33", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_f25ca33cd32490e1b5cf7766719a923d.setContent(html_8990c582ea6cd368f739db499e5720f7);
-            
-        
-
-        marker_c7881799e85bb20492f287ac9bb599fd.bindPopup(popup_f25ca33cd32490e1b5cf7766719a923d)
-        ;
-
-        
-    
-    
-                marker_c7881799e85bb20492f287ac9bb599fd.setIcon(div_icon_996db4e57f15ea1dd43be28581c895a1);
-            
-    
-            feature_group_537722e80eda64e2621c55f2cf24bdd3.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
-        
-    
-            var feature_group_c01e9149268a1af340bff53261a05f1f = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var marker_27f04bb0c6d02f508002bcdb1d6d5aaa = L.marker(
+            var marker_a4445e8419207b60b4e2f8a10426a9ed = L.marker(
                 [48.3095555, 9.2770409],
                 {
 }
-            ).addTo(feature_group_c01e9149268a1af340bff53261a05f1f);
+            ).addTo(feature_group_d9dca2d8c1688eee4d24de4575ee4028);
         
     
-            var div_icon_7d93342685c98d24c6ecb4c8b92cf30b = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_34\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTSV Steinhilben\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_2d45357b309478d734ab03359f614369 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_34\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTSV Steinhilben\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_21635a286dc0a16c66044507043a9b03 = L.popup({
+        var popup_4a90efeca462108f687680f8d8f87aa8 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_0bce7a4805bbc8de2bce2f3801e72d4a = $(`<div id="html_0bce7a4805bbc8de2bce2f3801e72d4a" style="width: 100.0%; height: 100.0%;"><b>TSV Steinhilben</b><br>Albstraße 5, Steinhilben<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_34", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_21635a286dc0a16c66044507043a9b03.setContent(html_0bce7a4805bbc8de2bce2f3801e72d4a);
+                var html_b7220d7392a2f2cb752af59ed677cb7f = $(`<div id="html_b7220d7392a2f2cb752af59ed677cb7f" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Albstraße 5, Steinhilben<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Steinhilben</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_34", this.value, "marker_34")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_4a90efeca462108f687680f8d8f87aa8.setContent(html_b7220d7392a2f2cb752af59ed677cb7f);
             
         
 
-        marker_27f04bb0c6d02f508002bcdb1d6d5aaa.bindPopup(popup_21635a286dc0a16c66044507043a9b03)
+        marker_a4445e8419207b60b4e2f8a10426a9ed.bindPopup(popup_4a90efeca462108f687680f8d8f87aa8)
         ;
 
         
     
     
-                marker_27f04bb0c6d02f508002bcdb1d6d5aaa.setIcon(div_icon_7d93342685c98d24c6ecb4c8b92cf30b);
+                marker_a4445e8419207b60b4e2f8a10426a9ed.setIcon(div_icon_2d45357b309478d734ab03359f614369);
             
     
-            feature_group_c01e9149268a1af340bff53261a05f1f.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_d9dca2d8c1688eee4d24de4575ee4028.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            var feature_group_659c66119640439766af931cd595f24a = L.featureGroup(
+            var feature_group_1dc7d69ea876cc5de9901c784679fc03 = L.featureGroup(
                 {
 }
             );
         
     
-            var marker_470e6b4ca89e24c7c89f1ae459cae666 = L.marker(
+            var marker_8309ed5f700143b15a79192dc4a66ba0 = L.marker(
                 [48.4090808, 9.1848558],
                 {
 }
-            ).addTo(feature_group_659c66119640439766af931cd595f24a);
+            ).addTo(feature_group_1dc7d69ea876cc5de9901c784679fc03);
         
     
-            var div_icon_669c490e883f110a37563e497d811d4c = L.divIcon({
-  "html": "\u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e  \u003cdiv id=\u0027dot_marker_35\u0027 style=\u0027    width: 14px; height: 14px;     background-color: purple;     border: 2px solid white;     border-radius: 50%;     box-shadow: 0 0 4px rgba(0,0,0,0.4);    flex-shrink: 0;  \u0027\u003e\u003c/div\u003e  \u003cdiv style=\u0027    white-space: nowrap;     padding: 2px 6px;     border-radius: 4px;     background: rgba(255,255,255,0.95);     border: 1px solid #666;     font-size: 12px;     margin-left: 8px;    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);  \u0027\u003eTTG Sonnenb\u00fchl II\u003c/div\u003e\u003c/div\u003e",
-  "iconSize": [200, 24],
+            var div_icon_ced569ccb6799b846b6d1b6ebe9d4fe5 = L.divIcon({
+  "html": "\n            \u003cdiv style=\u0027display: flex; align-items: center; position: relative;\u0027\u003e\n                \u003cdiv style=\u0027display: flex; align-items: center;\u0027\u003e\n                \u003cdiv id=\u0027dot_marker_35\u0027 style=\u0027\n                    width: 14px; height: 14px; \n                    background-color: purple; \n                    border: 2px solid white; \n                    border-radius: 50%; \n                    box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                    flex-shrink: 0;\n                    margin-left: 0px;\n                    position: relative;\n                    z-index: 10;\n                \u0027\u003e\u003c/div\u003e\n                \u003c/div\u003e\n                \u003cdiv style=\u0027\n                    white-space: nowrap; \n                    padding: 2px 6px; \n                    border-radius: 4px; \n                    background: rgba(255,255,255,0.95); \n                    border: 1px solid #666; \n                    font-size: 12px; \n                    margin-left: 8px;\n                    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                \u0027\u003eTTG Sonnenb\u00fchl (II)\u003c/div\u003e\n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 24],
   "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_ef37e2c92b66bfdac40b0be13410a723 = L.popup({
+        var popup_473205d579b2fa0aea853896545fc847 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_f80ee4d4c792565b89fda29e016ff709 = $(`<div id="html_f80ee4d4c792565b89fda29e016ff709" style="width: 100.0%; height: 100.0%;"><b>TTG Sonnenbühl II</b><br>Mezgerstraße 21, Sonnenbühl<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_35", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
-                popup_ef37e2c92b66bfdac40b0be13410a723.setContent(html_f80ee4d4c792565b89fda29e016ff709);
+                var html_c093cafee1e3b1a2c9faf41e7701c263 = $(`<div id="html_c093cafee1e3b1a2c9faf41e7701c263" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Mezgerstraße 21, Sonnenbühl<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTG Sonnenbühl II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_35", this.value, "marker_35")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='1' >Gruppe 1</option><option value='2' >Gruppe 2</option><option value='3' >Gruppe 3</option><option value='4' selected>Gruppe 4</option></select></div></div>`)[0];
+                popup_473205d579b2fa0aea853896545fc847.setContent(html_c093cafee1e3b1a2c9faf41e7701c263);
             
         
 
-        marker_470e6b4ca89e24c7c89f1ae459cae666.bindPopup(popup_ef37e2c92b66bfdac40b0be13410a723)
+        marker_8309ed5f700143b15a79192dc4a66ba0.bindPopup(popup_473205d579b2fa0aea853896545fc847)
         ;
 
         
     
     
-                marker_470e6b4ca89e24c7c89f1ae459cae666.setIcon(div_icon_669c490e883f110a37563e497d811d4c);
+                marker_8309ed5f700143b15a79192dc4a66ba0.setIcon(div_icon_ced569ccb6799b846b6d1b6ebe9d4fe5);
             
     
-            feature_group_659c66119640439766af931cd595f24a.addTo(feature_group_61f11302fd1bc830010b2e14a0a31f9b);
+            feature_group_1dc7d69ea876cc5de9901c784679fc03.addTo(feature_group_6fc3961fc1fe1b7ae031860c6a1308b2);
         
     
-            feature_group_61f11302fd1bc830010b2e14a0a31f9b.addTo(map_62294028166261300c2f95188ebdebf4);
+            feature_group_6fc3961fc1fe1b7ae031860c6a1308b2.addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
         
     
-            var layer_control_878f911fe742787e8c35e11873f2bbd4_layers = {
+            var layer_control_0f2ea572c2ada20b23fe8bee27cf68c2_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_7bc01efc56d169ed18531ceaf96254fc,
+                    "openstreetmap" : tile_layer_c670e907ec20674241c3c01917668fdb,
                 },
                 overlays :  {
-                    "Gruppe 1" : feature_group_d2906238e136f0797b45932602083266,
-                    "Gruppe 2" : feature_group_7b2cd8e9d3bbcd486d5acd18dbf9a555,
-                    "Gruppe 3" : feature_group_3f0522d1763c55c1dc667570dadd7224,
-                    "Gruppe 4" : feature_group_61f11302fd1bc830010b2e14a0a31f9b,
+                    "Gruppe 1" : feature_group_7a93508589aeeef1c323e6746c776e7e,
+                    "Gruppe 2" : feature_group_9db8c0bbc4c7a4e0c6b47e01d6b4600c,
+                    "Gruppe 3" : feature_group_99b2fba5bdacd6b24d8e2e27ce6599b4,
+                    "Gruppe 4" : feature_group_6fc3961fc1fe1b7ae031860c6a1308b2,
                 },
             };
-            let layer_control_878f911fe742787e8c35e11873f2bbd4 = L.control.layers(
-                layer_control_878f911fe742787e8c35e11873f2bbd4_layers.base_layers,
-                layer_control_878f911fe742787e8c35e11873f2bbd4_layers.overlays,
+            let layer_control_0f2ea572c2ada20b23fe8bee27cf68c2 = L.control.layers(
+                layer_control_0f2ea572c2ada20b23fe8bee27cf68c2_layers.base_layers,
+                layer_control_0f2ea572c2ada20b23fe8bee27cf68c2_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_62294028166261300c2f95188ebdebf4);
+            ).addTo(map_fa7f518495a98b1b46bcf1937cacfa49);
 
         
 </script>
