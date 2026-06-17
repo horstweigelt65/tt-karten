@@ -261,7 +261,6 @@ def create_maps(locations, entries):
         color_json = json.dumps(color_mapping)
         marker_labels_json = json.dumps(group_marker_labels, ensure_ascii=False)
         
-        # --- ENHANCED JAVASCRIPT: Handles map element mutation & legend updates ---
 # --- ENHANCED JAVASCRIPT: Handles map element mutation & legend updates ---
         enable_overlays_js = f"""
         <script>
@@ -287,9 +286,13 @@ def create_maps(locations, entries):
             }});
         }}
 
-        // Dynamic Engine for switching marker allocations live
+      // Dynamic Engine for switching marker allocations live
         window.moveMarkerGroup = function(markerId, targetRawGroup) {{
-            var targetDisplayName = targetRawGroup === 'Alle' ? 'Alle' : 'Gruppe ' + targetRawGroup;
+            var targetDisplayName = 'Alle';
+            if (targetRawGroup !== 'Alle') {{
+                targetDisplayName = 'Gruppe ' + targetRawGroup;
+            }}
+            
             var currentRawGroup = null;
             var matchedItem = null;
             
@@ -321,13 +324,24 @@ def create_maps(locations, entries):
                 if (fGroups[targetRawGroup]) {{
                     fGroups[targetRawGroup].addLayer(childLayer);
                     
-                    // Update circle colors within the shifted package to mimic original layer style
+                    // Forcefully change color and fill color of the specific marker path
+                    var targetColor = colorMapping[targetRawGroup];
                     childLayer.eachLayer(function(layer) {{
+                        // Apply updates directly to CircleMarkers
                         if (layer.setStyle) {{
                             layer.setStyle({{
-                                color: colorMapping[targetRawGroup],
-                                fillColor: colorMapping[targetRawGroup]
+                                color: targetColor,
+                                fillColor: targetColor
                             }});
+                            // Extra assurance: inject into direct option properties
+                            if (layer.options) {{
+                                layer.options.color = targetColor;
+                                layer.options.fillColor = targetColor;
+                            }}
+                            // Force Leaflet vector engine to redraw the marker path with the new style
+                            if (typeof layer.redraw === 'function') {{
+                                layer.redraw();
+                            }}
                         }}
                     }});
                 }}
