@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_35ca4214ad6a4ac71c756be9e59fc971 {
+                #map_4d629cc086fd84dd3b3c0c8378a8b3b6 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -56,13 +56,11 @@
     
         <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25); max-height:40vh; width:280px; overflow:auto;'>
             <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Erwachsene - Bezirksoberliga</div>
-            <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Alle' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Alle</label><ul class='group-marker-list' data-group='Alle' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
+            <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Alle' checked style='margin-right:6px;'/><span id='box_Alle' style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Alle</label><ul class='group-marker-list' data-group='Alle' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
         </div>
         <style>
         .leaflet-control-layers { display: none !important; }
-        /* group marker lists show fully; outer legend scroll handles overflow */
         .group-marker-list { margin:4px 0 0 0; padding-left:16px; }
-        /* ensure legend scroll is comfortable on small screens */
         @media (max-height:600px) {
             #map_legend { max-height:50vh; }
         }
@@ -70,28 +68,113 @@
         
     
         <script>
-        var groupMarkerLabels = {"Alle": ["TTC Grosselfingen", "TSV Gomaringen", "TSV Dettingen", "SV Tübingen", "TSV Nusplingen II", "TTC Ergenzingen II", "TSV Sondelfingen", "TSV Dormettingen", "TSV Nusplingen"]};
+        var groupMarkerLabels = {"Alle": [{"id": "marker_0", "label": "TTC Grosselfingen", "rawGroup": "Alle"}, {"id": "marker_1", "label": "TSV Gomaringen", "rawGroup": "Alle"}, {"id": "marker_2", "label": "TSV Dettingen", "rawGroup": "Alle"}, {"id": "marker_3", "label": "SV Tübingen", "rawGroup": "Alle"}, {"id": "marker_4", "label": "TSV Nusplingen II", "rawGroup": "Alle"}, {"id": "marker_5", "label": "TTC Ergenzingen II", "rawGroup": "Alle"}, {"id": "marker_6", "label": "TSV Sondelfingen", "rawGroup": "Alle"}, {"id": "marker_7", "label": "TSV Dormettingen", "rawGroup": "Alle"}, {"id": "marker_8", "label": "TSV Nusplingen", "rawGroup": "Alle"}]};
+        var colorMapping = {"Alle": "blue"};
+        var fGroups = {};
+        var subGroups = {};
 
         function refreshGroupMarkerList(groupName, visible) {
             var list = document.querySelector('ul.group-marker-list[data-group="' + groupName + '"]');
             if (!list) return;
-            var labels = groupMarkerLabels[groupName] || [];
-            list.innerHTML = labels.map(function(name) {
-                return '<li style="margin:2px 0; font-size:12px;">' + name + '</li>';
+            var dataItems = groupMarkerLabels[groupName] || [];
+            list.innerHTML = dataItems.map(function(item) {
+                return '<li style="margin:2px 0; font-size:12px;">' + item.label + '</li>';
             }).join('');
             list.style.display = visible ? 'block' : 'none';
         }
 
         function refreshAllGroupMarkerLists() {
-            document.querySelectorAll('.group-toggle').forEach(function(cb) {
-                var groupName = cb.getAttribute('data-group');
-                refreshGroupMarkerList(groupName, cb.checked);
+            Object.keys(groupMarkerLabels).forEach(function(groupName) {
+                var cb = document.querySelector('.group-toggle[data-group="' + groupName + '"]');
+                refreshGroupMarkerList(groupName, cb ? cb.checked : true);
             });
         }
+
+      // Dynamic Engine for switching marker allocations live
+        window.moveMarkerGroup = function(markerId, targetRawGroup) {
+            var targetDisplayName = 'Alle';
+            if (targetRawGroup !== 'Alle') {
+                targetDisplayName = 'Gruppe ' + targetRawGroup;
+            }
+            
+            var currentRawGroup = null;
+            var matchedItem = null;
+            
+            // Find current structural location of marker metadata
+            Object.keys(groupMarkerLabels).forEach(function(gName) {
+                var arr = groupMarkerLabels[gName];
+                var foundIdx = arr.findIndex(function(i) { return i.id === markerId; });
+                if (foundIdx !== -1) {
+                    matchedItem = arr.splice(foundIdx, 1)[0];
+                }
+            });
+
+            if (!matchedItem) return;
+
+            // Append item into target metadata array
+            matchedItem.rawGroup = targetRawGroup;
+            if (!groupMarkerLabels[targetDisplayName]) groupMarkerLabels[targetDisplayName] = [];
+            groupMarkerLabels[targetDisplayName].push(matchedItem);
+
+            // Handle Leaflet Object Transfer Layer-to-Layer
+            var childLayer = subGroups[markerId];
+            if (childLayer) {
+                // Remove from all parent groups cleanly
+                Object.keys(fGroups).forEach(function(gKey) {
+                    fGroups[gKey].removeLayer(childLayer);
+                });
+                
+                // Add to target parent FeatureGroup
+                if (fGroups[targetRawGroup]) {
+                    fGroups[targetRawGroup].addLayer(childLayer);
+                    
+                    // Forcefully change color and fill color of the specific marker path
+                    var targetColor = colorMapping[targetRawGroup];
+                    childLayer.eachLayer(function(layer) {
+                        // Apply updates directly to CircleMarkers
+                        if (layer.setStyle) {
+                            layer.setStyle({
+                                color: targetColor,
+                                fillColor: targetColor
+                            });
+                            // Extra assurance: inject into direct option properties
+                            if (layer.options) {
+                                layer.options.color = targetColor;
+                                layer.options.fillColor = targetColor;
+                            }
+                            // Force Leaflet vector engine to redraw the marker path with the new style
+                            if (typeof layer.redraw === 'function') {
+                                layer.redraw();
+                            }
+                        }
+                    });
+                }
+            }
+
+            refreshAllGroupMarkerLists();
+        };
 
         setTimeout(function() {
             try {
                 var overlayMap = {};
+                
+                // Track down Folium's global autogenerated Leaflet variable names
+                Object.keys(window).forEach(function(key) {
+                    if (key.startsWith('feature_group_')) {
+                        var fg = window[key];
+                        if (fg.options && fg.options.name) {
+                            if (fg.options.name.startsWith('sub_marker_')) {
+                                var mId = fg.options.name.replace('sub_', '');
+                                subGroups[mId] = fg;
+                            } else {
+                                // Map string names back to parent layout keys
+                                var cleanKey = fg.options.name.replace('Gruppe ', '');
+                                fGroups[cleanKey] = fg;
+                            }
+                        }
+                    }
+                });
+
                 document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(label) {
                     var input = label.querySelector('input[type=checkbox]');
                     if (!input) return;
@@ -113,7 +196,7 @@
                 refreshAllGroupMarkerLists();
             } catch (e) { console && console.log && console.log('group legend init error', e); }
         }, 1000);
-        // Also refresh on window load in case the DOM/map initialization is slower
+
         if (window && window.addEventListener) {
             window.addEventListener('load', function() {
                 try { refreshAllGroupMarkerLists(); } catch(e){}
@@ -122,14 +205,14 @@
         </script>
         
     
-            <div class="folium-map" id="map_35ca4214ad6a4ac71c756be9e59fc971" ></div>
+            <div class="folium-map" id="map_4d629cc086fd84dd3b3c0c8378a8b3b6" ></div>
         
 </body>
 <script>
     
     
-            var map_35ca4214ad6a4ac71c756be9e59fc971 = L.map(
-                "map_35ca4214ad6a4ac71c756be9e59fc971",
+            var map_4d629cc086fd84dd3b3c0c8378a8b3b6 = L.map(
+                "map_4d629cc086fd84dd3b3c0c8378a8b3b6",
                 {
                     center: [48.36976535555555, 8.997887266666666],
                     crs: L.CRS.EPSG3857,
@@ -146,7 +229,7 @@
 
         
     
-            var tile_layer_f49d40ea152c8eb4074eecfc61835c1e = L.tileLayer(
+            var tile_layer_d47c13fbcbcd0e52811e6751988d6cf1 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -163,29 +246,52 @@
             );
         
     
-            tile_layer_f49d40ea152c8eb4074eecfc61835c1e.addTo(map_35ca4214ad6a4ac71c756be9e59fc971);
+            tile_layer_d47c13fbcbcd0e52811e6751988d6cf1.addTo(map_4d629cc086fd84dd3b3c0c8378a8b3b6);
         
     
-            var feature_group_0616f71f689b373f040bbf840da07ce9 = L.featureGroup(
+            var feature_group_528324501ff210a33d93035d4dcea48b = L.featureGroup(
                 {
 }
             );
         
     
-            var circle_marker_98bd0cc8cd807cf4780e95e5f25aa8f6 = L.circleMarker(
-                [48.3307525, 8.8819193],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            var feature_group_05bb1d0eeb87dc8cbe1cb61614a72ee4 = L.featureGroup(
+                {
+}
+            );
         
     
-            var marker_d2356caaa44648a8746c5f9f9cca0305 = L.marker(
+            var circle_marker_a3f2a9307b1c4a31f9d79c30d235817e = L.circleMarker(
+                [48.3307525, 8.8819193],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_05bb1d0eeb87dc8cbe1cb61614a72ee4);
+        
+    
+        var popup_6cd0dfd32aed5794d3fb7f11b38b024b = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f232aceb94f64842e96e76ae3f8bde7d = $(`<div id="html_f232aceb94f64842e96e76ae3f8bde7d" style="width: 100.0%; height: 100.0%;"><b>TTC Grosselfingen</b><br>Schulstraße 9, Grosselfingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_0", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_6cd0dfd32aed5794d3fb7f11b38b024b.setContent(html_f232aceb94f64842e96e76ae3f8bde7d);
+            
+        
+
+        circle_marker_a3f2a9307b1c4a31f9d79c30d235817e.bindPopup(popup_6cd0dfd32aed5794d3fb7f11b38b024b)
+        ;
+
+        
+    
+    
+            var marker_441ecc7c104d899d016969a03847ce6e = L.marker(
                 [48.3307525, 8.8819193],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_05bb1d0eeb87dc8cbe1cb61614a72ee4);
         
     
-            var div_icon_2330db59c15af8ffd95eda89979b07d5 = L.divIcon({
+            var div_icon_b0dc7c9ddb720769d04207072b548b93 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Grosselfingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -193,23 +299,66 @@
 });
         
     
-                marker_d2356caaa44648a8746c5f9f9cca0305.setIcon(div_icon_2330db59c15af8ffd95eda89979b07d5);
+        var popup_d65f08c9fd58ed0bcd5f07ac19e7fdd1 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_7ef58b2aa9538f8dc59e0dd3627ca26b = L.circleMarker(
-                [48.4474987, 9.0887233],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_d0f0f744f3e14a1e641b538bf97c0a61 = $(`<div id="html_d0f0f744f3e14a1e641b538bf97c0a61" style="width: 100.0%; height: 100.0%;"><b>TTC Grosselfingen</b><br>Schulstraße 9, Grosselfingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_0", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_d65f08c9fd58ed0bcd5f07ac19e7fdd1.setContent(html_d0f0f744f3e14a1e641b538bf97c0a61);
+            
+        
+
+        marker_441ecc7c104d899d016969a03847ce6e.bindPopup(popup_d65f08c9fd58ed0bcd5f07ac19e7fdd1)
+        ;
+
         
     
-            var marker_570a5646d20c432ae4b75fc32fb62edb = L.marker(
+    
+                marker_441ecc7c104d899d016969a03847ce6e.setIcon(div_icon_b0dc7c9ddb720769d04207072b548b93);
+            
+    
+            feature_group_05bb1d0eeb87dc8cbe1cb61614a72ee4.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_43e40197d12d254666f12ec0f9fcb6d5 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_076f561d7976bbf420d46ec806b97ae9 = L.circleMarker(
+                [48.4474987, 9.0887233],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_43e40197d12d254666f12ec0f9fcb6d5);
+        
+    
+        var popup_495c03e582c843583acad92e0d1bb0b3 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b0121bda4a773f41780543752b7033fd = $(`<div id="html_b0121bda4a773f41780543752b7033fd" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_1", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_495c03e582c843583acad92e0d1bb0b3.setContent(html_b0121bda4a773f41780543752b7033fd);
+            
+        
+
+        circle_marker_076f561d7976bbf420d46ec806b97ae9.bindPopup(popup_495c03e582c843583acad92e0d1bb0b3)
+        ;
+
+        
+    
+    
+            var marker_c42138dac666d98390a384f371c16a84 = L.marker(
                 [48.4474987, 9.0887233],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_43e40197d12d254666f12ec0f9fcb6d5);
         
     
-            var div_icon_c10787060a9f2e1f44e6867ef59bd5e8 = L.divIcon({
+            var div_icon_ff7a924dcfb157b9cbc195cdf3e7a4b0 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Gomaringen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -217,23 +366,66 @@
 });
         
     
-                marker_570a5646d20c432ae4b75fc32fb62edb.setIcon(div_icon_c10787060a9f2e1f44e6867ef59bd5e8);
+        var popup_e7f8d211d05a0d4d5df02326ac35f3e0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_ea42bd84d1336b5c98716631a1337470 = L.circleMarker(
-                [48.5283908, 9.3460774],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_2c8818213f8b44380e35bcf5fd219a6d = $(`<div id="html_2c8818213f8b44380e35bcf5fd219a6d" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_1", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_e7f8d211d05a0d4d5df02326ac35f3e0.setContent(html_2c8818213f8b44380e35bcf5fd219a6d);
+            
+        
+
+        marker_c42138dac666d98390a384f371c16a84.bindPopup(popup_e7f8d211d05a0d4d5df02326ac35f3e0)
+        ;
+
         
     
-            var marker_d9d5a70519bbf6b1260c6c279d85e340 = L.marker(
+    
+                marker_c42138dac666d98390a384f371c16a84.setIcon(div_icon_ff7a924dcfb157b9cbc195cdf3e7a4b0);
+            
+    
+            feature_group_43e40197d12d254666f12ec0f9fcb6d5.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_a42ebab9e6884c486444ce9e8f04774b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_fded18a1112266a7596b0cc16b34bc38 = L.circleMarker(
+                [48.5283908, 9.3460774],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a42ebab9e6884c486444ce9e8f04774b);
+        
+    
+        var popup_6ec6beaddfdfc5dd10e8ec7282b56c4b = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_34b015942451f61e0919e183d16f70af = $(`<div id="html_34b015942451f61e0919e183d16f70af" style="width: 100.0%; height: 100.0%;"><b>TSV Dettingen</b><br>Karlstraße 73, Dettingen an der Erms<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_2", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_6ec6beaddfdfc5dd10e8ec7282b56c4b.setContent(html_34b015942451f61e0919e183d16f70af);
+            
+        
+
+        circle_marker_fded18a1112266a7596b0cc16b34bc38.bindPopup(popup_6ec6beaddfdfc5dd10e8ec7282b56c4b)
+        ;
+
+        
+    
+    
+            var marker_03640b68a87d98f2e2ff58de292d610b = L.marker(
                 [48.5283908, 9.3460774],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_a42ebab9e6884c486444ce9e8f04774b);
         
     
-            var div_icon_604216f65daae3430f5e1c4ee4ba6e86 = L.divIcon({
+            var div_icon_d2ee265e243afeb42a6550f4ce491e28 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Dettingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -241,23 +433,66 @@
 });
         
     
-                marker_d9d5a70519bbf6b1260c6c279d85e340.setIcon(div_icon_604216f65daae3430f5e1c4ee4ba6e86);
+        var popup_7fefdd88a45e3d9fd9c6eb24273b75e8 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_2011233908634d2e4c7487666807eddf = L.circleMarker(
-                [48.5138093, 9.068387],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_5d72f0681d3e3671de654a3fbbe21bd5 = $(`<div id="html_5d72f0681d3e3671de654a3fbbe21bd5" style="width: 100.0%; height: 100.0%;"><b>TSV Dettingen</b><br>Karlstraße 73, Dettingen an der Erms<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_2", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_7fefdd88a45e3d9fd9c6eb24273b75e8.setContent(html_5d72f0681d3e3671de654a3fbbe21bd5);
+            
+        
+
+        marker_03640b68a87d98f2e2ff58de292d610b.bindPopup(popup_7fefdd88a45e3d9fd9c6eb24273b75e8)
+        ;
+
         
     
-            var marker_cfbea92303496df6704ae28bd03d715a = L.marker(
+    
+                marker_03640b68a87d98f2e2ff58de292d610b.setIcon(div_icon_d2ee265e243afeb42a6550f4ce491e28);
+            
+    
+            feature_group_a42ebab9e6884c486444ce9e8f04774b.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_ccb472053d50c478c0aa5408feba186d = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_bc5bb4a95253787899cff5598f085642 = L.circleMarker(
+                [48.5138093, 9.068387],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ccb472053d50c478c0aa5408feba186d);
+        
+    
+        var popup_5b503f9895b55e585b8535a2e2bd2e66 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b5987050fa3f86afe672d2bd9f239678 = $(`<div id="html_b5987050fa3f86afe672d2bd9f239678" style="width: 100.0%; height: 100.0%;"><b>SV Tübingen</b><br>Grundschule an der Hügelstraße, Tübingen,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_3", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_5b503f9895b55e585b8535a2e2bd2e66.setContent(html_b5987050fa3f86afe672d2bd9f239678);
+            
+        
+
+        circle_marker_bc5bb4a95253787899cff5598f085642.bindPopup(popup_5b503f9895b55e585b8535a2e2bd2e66)
+        ;
+
+        
+    
+    
+            var marker_c75da7ce003e45087e2d71d1b6633f41 = L.marker(
                 [48.5138093, 9.068387],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_ccb472053d50c478c0aa5408feba186d);
         
     
-            var div_icon_5c6c00af7d1ba67b99c40a303d8b7fb7 = L.divIcon({
+            var div_icon_99ec85eede4133836b38b336846538f4 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSV T\u00fcbingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -265,23 +500,66 @@
 });
         
     
-                marker_cfbea92303496df6704ae28bd03d715a.setIcon(div_icon_5c6c00af7d1ba67b99c40a303d8b7fb7);
+        var popup_92637653fd0ecb70f0ce46f1ad8bcca0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_22f08512bb120292e5a1a22518ba9fd0 = L.circleMarker(
-                [48.130618, 8.8902861],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_e3043d6691494d22c524d783a54a0a8d = $(`<div id="html_e3043d6691494d22c524d783a54a0a8d" style="width: 100.0%; height: 100.0%;"><b>SV Tübingen</b><br>Grundschule an der Hügelstraße, Tübingen,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_3", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_92637653fd0ecb70f0ce46f1ad8bcca0.setContent(html_e3043d6691494d22c524d783a54a0a8d);
+            
+        
+
+        marker_c75da7ce003e45087e2d71d1b6633f41.bindPopup(popup_92637653fd0ecb70f0ce46f1ad8bcca0)
+        ;
+
         
     
-            var marker_b952da5117a04aad079ebd0114478328 = L.marker(
+    
+                marker_c75da7ce003e45087e2d71d1b6633f41.setIcon(div_icon_99ec85eede4133836b38b336846538f4);
+            
+    
+            feature_group_ccb472053d50c478c0aa5408feba186d.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_aba8dd7b63d69f0f442c243c64829e8c = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_d9af9ef2d1dc9fb736578aa0bee22b5b = L.circleMarker(
+                [48.130618, 8.8902861],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_aba8dd7b63d69f0f442c243c64829e8c);
+        
+    
+        var popup_9240570911b253dbd68f8a7f055073ad = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8c214b38bccc4b1fedb175b53f1407d9 = $(`<div id="html_8c214b38bccc4b1fedb175b53f1407d9" style="width: 100.0%; height: 100.0%;"><b>TSV Nusplingen II</b><br>Schulstraße 25, 72362 Nusplingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_4", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_9240570911b253dbd68f8a7f055073ad.setContent(html_8c214b38bccc4b1fedb175b53f1407d9);
+            
+        
+
+        circle_marker_d9af9ef2d1dc9fb736578aa0bee22b5b.bindPopup(popup_9240570911b253dbd68f8a7f055073ad)
+        ;
+
+        
+    
+    
+            var marker_cb02f2ffa6c9ee5d85ae67193a54bac7 = L.marker(
                 [48.130618, 8.8902861],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_aba8dd7b63d69f0f442c243c64829e8c);
         
     
-            var div_icon_c5cc59eaec3637fc0b7310d169486875 = L.divIcon({
+            var div_icon_a4438cd3f09c774f8247afb240dfb919 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Nusplingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -289,23 +567,66 @@
 });
         
     
-                marker_b952da5117a04aad079ebd0114478328.setIcon(div_icon_c5cc59eaec3637fc0b7310d169486875);
+        var popup_565fe844dcb602b4d54f46e3d34eccfe = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_2c3ef7ad4341e5cb9aa6b1e8b6c35cd6 = L.circleMarker(
-                [48.4916585, 8.8156384],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_2cec26a15f8334e4bcc0ee3551a72f18 = $(`<div id="html_2cec26a15f8334e4bcc0ee3551a72f18" style="width: 100.0%; height: 100.0%;"><b>TSV Nusplingen II</b><br>Schulstraße 25, 72362 Nusplingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_4", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_565fe844dcb602b4d54f46e3d34eccfe.setContent(html_2cec26a15f8334e4bcc0ee3551a72f18);
+            
+        
+
+        marker_cb02f2ffa6c9ee5d85ae67193a54bac7.bindPopup(popup_565fe844dcb602b4d54f46e3d34eccfe)
+        ;
+
         
     
-            var marker_7790405b1d5ee903cb7bfeed903765d1 = L.marker(
+    
+                marker_cb02f2ffa6c9ee5d85ae67193a54bac7.setIcon(div_icon_a4438cd3f09c774f8247afb240dfb919);
+            
+    
+            feature_group_aba8dd7b63d69f0f442c243c64829e8c.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_2949a177c4e043541bee6ca1fc69f3cd = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_7d5160be136e004d067bcee8e250de8e = L.circleMarker(
+                [48.4916585, 8.8156384],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_2949a177c4e043541bee6ca1fc69f3cd);
+        
+    
+        var popup_2d3ec0faa01d0bee5663428ccb222437 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_a816d6d6d235c01faeb64fe3fc607bc3 = $(`<div id="html_a816d6d6d235c01faeb64fe3fc607bc3" style="width: 100.0%; height: 100.0%;"><b>TTC Ergenzingen II</b><br>Lilienweg 6, Rottenburg am Neckar,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_5", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_2d3ec0faa01d0bee5663428ccb222437.setContent(html_a816d6d6d235c01faeb64fe3fc607bc3);
+            
+        
+
+        circle_marker_7d5160be136e004d067bcee8e250de8e.bindPopup(popup_2d3ec0faa01d0bee5663428ccb222437)
+        ;
+
+        
+    
+    
+            var marker_42ed32643206bae95c3493ff14c6358a = L.marker(
                 [48.4916585, 8.8156384],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_2949a177c4e043541bee6ca1fc69f3cd);
         
     
-            var div_icon_44d8f4385c4f5b16879a89a0399be4a0 = L.divIcon({
+            var div_icon_de13afa133d2e65938a0d9833678f4ad = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Ergenzingen II\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -313,23 +634,66 @@
 });
         
     
-                marker_7790405b1d5ee903cb7bfeed903765d1.setIcon(div_icon_44d8f4385c4f5b16879a89a0399be4a0);
+        var popup_fd99a1f1330f08ddfcb48732aa4c89b1 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_09faa3edb51f6fcdfbb6c7b06b942dff = L.circleMarker(
-                [48.5143552, 9.2280459],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_e816755a6832043456eccd02f15c8903 = $(`<div id="html_e816755a6832043456eccd02f15c8903" style="width: 100.0%; height: 100.0%;"><b>TTC Ergenzingen II</b><br>Lilienweg 6, Rottenburg am Neckar,BW,Deutschland<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_5", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_fd99a1f1330f08ddfcb48732aa4c89b1.setContent(html_e816755a6832043456eccd02f15c8903);
+            
+        
+
+        marker_42ed32643206bae95c3493ff14c6358a.bindPopup(popup_fd99a1f1330f08ddfcb48732aa4c89b1)
+        ;
+
         
     
-            var marker_5eefcf5ada601c1174a7cd2e36739eaf = L.marker(
+    
+                marker_42ed32643206bae95c3493ff14c6358a.setIcon(div_icon_de13afa133d2e65938a0d9833678f4ad);
+            
+    
+            feature_group_2949a177c4e043541bee6ca1fc69f3cd.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_22f1c3c52ff3b73d26caddccd1606dd9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_375546745e0fd37a37479685b246afb7 = L.circleMarker(
+                [48.5143552, 9.2280459],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_22f1c3c52ff3b73d26caddccd1606dd9);
+        
+    
+        var popup_4eefefa802e4e5e62079bc62055ec77e = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_0c19343b634004cfccbc3756b1c939c5 = $(`<div id="html_0c19343b634004cfccbc3756b1c939c5" style="width: 100.0%; height: 100.0%;"><b>TSV Sondelfingen</b><br>Lange Straße 36, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_6", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_4eefefa802e4e5e62079bc62055ec77e.setContent(html_0c19343b634004cfccbc3756b1c939c5);
+            
+        
+
+        circle_marker_375546745e0fd37a37479685b246afb7.bindPopup(popup_4eefefa802e4e5e62079bc62055ec77e)
+        ;
+
+        
+    
+    
+            var marker_fee67460dc6ae72ffa6f3b03bcefa318 = L.marker(
                 [48.5143552, 9.2280459],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_22f1c3c52ff3b73d26caddccd1606dd9);
         
     
-            var div_icon_4084fbd4243617b74a4922740afd3285 = L.divIcon({
+            var div_icon_c383b30cb21459b995b8d64a958161f7 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Sondelfingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -337,23 +701,66 @@
 });
         
     
-                marker_5eefcf5ada601c1174a7cd2e36739eaf.setIcon(div_icon_4084fbd4243617b74a4922740afd3285);
+        var popup_c1fa840b352174235aa279fade06737a = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_4aef7d0d7e975ea42bc7f1df12504688 = L.circleMarker(
-                [48.2401872, 8.7716219],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_2b4a8e2a95a12e64cd21a327d2ea34f5 = $(`<div id="html_2b4a8e2a95a12e64cd21a327d2ea34f5" style="width: 100.0%; height: 100.0%;"><b>TSV Sondelfingen</b><br>Lange Straße 36, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_6", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_c1fa840b352174235aa279fade06737a.setContent(html_2b4a8e2a95a12e64cd21a327d2ea34f5);
+            
+        
+
+        marker_fee67460dc6ae72ffa6f3b03bcefa318.bindPopup(popup_c1fa840b352174235aa279fade06737a)
+        ;
+
         
     
-            var marker_76a394a04abce0caa7835f7f7ecfb599 = L.marker(
+    
+                marker_fee67460dc6ae72ffa6f3b03bcefa318.setIcon(div_icon_c383b30cb21459b995b8d64a958161f7);
+            
+    
+            feature_group_22f1c3c52ff3b73d26caddccd1606dd9.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_fbd36f5823cbbcc87c165628465fcc36 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_5961455adb01ea8e2d2efbb7e09dd1e4 = L.circleMarker(
+                [48.2401872, 8.7716219],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_fbd36f5823cbbcc87c165628465fcc36);
+        
+    
+        var popup_e9ecbad38512ce1e044c19ad5e1490ab = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2d5c80517b30604f11a70609921b1bfe = $(`<div id="html_2d5c80517b30604f11a70609921b1bfe" style="width: 100.0%; height: 100.0%;"><b>TSV Dormettingen</b><br>Schulstraße 35, 72358 Dormettingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_7", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_e9ecbad38512ce1e044c19ad5e1490ab.setContent(html_2d5c80517b30604f11a70609921b1bfe);
+            
+        
+
+        circle_marker_5961455adb01ea8e2d2efbb7e09dd1e4.bindPopup(popup_e9ecbad38512ce1e044c19ad5e1490ab)
+        ;
+
+        
+    
+    
+            var marker_b5cc8ec93a8756f62b0f568d46e79f89 = L.marker(
                 [48.2401872, 8.7716219],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_fbd36f5823cbbcc87c165628465fcc36);
         
     
-            var div_icon_ace4787e8abaf8a43593a8bd5ffa1199 = L.divIcon({
+            var div_icon_f3457704265a67f2563cf28dbcb82538 = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Dormettingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -361,23 +768,66 @@
 });
         
     
-                marker_76a394a04abce0caa7835f7f7ecfb599.setIcon(div_icon_ace4787e8abaf8a43593a8bd5ffa1199);
+        var popup_642e13296481af90a13569a0afebc7a4 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            var circle_marker_ecbf7b1abbac4cd6282c44cdf1f80214 = L.circleMarker(
-                [48.130618, 8.8902861],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+                var html_4dc402865ebc6b1edab7c4f6978b3ccf = $(`<div id="html_4dc402865ebc6b1edab7c4f6978b3ccf" style="width: 100.0%; height: 100.0%;"><b>TSV Dormettingen</b><br>Schulstraße 35, 72358 Dormettingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_7", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_642e13296481af90a13569a0afebc7a4.setContent(html_4dc402865ebc6b1edab7c4f6978b3ccf);
+            
+        
+
+        marker_b5cc8ec93a8756f62b0f568d46e79f89.bindPopup(popup_642e13296481af90a13569a0afebc7a4)
+        ;
+
         
     
-            var marker_fa7448445111bda6c73dd96cf5140f14 = L.marker(
+    
+                marker_b5cc8ec93a8756f62b0f568d46e79f89.setIcon(div_icon_f3457704265a67f2563cf28dbcb82538);
+            
+    
+            feature_group_fbd36f5823cbbcc87c165628465fcc36.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            var feature_group_5a778ce6caa8e3f7994b1405b61ab8f9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_36b2ad39948c3146b85c7d58b588efb5 = L.circleMarker(
+                [48.130618, 8.8902861],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
+            ).addTo(feature_group_5a778ce6caa8e3f7994b1405b61ab8f9);
+        
+    
+        var popup_9d1c4b7ec1fb9212847ddc846e646420 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_b602eb6f8530d3f9ea2f994a11d9ae8c = $(`<div id="html_b602eb6f8530d3f9ea2f994a11d9ae8c" style="width: 100.0%; height: 100.0%;"><b>TSV Nusplingen</b><br>Schulstraße 25, 72362 Nusplingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_8", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_9d1c4b7ec1fb9212847ddc846e646420.setContent(html_b602eb6f8530d3f9ea2f994a11d9ae8c);
+            
+        
+
+        circle_marker_36b2ad39948c3146b85c7d58b588efb5.bindPopup(popup_9d1c4b7ec1fb9212847ddc846e646420)
+        ;
+
+        
+    
+    
+            var marker_93f580623d818c13020002215645b753 = L.marker(
                 [48.130618, 8.8902861],
                 {
 }
-            ).addTo(feature_group_0616f71f689b373f040bbf840da07ce9);
+            ).addTo(feature_group_5a778ce6caa8e3f7994b1405b61ab8f9);
         
     
-            var div_icon_7fbe51d256683f0af815804d4f7bb9de = L.divIcon({
+            var div_icon_80cfeaa2895aa68d7f7f3f90a91d036a = L.divIcon({
   "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Nusplingen\u003c/div\u003e",
   "iconSize": [150, 20],
   "iconAnchor": [0, -10],
@@ -385,29 +835,49 @@
 });
         
     
-                marker_fa7448445111bda6c73dd96cf5140f14.setIcon(div_icon_7fbe51d256683f0af815804d4f7bb9de);
+        var popup_639a4536bc187ec35ecbd7b06cffc4d6 = L.popup({
+  "maxWidth": 250,
+});
+
+        
             
-    
-            feature_group_0616f71f689b373f040bbf840da07ce9.addTo(map_35ca4214ad6a4ac71c756be9e59fc971);
+                var html_d15a1615bf21611003e1e235d696f1dc = $(`<div id="html_d15a1615bf21611003e1e235d696f1dc" style="width: 100.0%; height: 100.0%;"><b>TSV Nusplingen</b><br>Schulstraße 25, 72362 Nusplingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_8", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_639a4536bc187ec35ecbd7b06cffc4d6.setContent(html_d15a1615bf21611003e1e235d696f1dc);
+            
+        
+
+        marker_93f580623d818c13020002215645b753.bindPopup(popup_639a4536bc187ec35ecbd7b06cffc4d6)
+        ;
+
         
     
-            var layer_control_f827b9ae917de25eca5b720a5f21a593_layers = {
+    
+                marker_93f580623d818c13020002215645b753.setIcon(div_icon_80cfeaa2895aa68d7f7f3f90a91d036a);
+            
+    
+            feature_group_5a778ce6caa8e3f7994b1405b61ab8f9.addTo(feature_group_528324501ff210a33d93035d4dcea48b);
+        
+    
+            feature_group_528324501ff210a33d93035d4dcea48b.addTo(map_4d629cc086fd84dd3b3c0c8378a8b3b6);
+        
+    
+            var layer_control_bc5e8db081bc796621dc0d36e66c7783_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_f49d40ea152c8eb4074eecfc61835c1e,
+                    "openstreetmap" : tile_layer_d47c13fbcbcd0e52811e6751988d6cf1,
                 },
                 overlays :  {
-                    "Alle" : feature_group_0616f71f689b373f040bbf840da07ce9,
+                    "Alle" : feature_group_528324501ff210a33d93035d4dcea48b,
                 },
             };
-            let layer_control_f827b9ae917de25eca5b720a5f21a593 = L.control.layers(
-                layer_control_f827b9ae917de25eca5b720a5f21a593_layers.base_layers,
-                layer_control_f827b9ae917de25eca5b720a5f21a593_layers.overlays,
+            let layer_control_bc5e8db081bc796621dc0d36e66c7783 = L.control.layers(
+                layer_control_bc5e8db081bc796621dc0d36e66c7783_layers.base_layers,
+                layer_control_bc5e8db081bc796621dc0d36e66c7783_layers.overlays,
                 {
   "position": "topright",
   "collapsed": false,
   "autoZIndex": true,
 }
-            ).addTo(map_35ca4214ad6a4ac71c756be9e59fc971);
+            ).addTo(map_4d629cc086fd84dd3b3c0c8378a8b3b6);
 
         
 </script>
