@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_6fac4496737f9a3c1bd59ddefe6d78c0 {
+                #map_e82e38f3aef166a275209ffe3813b060 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -56,51 +56,153 @@
     
         <div id='map_legend' style='position: fixed; bottom: 60px; left: 10px; z-index:9999; background: rgba(255,255,255,0.95); padding:10px; border:1px solid #ccc; border-radius:6px; box-shadow:2px 2px 6px rgba(0,0,0,0.25); max-height:40vh; width:280px; overflow:auto;'>
             <div style='font-weight:700; margin-bottom:6px; font-size:14px;'>Damen - Kreisklasse</div>
-            <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Alle' checked style='margin-right:6px;'/><span id='box_Alle' style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span>Alle</label><ul class='group-marker-list' data-group='Alle' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
+            <div style='margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #ddd;'>
+                <label style='cursor:pointer; font-size:13px; font-weight:bold; display:flex; align-items:center;'>
+                    <input type='checkbox' id='global-labels-toggle' checked style='margin-right:6px;'/>
+                    Labels anzeigen
+                </label>
+            </div>
+            <ul style='list-style:none; padding:0; margin:0;'><li style='margin:4px 0;' data-raw-group='Alle'><label style='cursor:pointer; display:flex; align-items:center;'><input type='checkbox' class='group-toggle' data-group='Alle (7)' checked style='margin-right:6px;'/><span style='display:inline-block;width:14px;height:14px;background:blue;margin-right:8px;border:1px solid #444;vertical-align:middle;'></span><span class='legend-text-label'>Alle (7)</span></label><ul class='group-marker-list' data-group='Alle (7)' style='list-style:none; padding-left:20px; margin:4px 0 0 0;'></ul></li></ul>
         </div>
         <style>
         .leaflet-control-layers { display: none !important; }
         .group-marker-list { margin:4px 0 0 0; padding-left:16px; }
-        @media (max-height:600px) {
-            #map_legend { max-height:50vh; }
-        }
+        @media (max-height:600px) { #map_legend { max-height:50vh; } }
         </style>
         
     
         <script>
-        var groupMarkerLabels = {"Alle": [{"id": "marker_0", "label": "TTC Hechingen", "rawGroup": "Alle"}, {"id": "marker_1", "label": "FC Mittelstadt II", "rawGroup": "Alle"}, {"id": "marker_2", "label": "SSV Rübgarten", "rawGroup": "Alle"}, {"id": "marker_3", "label": "TTC Bad Imnau", "rawGroup": "Alle"}, {"id": "marker_4", "label": "TSV Gomaringen", "rawGroup": "Alle"}, {"id": "marker_5", "label": "TSV Betzingen II", "rawGroup": "Alle"}, {"id": "marker_6", "label": "TSV Steinhilben", "rawGroup": "Alle"}]};
+        var groupMarkerLabels = {"Alle (7)": [{"id": "marker_0", "label": "TTC Hechingen", "rawGroup": "Alle"}, {"id": "marker_1", "label": "FC Mittelstadt II", "rawGroup": "Alle"}, {"id": "marker_2", "label": "SSV Rübgarten", "rawGroup": "Alle"}, {"id": "marker_3", "label": "TTC Bad Imnau", "rawGroup": "Alle"}, {"id": "marker_4", "label": "TSV Gomaringen", "rawGroup": "Alle"}, {"id": "marker_5", "label": "TSV Betzingen II", "rawGroup": "Alle"}, {"id": "marker_6", "label": "TSV Steinhilben", "rawGroup": "Alle"}]};
         var colorMapping = {"Alle": "blue"};
-        var fGroups = {};
-        var subGroups = {};
+        var bundlesData = {"bundle_0": [{"id": "marker_0", "label": "TTC Hechingen", "initialGroup": "Alle"}], "bundle_1": [{"id": "marker_1", "label": "FC Mittelstadt II", "initialGroup": "Alle"}], "bundle_2": [{"id": "marker_2", "label": "SSV Rübgarten", "initialGroup": "Alle"}], "bundle_3": [{"id": "marker_3", "label": "TTC Bad Imnau", "initialGroup": "Alle"}], "bundle_4": [{"id": "marker_4", "label": "TSV Gomaringen", "initialGroup": "Alle"}], "bundle_5": [{"id": "marker_5", "label": "TSV Betzingen II", "initialGroup": "Alle"}], "bundle_6": [{"id": "marker_6", "label": "TSV Steinhilben", "initialGroup": "Alle"}]}; 
+        var rawToDisplayMapping = {"Alle": "Alle (7)"};
 
-        function refreshGroupMarkerList(groupName, visible) {
-            var list = document.querySelector('ul.group-marker-list[data-group="' + groupName + '"]');
+        function refreshGroupMarkerList(groupDisplayName, visible) {
+            var list = document.querySelector('ul.group-marker-list[data-group="' + groupDisplayName + '"]');
             if (!list) return;
-            var dataItems = groupMarkerLabels[groupName] || [];
+            var dataItems = groupMarkerLabels[groupDisplayName] || [];
             list.innerHTML = dataItems.map(function(item) {
                 return '<li style="margin:2px 0; font-size:12px;">' + item.label + '</li>';
             }).join('');
             list.style.display = visible ? 'block' : 'none';
         }
 
-        function refreshAllGroupMarkerLists() {
-            Object.keys(groupMarkerLabels).forEach(function(groupName) {
-                var cb = document.querySelector('.group-toggle[data-group="' + groupName + '"]');
-                refreshGroupMarkerList(groupName, cb ? cb.checked : true);
+        function updateMapElementsState() {
+            var dynamicCounts = {};
+            Object.keys(rawToDisplayMapping).forEach(function(key) {
+                dynamicCounts[key] = 0;
+            });
+
+            Object.keys(bundlesData).forEach(function(bId) {
+                bundlesData[bId].forEach(function(t) {
+                    if (dynamicCounts[t.initialGroup] !== undefined) {
+                        dynamicCounts[t.initialGroup]++;
+                    }
+                });
+            });
+
+            Object.keys(dynamicCounts).forEach(function(rawKey) {
+                var count = dynamicCounts[rawKey];
+                var baseName = (rawKey === 'Alle') ? 'Alle' : 'Gruppe ' + rawKey;
+                var newDisplayNameWithCount = baseName + ' (' + count + ')';
+                
+                var liElement = document.querySelector('li[data-raw-group="' + rawKey + '"]');
+                if (liElement) {
+                    var textSpan = liElement.querySelector('.legend-text-label');
+                    if (textSpan) textSpan.textContent = newDisplayNameWithCount;
+                    
+                    var cb = liElement.querySelector('.group-toggle');
+                    if (cb) cb.setAttribute('data-group', newDisplayNameWithCount);
+                    
+                    var subList = liElement.querySelector('.group-marker-list');
+                    if (subList) {
+                        var oldGroupAttr = subList.getAttribute('data-group');
+                        if (oldGroupAttr !== newDisplayNameWithCount) {
+                            if (groupMarkerLabels[oldGroupAttr]) {
+                                groupMarkerLabels[newDisplayNameWithCount] = groupMarkerLabels[oldGroupAttr];
+                                delete groupMarkerLabels[oldGroupAttr];
+                            }
+                            subList.setAttribute('data-group', newDisplayNameWithCount);
+                        }
+                    }
+                    rawToDisplayMapping[rawKey] = newDisplayNameWithCount;
+                }
+            });
+
+            var activeGroups = {};
+            document.querySelectorAll('.group-toggle').forEach(function(cb) {
+                var gDisplayName = cb.getAttribute('data-group');
+                var rawKey = Object.keys(rawToDisplayMapping).find(function(key) {
+                    return rawToDisplayMapping[key] === gDisplayName;
+                });
+                if (rawKey) {
+                    activeGroups[rawKey] = cb.checked;
+                }
+            });
+
+            // Zustand des neuen globalen Toggles auslesen
+            var labelsToggle = document.getElementById('global-labels-toggle');
+            var showLabelsGlobal = labelsToggle ? labelsToggle.checked : true;
+
+            Object.keys(bundlesData).forEach(function(bId) {
+                var teamsInBundle = bundlesData[bId];
+                var visibleTeamsCount = 0;
+                
+                teamsInBundle.forEach(function(t) {
+                    var isTeamGroupActive = activeGroups[t.initialGroup] !== false; 
+                    
+                    var targetRows = document.querySelectorAll('.team-row-' + bId + '[data-marker-id="' + t.id + '"]');
+                    targetRows.forEach(function(row) {
+                        if (isTeamGroupActive) {
+                            row.style.display = 'flex';
+                            visibleTeamsCount++;
+                            
+                            // Text-Label ein- oder ausblenden, je nach globalem Toggle
+                            var lbl = row.querySelector('.team-label-box');
+                            if (lbl) {
+                                lbl.style.display = showLabelsGlobal ? 'block' : 'none';
+                            }
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+
+                    var targetDots = document.querySelectorAll('#dot_' + t.id);
+                    targetDots.forEach(function(dot) {
+                        dot.style.backgroundColor = colorMapping[t.initialGroup];
+                    });
+                });
+
+                var container = document.getElementById('container_' + bId);
+                if (container) {
+                    var leafletMarkerIcon = container.closest('.leaflet-marker-icon');
+                    if (leafletMarkerIcon) {
+                        leafletMarkerIcon.style.display = (visibleTeamsCount > 0) ? 'block' : 'none';
+                    }
+                    var leafletPopup = container.closest('.leaflet-popup');
+                    if (leafletPopup && visibleTeamsCount === 0) {
+                        leafletPopup.style.display = 'none';
+                    }
+                }
             });
         }
 
-   // Dynamic Engine for switching marker allocations live
-        window.moveMarkerGroup = function(markerId, targetRawGroup) {
-            var targetDisplayName = 'Alle';
-            if (targetRawGroup !== 'Alle') {
-                targetDisplayName = 'Gruppe ' + targetRawGroup;
+        function refreshAllGroupMarkerLists() {
+            Object.keys(groupMarkerLabels).forEach(function(gDisplayName) {
+                var cb = document.querySelector('.group-toggle[data-group="' + gDisplayName + '"]');
+                refreshGroupMarkerList(gDisplayName, cb ? cb.checked : true);
+            });
+        }
+
+        window.moveMarkerGroup = function(markerId, targetRawGroup, bundleId) {
+            if (bundlesData[bundleId]) {
+                var teamObj = bundlesData[bundleId].find(function(t) { return t.id === markerId; });
+                if (teamObj) {
+                    teamObj.initialGroup = targetRawGroup;
+                }
             }
-            
-            var currentRawGroup = null;
+
             var matchedItem = null;
-            
-            // Find current structural location of marker metadata
             Object.keys(groupMarkerLabels).forEach(function(gName) {
                 var arr = groupMarkerLabels[gName];
                 var foundIdx = arr.findIndex(function(i) { return i.id === markerId; });
@@ -109,132 +211,50 @@
                 }
             });
 
-            if (!matchedItem) return;
-
-            // Append item into target metadata array
-            matchedItem.rawGroup = targetRawGroup;
-            if (!groupMarkerLabels[targetDisplayName]) groupMarkerLabels[targetDisplayName] = [];
-            groupMarkerLabels[targetDisplayName].push(matchedItem);
-
-            // Handle Leaflet Object Transfer Layer-to-Layer
-            var childLayer = subGroups[markerId];
-            if (childLayer) {
-                // Remove from all parent groups cleanly
-                Object.keys(fGroups).forEach(function(gKey) {
-                    fGroups[gKey].removeLayer(childLayer);
-                });
-                
-                // Add to target parent FeatureGroup
-                if (fGroups[targetRawGroup]) {
-                    fGroups[targetRawGroup].addLayer(childLayer);
-                    
-                    var targetColor = colorMapping[targetRawGroup];
-                    
-                    // Recursively check all nested Leaflet layers (CircleMarker paths)
-                    childLayer.eachLayer(function(layer) {
-                        // Apply updates directly to the Leaflet CircleMarkers vector paths
-                        if (layer.setStyle) {
-                            layer.setStyle({
-                                color: targetColor,
-                                fillColor: targetColor
-                            });
-                        }
-                        
-                        // Deep update internal Leaflet layer properties if nested
-                        if (layer.options) {
-                            layer.options.color = targetColor;
-                            layer.options.fillColor = targetColor;
-                        }
-                        
-                        // If it has sub-layers (FeatureGroup wrapper depth)
-                        if (typeof layer.eachLayer === 'function') {
-                            layer.eachLayer(function(subLayer) {
-                                if (subLayer.setStyle) {
-                                    subLayer.setStyle({
-                                        color: targetColor,
-                                        fillColor: targetColor
-                                    });
-                                }
-                                if (subLayer.options) {
-                                    subLayer.options.color = targetColor;
-                                    subLayer.options.fillColor = targetColor;
-                                }
-                                if (typeof subLayer.redraw === 'function') {
-                                    subLayer.redraw();
-                                }
-                            });
-                        }
-
-                        // Force Leaflet engine to repaint vector boundaries
-                        if (typeof layer.redraw === 'function') {
-                            layer.redraw();
-                        }
-                    });
-                }
+            if (matchedItem) {
+                matchedItem.rawGroup = targetRawGroup;
+                var targetDisplayName = rawToDisplayMapping[targetRawGroup];
+                if (!groupMarkerLabels[targetDisplayName]) groupMarkerLabels[targetDisplayName] = [];
+                groupMarkerLabels[targetDisplayName].push(matchedItem);
             }
 
+            updateMapElementsState();
             refreshAllGroupMarkerLists();
         };
-        
+
         setTimeout(function() {
             try {
-                var overlayMap = {};
-                
-                // Track down Folium's global autogenerated Leaflet variable names
-                Object.keys(window).forEach(function(key) {
-                    if (key.startsWith('feature_group_')) {
-                        var fg = window[key];
-                        if (fg.options && fg.options.name) {
-                            if (fg.options.name.startsWith('sub_marker_')) {
-                                var mId = fg.options.name.replace('sub_', '');
-                                subGroups[mId] = fg;
-                            } else {
-                                // Map string names back to parent layout keys
-                                var cleanKey = fg.options.name.replace('Gruppe ', '');
-                                fGroups[cleanKey] = fg;
-                            }
-                        }
+                document.getElementById('map_legend').addEventListener('change', function(e) {
+                    // Fall 1: Eine Gruppen-Checkbox wurde geklickt
+                    if (e.target && e.target.classList.contains('group-toggle')) {
+                        var target = e.target.getAttribute('data-group');
+                        refreshGroupMarkerList(target, e.target.checked);
+                        updateMapElementsState();
+                    }
+                    // Fall 2: Der globale Label-Toggle wurde geklickt
+                    if (e.target && e.target.id === 'global-labels-toggle') {
+                        updateMapElementsState();
                     }
                 });
 
-                document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(label) {
-                    var input = label.querySelector('input[type=checkbox]');
-                    if (!input) return;
-                    var text = label.textContent.trim();
-                    overlayMap[text] = input;
-                });
-
-                document.querySelectorAll('.group-toggle').forEach(function(cb) {
-                    var target = cb.getAttribute('data-group');
-                    cb.addEventListener('change', function() {
-                        var overlayInput = overlayMap[target];
-                        if (overlayInput && overlayInput.checked !== cb.checked) {
-                            overlayInput.click();
-                        }
-                        refreshGroupMarkerList(target, cb.checked);
-                    });
-                });
-
+                updateMapElementsState();
                 refreshAllGroupMarkerLists();
-            } catch (e) { console && console.log && console.log('group legend init error', e); }
-        }, 1000);
+                
+                setInterval(updateMapElementsState, 500);
 
-        if (window && window.addEventListener) {
-            window.addEventListener('load', function() {
-                try { refreshAllGroupMarkerLists(); } catch(e){}
-            });
-        }
+            } catch (e) { console.log('Init error:', e); }
+        }, 1000);
         </script>
         
     
-            <div class="folium-map" id="map_6fac4496737f9a3c1bd59ddefe6d78c0" ></div>
+            <div class="folium-map" id="map_e82e38f3aef166a275209ffe3813b060" ></div>
         
 </body>
 <script>
     
     
-            var map_6fac4496737f9a3c1bd59ddefe6d78c0 = L.map(
-                "map_6fac4496737f9a3c1bd59ddefe6d78c0",
+            var map_e82e38f3aef166a275209ffe3813b060 = L.map(
+                "map_e82e38f3aef166a275209ffe3813b060",
                 {
                     center: [48.44900892775738, 9.098231890368499],
                     crs: L.CRS.EPSG3857,
@@ -251,7 +271,7 @@
 
         
     
-            var tile_layer_a62204b20e2023ce8da06c7616cb170f = L.tileLayer(
+            var tile_layer_ee97463e006316fec8aecff0f2c757d1 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -268,505 +288,261 @@
             );
         
     
-            tile_layer_a62204b20e2023ce8da06c7616cb170f.addTo(map_6fac4496737f9a3c1bd59ddefe6d78c0);
+            tile_layer_ee97463e006316fec8aecff0f2c757d1.addTo(map_e82e38f3aef166a275209ffe3813b060);
         
     
-            var feature_group_9f8ce1240f3c8261cbda7c280553df4c = L.featureGroup(
+            var feature_group_66cb470a74d0cf9c4930f217cfbc9ff9 = L.featureGroup(
                 {
 }
             );
         
     
-            var feature_group_e58fc7b4dcc653e2b506c529e054a3d9 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_570f561c0f906c0d3e9ff2bc03dfb15c = L.circleMarker(
-                [48.3549089, 8.9616219],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_e58fc7b4dcc653e2b506c529e054a3d9);
-        
-    
-        var popup_cd3b584cc87428c5044ed59e76040fd2 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_2a63f41b3d941f4bea6215cabff3ea67 = $(`<div id="html_2a63f41b3d941f4bea6215cabff3ea67" style="width: 100.0%; height: 100.0%;"><b>TTC Hechingen</b><br>Am Schloßberg 13, Hechingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_0", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_cd3b584cc87428c5044ed59e76040fd2.setContent(html_2a63f41b3d941f4bea6215cabff3ea67);
-            
-        
-
-        circle_marker_570f561c0f906c0d3e9ff2bc03dfb15c.bindPopup(popup_cd3b584cc87428c5044ed59e76040fd2)
-        ;
-
-        
-    
-    
-            var marker_3aca217583f7b5f8dbf31ec87b255ecf = L.marker(
+            var marker_5cb98a619837c11946a578f36b9dc54c = L.marker(
                 [48.3549089, 8.9616219],
                 {
 }
-            ).addTo(feature_group_e58fc7b4dcc653e2b506c529e054a3d9);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_1b2145416f87d5d759c8cb07d8718b6b = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Hechingen\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_388e719297f430d0dba05e598b3aba17 = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_0\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_0\u0027 data-marker-id=\u0027marker_0\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_0\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eTTC Hechingen\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_c9b90abe084ad28090cb301257631d04 = L.popup({
+        var popup_f7325917446efcf1490478b9d66c40d6 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_686627a993eff03022bbfec0a982139f = $(`<div id="html_686627a993eff03022bbfec0a982139f" style="width: 100.0%; height: 100.0%;"><b>TTC Hechingen</b><br>Am Schloßberg 13, Hechingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_0", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_c9b90abe084ad28090cb301257631d04.setContent(html_686627a993eff03022bbfec0a982139f);
+                var html_bb068912b0c487fbe283722c59404ac5 = $(`<div id="html_bb068912b0c487fbe283722c59404ac5" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Am Schloßberg 13, Hechingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Hechingen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_0", this.value, "bundle_0")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_f7325917446efcf1490478b9d66c40d6.setContent(html_bb068912b0c487fbe283722c59404ac5);
             
         
 
-        marker_3aca217583f7b5f8dbf31ec87b255ecf.bindPopup(popup_c9b90abe084ad28090cb301257631d04)
+        marker_5cb98a619837c11946a578f36b9dc54c.bindPopup(popup_f7325917446efcf1490478b9d66c40d6)
         ;
 
         
     
     
-                marker_3aca217583f7b5f8dbf31ec87b255ecf.setIcon(div_icon_1b2145416f87d5d759c8cb07d8718b6b);
+                marker_5cb98a619837c11946a578f36b9dc54c.setIcon(div_icon_388e719297f430d0dba05e598b3aba17);
             
     
-            feature_group_e58fc7b4dcc653e2b506c529e054a3d9.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_3f840b4d04a64d3798fd63fcf5a0d2eb = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_823ea06442675193f7a379eb693abb42 = L.circleMarker(
-                [48.5651237, 9.2285889],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_3f840b4d04a64d3798fd63fcf5a0d2eb);
-        
-    
-        var popup_def09171be4d73050974a5675541fb59 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_e58e55d61dbb14b97ebac97996d5809a = $(`<div id="html_e58e55d61dbb14b97ebac97996d5809a" style="width: 100.0%; height: 100.0%;"><b>FC Mittelstadt II</b><br>Badbrunnenstr 4, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_1", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_def09171be4d73050974a5675541fb59.setContent(html_e58e55d61dbb14b97ebac97996d5809a);
-            
-        
-
-        circle_marker_823ea06442675193f7a379eb693abb42.bindPopup(popup_def09171be4d73050974a5675541fb59)
-        ;
-
-        
-    
-    
-            var marker_af41a8241b94b6c3593ef239ddbc2d36 = L.marker(
+            var marker_bb2afbab35c2c5535adac2c2494ca848 = L.marker(
                 [48.5651237, 9.2285889],
                 {
 }
-            ).addTo(feature_group_3f840b4d04a64d3798fd63fcf5a0d2eb);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_9fd19cab31cc19e37ffd774d1407a121 = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eFC Mittelstadt II\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_595e5a938a94f14e1cbd91a29fba2905 = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_1\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_1\u0027 data-marker-id=\u0027marker_1\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_1\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eFC Mittelstadt II\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_f849376df27ea265409d0eb56701b146 = L.popup({
+        var popup_89e18550171bfda112f987ff21daa701 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_cc3cc93dbfd957fe3d18c0e3d8b7c99f = $(`<div id="html_cc3cc93dbfd957fe3d18c0e3d8b7c99f" style="width: 100.0%; height: 100.0%;"><b>FC Mittelstadt II</b><br>Badbrunnenstr 4, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_1", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_f849376df27ea265409d0eb56701b146.setContent(html_cc3cc93dbfd957fe3d18c0e3d8b7c99f);
+                var html_6d0e7bdcd2d831fb437a87454f1d3627 = $(`<div id="html_6d0e7bdcd2d831fb437a87454f1d3627" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Badbrunnenstr 4, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>FC Mittelstadt II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_1", this.value, "bundle_1")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_89e18550171bfda112f987ff21daa701.setContent(html_6d0e7bdcd2d831fb437a87454f1d3627);
             
         
 
-        marker_af41a8241b94b6c3593ef239ddbc2d36.bindPopup(popup_f849376df27ea265409d0eb56701b146)
+        marker_bb2afbab35c2c5535adac2c2494ca848.bindPopup(popup_89e18550171bfda112f987ff21daa701)
         ;
 
         
     
     
-                marker_af41a8241b94b6c3593ef239ddbc2d36.setIcon(div_icon_9fd19cab31cc19e37ffd774d1407a121);
+                marker_bb2afbab35c2c5535adac2c2494ca848.setIcon(div_icon_595e5a938a94f14e1cbd91a29fba2905);
             
     
-            feature_group_3f840b4d04a64d3798fd63fcf5a0d2eb.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_5b6ce3a90d29e93cac7f8182fd0f63b9 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_8a1e64d6420021a57b628b55e9cada45 = L.circleMarker(
-                [48.563771994301646, 9.170867632579498],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_5b6ce3a90d29e93cac7f8182fd0f63b9);
-        
-    
-        var popup_c05e8e56cb061e654810804e42433ad3 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_12fc26922aa83bebd1cf372146a38423 = $(`<div id="html_12fc26922aa83bebd1cf372146a38423" style="width: 100.0%; height: 100.0%;"><b>SSV Rübgarten</b><br>Wildenaustraße 15, Pliezhausen Rübgarten<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_2", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_c05e8e56cb061e654810804e42433ad3.setContent(html_12fc26922aa83bebd1cf372146a38423);
-            
-        
-
-        circle_marker_8a1e64d6420021a57b628b55e9cada45.bindPopup(popup_c05e8e56cb061e654810804e42433ad3)
-        ;
-
-        
-    
-    
-            var marker_e16303f0742890d7c5721bd733878f04 = L.marker(
+            var marker_e373c53fe258ba92bd2f61a0e29345bf = L.marker(
                 [48.563771994301646, 9.170867632579498],
                 {
 }
-            ).addTo(feature_group_5b6ce3a90d29e93cac7f8182fd0f63b9);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_189ac1c83997ddfb2076e0a12152e274 = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eSSV R\u00fcbgarten\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_6b5872bfabb561d72e5f1b0f887669ba = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_2\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_2\u0027 data-marker-id=\u0027marker_2\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_2\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eSSV R\u00fcbgarten\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_6fb7324598065ddfd709067ce1b85f68 = L.popup({
+        var popup_2b192f6a36751509d57bb29a94818040 = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_9439638eb93e4b9cfdcada3314da6e3f = $(`<div id="html_9439638eb93e4b9cfdcada3314da6e3f" style="width: 100.0%; height: 100.0%;"><b>SSV Rübgarten</b><br>Wildenaustraße 15, Pliezhausen Rübgarten<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_2", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_6fb7324598065ddfd709067ce1b85f68.setContent(html_9439638eb93e4b9cfdcada3314da6e3f);
+                var html_a17467b63e549b087d93093587532ee5 = $(`<div id="html_a17467b63e549b087d93093587532ee5" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Wildenaustraße 15, Pliezhausen Rübgarten<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>SSV Rübgarten</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_2", this.value, "bundle_2")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_2b192f6a36751509d57bb29a94818040.setContent(html_a17467b63e549b087d93093587532ee5);
             
         
 
-        marker_e16303f0742890d7c5721bd733878f04.bindPopup(popup_6fb7324598065ddfd709067ce1b85f68)
+        marker_e373c53fe258ba92bd2f61a0e29345bf.bindPopup(popup_2b192f6a36751509d57bb29a94818040)
         ;
 
         
     
     
-                marker_e16303f0742890d7c5721bd733878f04.setIcon(div_icon_189ac1c83997ddfb2076e0a12152e274);
+                marker_e373c53fe258ba92bd2f61a0e29345bf.setIcon(div_icon_6b5872bfabb561d72e5f1b0f887669ba);
             
     
-            feature_group_5b6ce3a90d29e93cac7f8182fd0f63b9.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_c1294b2d6c00b4456aebc19175dd22f0 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_8d317a30745856f5f9ae80050ed0a7ae = L.circleMarker(
-                [48.4028192, 8.7783504],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_c1294b2d6c00b4456aebc19175dd22f0);
-        
-    
-        var popup_abcbf8a1a600bed952b6a079df6b0b40 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_7357c918ef6b04be89f5b1fd9403aa64 = $(`<div id="html_7357c918ef6b04be89f5b1fd9403aa64" style="width: 100.0%; height: 100.0%;"><b>TTC Bad Imnau</b><br>Schulstr. 14, Bad Imnau<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_3", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_abcbf8a1a600bed952b6a079df6b0b40.setContent(html_7357c918ef6b04be89f5b1fd9403aa64);
-            
-        
-
-        circle_marker_8d317a30745856f5f9ae80050ed0a7ae.bindPopup(popup_abcbf8a1a600bed952b6a079df6b0b40)
-        ;
-
-        
-    
-    
-            var marker_373b87a9a8628a8f59144300ddc7f761 = L.marker(
+            var marker_26ae164a72f400d10ca23277ee6d8aa6 = L.marker(
                 [48.4028192, 8.7783504],
                 {
 }
-            ).addTo(feature_group_c1294b2d6c00b4456aebc19175dd22f0);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_617021ec079701d3512cedc3236f3d90 = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTTC Bad Imnau\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_92f036ce3f74e5de407c39234a8a9d2b = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_3\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_3\u0027 data-marker-id=\u0027marker_3\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_3\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eTTC Bad Imnau\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_12a6ae9c20503123171e2d1b4ac4d7ca = L.popup({
+        var popup_e6eae793cc79fae8fdd7bde52d7f3cba = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_c2dbf47dfb5147fa2493dd2899e8acf6 = $(`<div id="html_c2dbf47dfb5147fa2493dd2899e8acf6" style="width: 100.0%; height: 100.0%;"><b>TTC Bad Imnau</b><br>Schulstr. 14, Bad Imnau<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_3", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_12a6ae9c20503123171e2d1b4ac4d7ca.setContent(html_c2dbf47dfb5147fa2493dd2899e8acf6);
+                var html_d442c6ceb2540f5f96c0eef75a422b80 = $(`<div id="html_d442c6ceb2540f5f96c0eef75a422b80" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Schulstr. 14, Bad Imnau<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TTC Bad Imnau</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_3", this.value, "bundle_3")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_e6eae793cc79fae8fdd7bde52d7f3cba.setContent(html_d442c6ceb2540f5f96c0eef75a422b80);
             
         
 
-        marker_373b87a9a8628a8f59144300ddc7f761.bindPopup(popup_12a6ae9c20503123171e2d1b4ac4d7ca)
+        marker_26ae164a72f400d10ca23277ee6d8aa6.bindPopup(popup_e6eae793cc79fae8fdd7bde52d7f3cba)
         ;
 
         
     
     
-                marker_373b87a9a8628a8f59144300ddc7f761.setIcon(div_icon_617021ec079701d3512cedc3236f3d90);
+                marker_26ae164a72f400d10ca23277ee6d8aa6.setIcon(div_icon_92f036ce3f74e5de407c39234a8a9d2b);
             
     
-            feature_group_c1294b2d6c00b4456aebc19175dd22f0.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_29e4d3c59af6cb48be0f70fbc5295785 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_852c4c2e831ea26b1a20e98406959be9 = L.circleMarker(
-                [48.4474987, 9.0887233],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_29e4d3c59af6cb48be0f70fbc5295785);
-        
-    
-        var popup_318ba4f81fb15b2058b0ee07259679d3 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_38d2116199c086ad63be5e1d941c0370 = $(`<div id="html_38d2116199c086ad63be5e1d941c0370" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_4", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_318ba4f81fb15b2058b0ee07259679d3.setContent(html_38d2116199c086ad63be5e1d941c0370);
-            
-        
-
-        circle_marker_852c4c2e831ea26b1a20e98406959be9.bindPopup(popup_318ba4f81fb15b2058b0ee07259679d3)
-        ;
-
-        
-    
-    
-            var marker_9ecf631dd466130266beb85dcc9b2d75 = L.marker(
+            var marker_2d8c24d60d4aab6326ee658fb9371825 = L.marker(
                 [48.4474987, 9.0887233],
                 {
 }
-            ).addTo(feature_group_29e4d3c59af6cb48be0f70fbc5295785);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_8b7d86c875cf27ab89f1df3a79efece4 = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Gomaringen\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_e5fd8d0234939f2a37e839503869b0e2 = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_4\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_4\u0027 data-marker-id=\u0027marker_4\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_4\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eTSV Gomaringen\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_59079fd49853f99ab48cbc0b0cfa23fc = L.popup({
+        var popup_287f65afcf4caaf3e4518551d31b822b = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_164ab58f8af9b0ad77540c046463932c = $(`<div id="html_164ab58f8af9b0ad77540c046463932c" style="width: 100.0%; height: 100.0%;"><b>TSV Gomaringen</b><br>Haydnstraße 22, Gomaringen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_4", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_59079fd49853f99ab48cbc0b0cfa23fc.setContent(html_164ab58f8af9b0ad77540c046463932c);
+                var html_a55aa03c40234bb69fe6ae8adb157e12 = $(`<div id="html_a55aa03c40234bb69fe6ae8adb157e12" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Haydnstraße 22, Gomaringen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Gomaringen</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_4", this.value, "bundle_4")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_287f65afcf4caaf3e4518551d31b822b.setContent(html_a55aa03c40234bb69fe6ae8adb157e12);
             
         
 
-        marker_9ecf631dd466130266beb85dcc9b2d75.bindPopup(popup_59079fd49853f99ab48cbc0b0cfa23fc)
+        marker_2d8c24d60d4aab6326ee658fb9371825.bindPopup(popup_287f65afcf4caaf3e4518551d31b822b)
         ;
 
         
     
     
-                marker_9ecf631dd466130266beb85dcc9b2d75.setIcon(div_icon_8b7d86c875cf27ab89f1df3a79efece4);
+                marker_2d8c24d60d4aab6326ee658fb9371825.setIcon(div_icon_e5fd8d0234939f2a37e839503869b0e2);
             
     
-            feature_group_29e4d3c59af6cb48be0f70fbc5295785.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_870a88b9c91c767cfad34c168f44496b = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_145b94bb6413e7ffe8c5918dd22ea2cb = L.circleMarker(
-                [48.4993845, 9.1824302],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_870a88b9c91c767cfad34c168f44496b);
-        
-    
-        var popup_b959ac6c2ce101d66af935c2767c4c30 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_b43acbdecdd24cad2e30f787831f02f1 = $(`<div id="html_b43acbdecdd24cad2e30f787831f02f1" style="width: 100.0%; height: 100.0%;"><b>TSV Betzingen II</b><br>Hoffmannstr. 6, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_5", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_b959ac6c2ce101d66af935c2767c4c30.setContent(html_b43acbdecdd24cad2e30f787831f02f1);
-            
-        
-
-        circle_marker_145b94bb6413e7ffe8c5918dd22ea2cb.bindPopup(popup_b959ac6c2ce101d66af935c2767c4c30)
-        ;
-
-        
-    
-    
-            var marker_ab80ed422cbbc87a77c12c35d0c0c16d = L.marker(
+            var marker_69c0e2d1549942d13c4ebc8a36bf7178 = L.marker(
                 [48.4993845, 9.1824302],
                 {
 }
-            ).addTo(feature_group_870a88b9c91c767cfad34c168f44496b);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_5688c8033672f405aec5c3e12104d1cc = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Betzingen II\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_4bc274130e8397ad7d878cceb92fcc47 = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_5\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_5\u0027 data-marker-id=\u0027marker_5\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_5\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eTSV Betzingen II\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_963f4cb0039c9b7d76d683f869658d66 = L.popup({
+        var popup_9e3f4e647e008d08996ebae945d3ee2a = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_891486251f1b86eb809fba29b59fc2ce = $(`<div id="html_891486251f1b86eb809fba29b59fc2ce" style="width: 100.0%; height: 100.0%;"><b>TSV Betzingen II</b><br>Hoffmannstr. 6, Reutlingen<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_5", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_963f4cb0039c9b7d76d683f869658d66.setContent(html_891486251f1b86eb809fba29b59fc2ce);
+                var html_93ebf6e2eb38a57042c8391c289cf54f = $(`<div id="html_93ebf6e2eb38a57042c8391c289cf54f" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Hoffmannstr. 6, Reutlingen<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Betzingen II</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_5", this.value, "bundle_5")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_9e3f4e647e008d08996ebae945d3ee2a.setContent(html_93ebf6e2eb38a57042c8391c289cf54f);
             
         
 
-        marker_ab80ed422cbbc87a77c12c35d0c0c16d.bindPopup(popup_963f4cb0039c9b7d76d683f869658d66)
+        marker_69c0e2d1549942d13c4ebc8a36bf7178.bindPopup(popup_9e3f4e647e008d08996ebae945d3ee2a)
         ;
 
         
     
     
-                marker_ab80ed422cbbc87a77c12c35d0c0c16d.setIcon(div_icon_5688c8033672f405aec5c3e12104d1cc);
+                marker_69c0e2d1549942d13c4ebc8a36bf7178.setIcon(div_icon_4bc274130e8397ad7d878cceb92fcc47);
             
     
-            feature_group_870a88b9c91c767cfad34c168f44496b.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            var feature_group_8f7ac956f3f4a34549e58cdddd5f0428 = L.featureGroup(
-                {
-}
-            );
-        
-    
-            var circle_marker_9e8ffe027f4f35a068849408cdfe27c4 = L.circleMarker(
-                [48.3095555, 9.2770409],
-                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.9, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(feature_group_8f7ac956f3f4a34549e58cdddd5f0428);
-        
-    
-        var popup_4ff8904511487419d7089922faab94b2 = L.popup({
-  "maxWidth": 250,
-});
-
-        
-            
-                var html_757898ddf729329017531a8466c150a6 = $(`<div id="html_757898ddf729329017531a8466c150a6" style="width: 100.0%; height: 100.0%;"><b>TSV Steinhilben</b><br>Albstraße 5, Steinhilben<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_6", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_4ff8904511487419d7089922faab94b2.setContent(html_757898ddf729329017531a8466c150a6);
-            
-        
-
-        circle_marker_9e8ffe027f4f35a068849408cdfe27c4.bindPopup(popup_4ff8904511487419d7089922faab94b2)
-        ;
-
-        
-    
-    
-            var marker_40171328969d44a555aa757d552e3b82 = L.marker(
+            var marker_7b5db1dbc827e8c7362c496f893cd7e7 = L.marker(
                 [48.3095555, 9.2770409],
                 {
 }
-            ).addTo(feature_group_8f7ac956f3f4a34549e58cdddd5f0428);
+            ).addTo(feature_group_66cb470a74d0cf9c4930f217cfbc9ff9);
         
     
-            var div_icon_0254eaa55c3baebac9e4ac1d025c0abf = L.divIcon({
-  "html": "\u003cdiv style=\u0027white-space:nowrap; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.9);; border:1px solid #666; font-size:12px;\u0027\u003eTSV Steinhilben\u003c/div\u003e",
-  "iconSize": [150, 20],
-  "iconAnchor": [0, -10],
+            var div_icon_242096dba8bc464b8d975ad570ec5c0a = L.divIcon({
+  "html": "\n            \u003cdiv id=\u0027container_bundle_6\u0027 class=\u0027master-bundle-container\u0027 style=\u0027display: flex; flex-direction: column; align-items: flex-start; position: relative;\u0027\u003e\n                \n                \u003cdiv class=\u0027team-row-bundle_6\u0027 data-marker-id=\u0027marker_6\u0027 style=\u0027display: flex; align-items: center; margin-bottom: 2px;\u0027\u003e\n                    \u003cdiv id=\u0027dot_marker_6\u0027 style=\u0027\n                        width: 14px; height: 14px; \n                        background-color: blue; \n                        border: 2px solid white; \n                        border-radius: 50%; \n                        box-shadow: 0 0 4px rgba(0,0,0,0.4);\n                        flex-shrink: 0;\n                    \u0027\u003e\u003c/div\u003e\n                    \u003cdiv class=\u0027team-label-box\u0027 style=\u0027\n                        white-space: nowrap; \n                        padding: 2px 6px; \n                        border-radius: 4px; \n                        background: rgba(255,255,255,0.95); \n                        border: 1px solid #666; \n                        font-size: 12px; \n                        margin-left: 8px;\n                        box-shadow: 1px 1px 3px rgba(0,0,0,0.2);\n                    \u0027\u003eTSV Steinhilben\u003c/div\u003e\n                \u003c/div\u003e\n                \n            \u003c/div\u003e\n            ",
+  "iconSize": [250, 60],
+  "iconAnchor": [7, 12],
   "className": "empty",
 });
         
     
-        var popup_cc8964da84f0551c2a9bd2d07bd065e9 = L.popup({
+        var popup_2d017074dda5f08d1c9992481fb1dbbe = L.popup({
   "maxWidth": 250,
 });
 
         
             
-                var html_89e74d2619e4f0777dd3ff7befb23d66 = $(`<div id="html_89e74d2619e4f0777dd3ff7befb23d66" style="width: 100.0%; height: 100.0%;"><b>TSV Steinhilben</b><br>Albstraße 5, Steinhilben<br><div style='margin-top:8px;'><b>Gruppe wechseln:</b><br><select onchange='moveMarkerGroup("marker_6", this.value)' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
-                popup_cc8964da84f0551c2a9bd2d07bd065e9.setContent(html_89e74d2619e4f0777dd3ff7befb23d66);
+                var html_15aadbbfa79148b4d66a370290acb1de = $(`<div id="html_15aadbbfa79148b4d66a370290acb1de" style="width: 100.0%; height: 100.0%;"><b>Adresse:</b> Albstraße 5, Steinhilben<hr style='margin:8px 0;'><div style='margin-bottom:10px; border-bottom:1px dashed #eee; padding-bottom:6px;'><b>TSV Steinhilben</b><br>Gruppe wechseln:<br><select onchange='moveMarkerGroup("marker_6", this.value, "bundle_6")' style='margin-top:4px; padding:2px; font-size:11px;'><option value='Alle' selected>Alle</option></select></div></div>`)[0];
+                popup_2d017074dda5f08d1c9992481fb1dbbe.setContent(html_15aadbbfa79148b4d66a370290acb1de);
             
         
 
-        marker_40171328969d44a555aa757d552e3b82.bindPopup(popup_cc8964da84f0551c2a9bd2d07bd065e9)
+        marker_7b5db1dbc827e8c7362c496f893cd7e7.bindPopup(popup_2d017074dda5f08d1c9992481fb1dbbe)
         ;
 
         
     
     
-                marker_40171328969d44a555aa757d552e3b82.setIcon(div_icon_0254eaa55c3baebac9e4ac1d025c0abf);
+                marker_7b5db1dbc827e8c7362c496f893cd7e7.setIcon(div_icon_242096dba8bc464b8d975ad570ec5c0a);
             
     
-            feature_group_8f7ac956f3f4a34549e58cdddd5f0428.addTo(feature_group_9f8ce1240f3c8261cbda7c280553df4c);
-        
-    
-            feature_group_9f8ce1240f3c8261cbda7c280553df4c.addTo(map_6fac4496737f9a3c1bd59ddefe6d78c0);
-        
-    
-            var layer_control_6721b35a2ede6c8b64841f2917d31e16_layers = {
-                base_layers : {
-                    "openstreetmap" : tile_layer_a62204b20e2023ce8da06c7616cb170f,
-                },
-                overlays :  {
-                    "Alle" : feature_group_9f8ce1240f3c8261cbda7c280553df4c,
-                },
-            };
-            let layer_control_6721b35a2ede6c8b64841f2917d31e16 = L.control.layers(
-                layer_control_6721b35a2ede6c8b64841f2917d31e16_layers.base_layers,
-                layer_control_6721b35a2ede6c8b64841f2917d31e16_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": false,
-  "autoZIndex": true,
-}
-            ).addTo(map_6fac4496737f9a3c1bd59ddefe6d78c0);
-
+            feature_group_66cb470a74d0cf9c4930f217cfbc9ff9.addTo(map_e82e38f3aef166a275209ffe3813b060);
         
 </script>
 </html>
